@@ -1,9 +1,26 @@
 ﻿<!DOCTYPE html>
 <html>
 <head>
-    <title>@ViewBag.Title</title>
+    <title>Cronofy Sample App</title>
+
+	<link rel="stylesheet" type="text/css" href="Content/bootstrap.min.css" />
+	<link rel="stylesheet" type="text/css" href="Content/sample-app.css" />
 </head>
-<body>
-	@RenderBody()
-</body>
+	<body>
+		<div class="navbar navbar-default navbar-fixed-top">
+			<div class="container">
+				<div class="navbar-header">
+					<a href="/" class="navbar-brand">Cronofy Sample Application</a>
+				</div>
+			</div>
+		</div>
+
+		<div class="container">
+			<div class="row">
+				<h1>Sample Application</h1>
+
+				@RenderBody()
+			</div>
+		</div>
+	</body>
 </html>

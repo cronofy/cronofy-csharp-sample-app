@@ -88,6 +88,7 @@
     <Content Include="Global.asax" />
     <Content Include="packages.config" />
     <Content Include="Content\bootstrap.min.css" />
+    <Content Include="Content\sample-app.css" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ProjectExtensions>

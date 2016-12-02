@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Configuration;
 using Cronofy;
 
@@ -13,6 +15,7 @@ namespace CronofyCSharpSampleApp
 		private static string _refreshToken;
 
 		private static CronofyOAuthClient _oauthClient;
+
 		private static CronofyOAuthClient OAuthClient
 		{
 			get
@@ -44,7 +47,7 @@ namespace CronofyCSharpSampleApp
 				return false;
 
 			_cronofyUid = cronofyUid;
-			_accessToken = "lol";//user.AccessToken;
+			_accessToken = user.AccessToken;
 			_refreshToken = user.RefreshToken;
 
 			return true;
@@ -71,6 +74,16 @@ namespace CronofyCSharpSampleApp
 		public static Account GetAccount()
 		{
 			return CronofyAccountRequest<Account>(() => { return AccountClient.GetAccount(); });
+		}
+
+		public static IEnumerable<Profile> GetProfiles()
+		{
+			return CronofyAccountRequest<IEnumerable<Profile>>(() => { return AccountClient.GetProfiles(); });
+		}
+
+		public static IEnumerable<Calendar> GetCalendars()
+		{
+			return CronofyAccountRequest<IEnumerable<Calendar>>(() => { return AccountClient.GetCalendars(); });
 		}
 
 		static T CronofyAccountRequest<T>(Func<T> request)

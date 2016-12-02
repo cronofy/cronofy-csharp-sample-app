@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using Cronofy;
 
 namespace CronofyCSharpSampleApp.Controllers
 {
@@ -18,6 +19,19 @@ namespace CronofyCSharpSampleApp.Controllers
 			}
 
 			base.OnActionExecuting(filterContext);
+		}
+
+		protected override void OnException(ExceptionContext filterContext)
+		{
+			var ex = filterContext.Exception;
+
+			if (ex is CronofyResponseException)
+			{
+				Response.Cookies.Remove(CronofyHelper.CookieName);
+				filterContext.Result = new RedirectResult("/login");
+			}
+
+			base.OnException(filterContext);
 		}
     }
 }

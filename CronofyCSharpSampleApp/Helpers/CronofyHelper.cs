@@ -8,6 +8,7 @@ namespace CronofyCSharpSampleApp
 	{
 		public const string CookieName = "CronofyUID";
 
+		private static string _cronofyUid;
 		private static string _accessToken;
 		private static string _refreshToken;
 
@@ -42,7 +43,8 @@ namespace CronofyCSharpSampleApp
 			if (user == null)
 				return false;
 
-			_accessToken = user.AccessToken;
+			_cronofyUid = cronofyUid;
+			_accessToken = "lol";//user.AccessToken;
 			_refreshToken = user.RefreshToken;
 
 			return true;
@@ -68,7 +70,44 @@ namespace CronofyCSharpSampleApp
 
 		public static Account GetAccount()
 		{
-			return AccountClient.GetAccount();
+			return CronofyAccountRequest<Account>(() => { return AccountClient.GetAccount(); });
+		}
+
+		static T CronofyAccountRequest<T>(Func<T> request)
+		{
+			T response = default(T);
+
+			try
+			{
+				response = request();
+			}
+			catch (CronofyException)
+			{
+				var token = OAuthClient.GetTokenFromRefreshToken(_refreshToken);
+
+				DatabaseHandler.ExecuteNonQuery($"UPDATE Users SET AccessToken='{token.AccessToken}', RefreshToken='{token.RefreshToken}' WHERE CronofyUID='{_cronofyUid}'");
+				SetToken(token);
+
+				try
+				{
+					response = request();
+				}
+				catch (CronofyException)
+				{
+					DatabaseHandler.ExecuteNonQuery($"UPDATE Users SET AccessToken='', RefreshToken='' WHERE CronofyUID={_cronofyUid}");
+
+					throw new CredentialsInvalidError();
+				}
+			}
+
+			return response;
+		}
+	}
+
+	public class CredentialsInvalidError : Exception
+	{
+		public CredentialsInvalidError()
+		{
 		}
 	}
 }

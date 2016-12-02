@@ -9,6 +9,8 @@ namespace CronofyCSharpSampleApp.Controllers
 	{
 		public ActionResult Index()
 		{
+			CronofyHelper.GetAccount();
+
 			return View();
 		}
 	}

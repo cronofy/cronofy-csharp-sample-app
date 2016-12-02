@@ -65,11 +65,18 @@
     <Reference Include="Cronofy">
       <HintPath>packages\Cronofy.0.0.18\lib\net35\Cronofy.dll</HintPath>
     </Reference>
+    <Reference Include="System.Configuration" />
+    <Reference Include="Mono.Data.Sqlite" />
+    <Reference Include="System.Data" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Content\" />
     <Folder Include="Models\" />
     <Folder Include="Scripts\" />
+    <Folder Include="Persistence\" />
+    <Folder Include="Persistence\Models\" />
+    <Folder Include="Helpers\" />
+    <Folder Include="Views\Login\" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Controllers\HomeController.cs" />
@@ -77,6 +84,13 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="Controllers\OAuthController.cs" />
+    <Compile Include="Persistence\DatabaseHandler.cs" />
+    <Compile Include="Persistence\ITableRowModel.cs" />
+    <Compile Include="Persistence\Models\User.cs" />
+    <Compile Include="Helpers\CronofyHelper.cs" />
+    <Compile Include="Controllers\ControllerBase.cs" />
+    <Compile Include="Controllers\LoginController.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Web.config" />
@@ -89,6 +103,7 @@
     <Content Include="packages.config" />
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="Content\sample-app.css" />
+    <Content Include="Views\Login\Index.cshtml" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ProjectExtensions>

@@ -1,41 +1,41 @@
 ﻿<Properties StartupConfiguration="{384035E1-C7D7-4E9F-9872-13EBB14DED66}|">
-  <MonoDevelop.Ide.Workbench ActiveDocument="Views/Profiles/Index.cshtml">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Helpers/CronofyHelper.cs">
     <Files>
-      <File FileName="Controllers/HomeController.cs" Line="12" Column="31" />
       <File FileName="Views/Home/Index.cshtml" Line="4" Column="25" />
       <File FileName="Content/bootstrap.min.css" Line="12" Column="2" />
       <File FileName="Views/_ViewStart.cshtml" Line="4" Column="1" />
-      <File FileName="Views/Shared/_Layout.cshtml" Line="4" Column="30" />
-      <File FileName="Views/Web.config" Line="29" Column="21" />
+      <File FileName="Views/Shared/_Layout.cshtml" Line="17" Column="3" />
+      <File FileName="Views/Web.config" Line="5" Column="122" />
       <File FileName="Controllers/OAuthController.cs" Line="27" Column="5" />
       <File FileName="Persistence/DatabaseHandler.cs" Line="71" Column="6" />
       <File FileName="Persistence/ITableRowModel.cs" Line="10" Column="3" />
       <File FileName="Persistence/Models/User.cs" Line="12" Column="20" />
-      <File FileName="Helpers/CronofyHelper.cs" Line="81" Column="48" />
       <File FileName="Controllers/ControllerBase.cs" Line="31" Column="57" />
       <File FileName="Controllers/LoginController.cs" Line="13" Column="53" />
-      <File FileName="Controllers/ProfilesController.cs" Line="13" Column="51" />
-      <File FileName="Views/Login/Index.cshtml" Line="1" Column="1" />
-      <File FileName="Views/Profiles/Index.cshtml" Line="3" Column="62" />
+      <File FileName="Controllers/ProfilesController.cs" Line="27" Column="2" />
+      <File FileName="Views/Profiles/Index.cshtml" Line="4" Column="20" />
+      <File FileName="Models/Calendar.cs" Line="15" Column="1" />
+      <File FileName="Controllers/CalendarsController.cs" Line="28" Column="34" />
+      <File FileName="Views/Calendars/CreateNewCalendar.cshtml" Line="1" Column="20" />
+      <File FileName="Web.config" Line="14" Column="20" />
+      <File FileName="Views/Calendars/New.cshtml" Line="15" Column="52" />
+      <File FileName="Helpers/CronofyHelper.cs" Line="89" Column="37" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">
         <State name="__root__">
           <Node name="CronofyCSharpSampleApp" expanded="True">
             <Node name="CronofyCSharpSampleApp" expanded="True">
-              <Node name="App_Start" expanded="True" />
-              <Node name="Content" expanded="True" />
+              <Node name="References" expanded="True" />
+              <Node name="Packages" expanded="True" />
               <Node name="Controllers" expanded="True" />
-              <Node name="Helpers" expanded="True" />
-              <Node name="Persistence" expanded="True">
-                <Node name="Models" expanded="True" />
+              <Node name="Helpers" expanded="True">
+                <Node name="CronofyHelper.cs" selected="True" />
               </Node>
+              <Node name="Models" expanded="True" />
               <Node name="Views" expanded="True">
-                <Node name="Home" expanded="True" />
+                <Node name="Calendars" expanded="True" />
                 <Node name="Login" expanded="True" />
-                <Node name="Profiles" expanded="True">
-                  <Node name="Index.cshtml" selected="True" />
-                </Node>
                 <Node name="Shared" expanded="True" />
               </Node>
             </Node>

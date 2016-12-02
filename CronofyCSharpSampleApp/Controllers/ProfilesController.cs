@@ -11,7 +11,7 @@ namespace CronofyCSharpSampleApp.Controllers
     {
         public ActionResult Index()
 		{
-			var profiles = new Dictionary<Profile, Calendar[]>();
+			var profiles = new Dictionary<Cronofy.Profile, Cronofy.Calendar[]>();
 			var calendars = CronofyHelper.GetCalendars();
 
 			foreach (var profile in CronofyHelper.GetProfiles())

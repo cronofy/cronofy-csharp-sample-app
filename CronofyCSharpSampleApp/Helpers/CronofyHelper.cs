@@ -76,14 +76,19 @@ namespace CronofyCSharpSampleApp
 			return CronofyAccountRequest<Account>(() => { return AccountClient.GetAccount(); });
 		}
 
-		public static IEnumerable<Profile> GetProfiles()
+		public static IEnumerable<Cronofy.Profile> GetProfiles()
 		{
-			return CronofyAccountRequest<IEnumerable<Profile>>(() => { return AccountClient.GetProfiles(); });
+			return CronofyAccountRequest<IEnumerable<Cronofy.Profile>>(() => { return AccountClient.GetProfiles(); });
 		}
 
-		public static IEnumerable<Calendar> GetCalendars()
+		public static IEnumerable<Cronofy.Calendar> GetCalendars()
 		{
-			return CronofyAccountRequest<IEnumerable<Calendar>>(() => { return AccountClient.GetCalendars(); });
+			return CronofyAccountRequest<IEnumerable<Cronofy.Calendar>>(() => { return AccountClient.GetCalendars(); });
+		}
+
+		public static Cronofy.Calendar CreateCalendar(string profileId, string name)
+		{
+			return CronofyAccountRequest<Cronofy.Calendar>(() => { return AccountClient.CreateCalendar(profileId, name); });
 		}
 
 		static T CronofyAccountRequest<T>(Func<T> request)

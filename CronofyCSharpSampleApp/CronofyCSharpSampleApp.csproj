@@ -78,6 +78,7 @@
     <Folder Include="Helpers\" />
     <Folder Include="Views\Login\" />
     <Folder Include="Views\Profiles\" />
+    <Folder Include="Views\Calendars\" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Controllers\HomeController.cs" />
@@ -93,6 +94,8 @@
     <Compile Include="Controllers\ControllerBase.cs" />
     <Compile Include="Controllers\LoginController.cs" />
     <Compile Include="Controllers\ProfilesController.cs" />
+    <Compile Include="Models\Calendar.cs" />
+    <Compile Include="Controllers\CalendarsController.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Web.config" />
@@ -107,6 +110,7 @@
     <Content Include="Content\sample-app.css" />
     <Content Include="Views\Login\Index.cshtml" />
     <Content Include="Views\Profiles\Index.cshtml" />
+    <Content Include="Views\Calendars\New.cshtml" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ProjectExtensions>

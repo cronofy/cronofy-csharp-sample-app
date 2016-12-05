@@ -17,13 +17,13 @@ namespace CronofyCSharpSampleApp.Controllers
 			return View("Show");
 		}
 
-        public ActionResult New(string id)
+        public ActionResult New([Bind(Prefix = "id")] string profileId)
         {
-			ViewData["profileName"] = CronofyHelper.GetProfiles().First(x => x.Id == id).Name;
+			ViewData["profileName"] = CronofyHelper.GetProfiles().First(x => x.Id == profileId).Name;
 
 			var calendar = new Models.Calendar
 			{
-				ProfileId = id,
+				ProfileId = profileId,
 			};
 
             return View("New", calendar);

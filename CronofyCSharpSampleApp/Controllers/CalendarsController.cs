@@ -10,11 +10,11 @@ namespace CronofyCSharpSampleApp.Controllers
     {
 		public ActionResult Show(string id)
 		{
-			ViewData["calendarId"] = id;
-			ViewData["calendarName"] = CronofyHelper.GetCalendars().First(x => x.CalendarId == id).Name;
+			var calendar = CronofyHelper.GetCalendars().First(x => x.CalendarId == id);
+
 			ViewData["events"] = CronofyHelper.ReadEventsForCalendar(id);
 
-			return View("Show");
+			return View("Show", calendar);
 		}
 
         public ActionResult New([Bind(Prefix = "id")] string profileId)

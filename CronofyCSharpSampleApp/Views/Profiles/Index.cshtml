@@ -1,6 +1,8 @@
-﻿<h2>Calendars</h2>
+﻿@model IDictionary<Cronofy.Profile, Cronofy.Calendar[]>
 
-@foreach (var profile in ViewData["profiles"] as IDictionary<Cronofy.Profile, Cronofy.Calendar[]>){
+<h2>Calendars</h2>
+
+@foreach (var profile in Model){
   <div class="row">
     <div class="col-xs-8">
       <h3>@profile.Key.Name</h3>

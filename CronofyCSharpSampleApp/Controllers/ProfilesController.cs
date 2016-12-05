@@ -19,9 +19,7 @@ namespace CronofyCSharpSampleApp.Controllers
 				profiles.Add(profile, calendars.Where(x => x.Profile.ProfileId == profile.Id).ToArray());
 			}
 
-			ViewData["profiles"] = profiles;
-
-            return View ();
+            return View(profiles);
         }
     }
 }

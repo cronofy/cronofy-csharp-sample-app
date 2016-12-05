@@ -98,6 +98,7 @@
     <Compile Include="Models\Calendar.cs" />
     <Compile Include="Controllers\CalendarsController.cs" />
     <Compile Include="Controllers\EventsController.cs" />
+    <Compile Include="Models\Event.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Web.config" />
@@ -115,6 +116,7 @@
     <Content Include="Views\Calendars\New.cshtml" />
     <Content Include="Views\Calendars\Show.cshtml" />
     <Content Include="Views\Events\Show.cshtml" />
+    <Content Include="Views\Events\New.cshtml" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ProjectExtensions>

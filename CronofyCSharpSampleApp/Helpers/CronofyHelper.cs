@@ -93,12 +93,41 @@ namespace CronofyCSharpSampleApp
 
 		public static IEnumerable<Cronofy.Event> ReadEventsForCalendar(string calendarId)
 		{
-			return CronofyAccountRequest<IEnumerable<Cronofy.Event>>(() => { return AccountClient.GetEvents(new GetEventsRequestBuilder().CalendarId(calendarId)); });
+			var readEvents = new GetEventsRequestBuilder()
+				.IncludeManaged(true)
+				.CalendarId(calendarId)
+				.Build();
+
+			return CronofyAccountRequest<IEnumerable<Cronofy.Event>>(() => { return AccountClient.GetEvents(readEvents); });
 		}
 
 		public static IEnumerable<Cronofy.Event> ReadEvents()
 		{
-			return CronofyAccountRequest<IEnumerable<Cronofy.Event>>(() => { return AccountClient.GetEvents(); });
+			var readEvents = new GetEventsRequestBuilder()
+				.IncludeManaged(true)
+				.Build();
+
+			return CronofyAccountRequest<IEnumerable<Cronofy.Event>>(() => { return AccountClient.GetEvents(readEvents); });
+		}
+
+		public static void UpsertEvent(string eventId, string calendarId, string summary, string description, DateTime start, DateTime end)
+		{
+			var builtEvent = new UpsertEventRequestBuilder()
+				.EventId(eventId)
+				.Summary(summary)
+				.Description(description)
+				.Start(start)
+				.End(end)
+				.Build();
+
+			CronofyAccountRequest(() => { 
+				AccountClient.UpsertEvent(calendarId, builtEvent); 
+			});
+		}
+
+		static void CronofyAccountRequest(Action request)
+		{
+			CronofyAccountRequest<bool>(() => { request(); return true; });
 		}
 
 		static T CronofyAccountRequest<T>(Func<T> request)

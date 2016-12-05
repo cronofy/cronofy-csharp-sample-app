@@ -7,10 +7,10 @@
 
 	@if(!@Model.EventId.IsEmpty()){
     <div class="col-xs-4 text-right">
-      <a href="/events/edit/@Model.EventId" class="btn btn-primary">
+      <a href="/events/edit/@Model.EventUid" class="btn btn-primary">
         Edit
       </a>
-	  <a href="/events/delete/@Model.EventId" class="btn btn-danger">
+	  <a href="/events/delete/@Model.EventUid" class="btn btn-danger">
 		Delete
 	  </a>
     </div>

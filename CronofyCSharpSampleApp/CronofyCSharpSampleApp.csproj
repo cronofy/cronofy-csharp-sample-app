@@ -117,6 +117,7 @@
     <Content Include="Views\Calendars\Show.cshtml" />
     <Content Include="Views\Events\Show.cshtml" />
     <Content Include="Views\Events\New.cshtml" />
+    <Content Include="Views\Events\Edit.cshtml" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ProjectExtensions>

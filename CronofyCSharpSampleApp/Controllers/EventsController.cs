@@ -6,16 +6,16 @@ using System.Web.Mvc;
 
 namespace CronofyCSharpSampleApp.Controllers
 {
-    public class EventsController : ControllerBase
-    {
+	public class EventsController : ControllerBase
+	{
 		public ActionResult Show(string id)
-        {
+		{
 			var shownEvent = CronofyHelper.ReadEvents().First(x => x.EventUid == id);
 
 			ViewData["calendarName"] = CronofyHelper.GetCalendars().First(x => x.CalendarId == shownEvent.CalendarId).Name;
 
 			return View("Show", shownEvent);
-        }
+		}
 
 		public ActionResult New([Bind(Prefix = "id")] string calendarId)
 		{
@@ -47,6 +47,44 @@ namespace CronofyCSharpSampleApp.Controllers
 			ViewData["calendarName"] = CronofyHelper.GetCalendars().First(x => x.CalendarId == newEvent.CalendarId).Name;
 
 			return View("New", newEvent);
+		}
+
+		public ActionResult Edit(string id)
+		{
+			var gotEvent = CronofyHelper.ReadEvents().First(x => x.EventUid == id);
+
+			ViewData["calendarName"] = CronofyHelper.GetCalendars().First(x => x.CalendarId == gotEvent.CalendarId).Name;
+
+			var editEvent = new Models.Event
+			{
+				CalendarId = gotEvent.CalendarId,
+				EventId = gotEvent.EventId,
+				Summary = gotEvent.Summary,
+				Description = gotEvent.Description,
+				Start = (gotEvent.Start.HasTime ? gotEvent.Start.DateTimeOffset.DateTime : gotEvent.Start.Date.DateTime),
+				End = (gotEvent.End.HasTime ? gotEvent.End.DateTimeOffset.DateTime : gotEvent.End.Date.DateTime)
+			};
+
+			return View("Edit", editEvent);
+		}
+
+		public ActionResult Update(Models.Event editEvent)
+		{
+			if (editEvent.Start > editEvent.End)
+			{
+				ModelState.AddModelError("End", "End time cannot be before start time");
+			}
+
+			if (ModelState.IsValid)
+			{
+				CronofyHelper.UpsertEvent(editEvent.EventId, editEvent.CalendarId, editEvent.Summary, editEvent.Description, editEvent.Start, editEvent.End);
+
+				return new RedirectResult($"/calendars/show/{editEvent.CalendarId}");
+			}
+
+			ViewData["calendarName"] = CronofyHelper.GetCalendars().First(x => x.CalendarId == editEvent.CalendarId).Name;
+
+			return View("Edit", editEvent);
 		}
     }
 }

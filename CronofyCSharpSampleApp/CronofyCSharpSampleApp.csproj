@@ -79,6 +79,7 @@
     <Folder Include="Views\Login\" />
     <Folder Include="Views\Profiles\" />
     <Folder Include="Views\Calendars\" />
+    <Folder Include="Views\Events\" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Controllers\HomeController.cs" />
@@ -96,6 +97,7 @@
     <Compile Include="Controllers\ProfilesController.cs" />
     <Compile Include="Models\Calendar.cs" />
     <Compile Include="Controllers\CalendarsController.cs" />
+    <Compile Include="Controllers\EventsController.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Web.config" />
@@ -112,6 +114,7 @@
     <Content Include="Views\Profiles\Index.cshtml" />
     <Content Include="Views\Calendars\New.cshtml" />
     <Content Include="Views\Calendars\Show.cshtml" />
+    <Content Include="Views\Events\Show.cshtml" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ProjectExtensions>

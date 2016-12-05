@@ -1,0 +1,43 @@
+﻿@model Cronofy.Event
+
+<div class="row">
+  <div class="col-xs-8">
+    <h2>@ViewData["calendarName"] - @Model.Summary</h2>
+  </div>
+
+	@if(!@Model.EventId.IsEmpty()){
+    <div class="col-xs-4 text-right">
+      <a href="/events/edit/@Model.EventId" class="btn btn-primary">
+        Edit
+      </a>
+	  <a href="/events/delete/@Model.EventId" class="btn btn-danger">
+		Delete
+	  </a>
+    </div>
+    }
+</div>
+
+<dl class="dl-horizontal">
+  @if(!@Model.EventId.IsEmpty()){
+    <dt>Event ID</dt>
+    <dd>@Model.EventId</dd>
+  }
+
+  <dt>Event UID</dt>
+  <dd>@Model.EventUid</dd>
+
+  <dt>Summary</dt>
+  <dd>@Model.Summary</dd>
+
+  <dt>Created</dt>
+  <dd>@Model.Created</dd>
+
+  <dt>Description</dt>
+  <dd>@Model.Description</dd>
+
+  <dt>Start Date</dt>
+  <dd>@(Model.Start.HasTime ? Model.Start.DateTimeOffset.ToString() : Model.Start.Date.ToString())</dd>
+
+  <dt>End Date</dt>
+  <dd>@(Model.End.HasTime ? Model.End.DateTimeOffset.ToString() : Model.End.Date.ToString())</dd>
+</dl>

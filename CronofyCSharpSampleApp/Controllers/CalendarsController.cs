@@ -8,6 +8,15 @@ namespace CronofyCSharpSampleApp.Controllers
 {
     public class CalendarsController : ControllerBase
     {
+		public ActionResult Show(string id)
+		{
+			ViewData["calendarId"] = id;
+			ViewData["calendarName"] = CronofyHelper.GetCalendars().First(x => x.CalendarId == id).Name;
+			ViewData["events"] = CronofyHelper.ReadEventsForCalendar(id);
+
+			return View("Show");
+		}
+
         public ActionResult New(string id)
         {
 			ViewData["profileName"] = CronofyHelper.GetProfiles().First(x => x.Id == id).Name;

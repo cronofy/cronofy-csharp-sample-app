@@ -1,0 +1,43 @@
+﻿<div class="row">
+	<div class="col-xs-8">
+		<h2>@ViewData["calendarName"] - Events</h2>
+	</div>
+
+	<div class="col-xs-4 text-right">
+		<a href="/events/new/@ViewData["calendarId"]" class="btn btn-primary">
+			Create Event
+		</a>
+	</div>
+</div>
+
+<table class="table table-striped table-hover">
+  <thead>
+    <tr>
+      <th>Event Summary</th>
+      <th>Start</th>
+      <th>End</th>
+      <th></th>
+    </tr>
+  </thead>
+
+  <tbody>
+	@foreach(var calEvent in ViewData["events"] as IEnumerable<Cronofy.Event>){
+    <tr>
+      <td>
+		@calEvent.Summary
+	  </td>
+      <td>
+        @(calEvent.Start.HasTime ? calEvent.Start.DateTimeOffset.ToString() : calEvent.Start.Date.ToString())
+      </td>
+      <td>
+        @(calEvent.Start.HasTime ? calEvent.Start.DateTimeOffset.ToString() : calEvent.Start.Date.ToString())
+      </td>
+      <td>
+        <a href="/events/show/@calEvent.EventId">
+          View
+        </a>
+      </td>
+    </tr>
+    }
+  </tbody>
+</table>

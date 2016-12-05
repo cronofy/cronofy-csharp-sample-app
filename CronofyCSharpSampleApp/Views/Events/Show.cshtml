@@ -10,9 +10,11 @@
       <a href="/events/edit/@Model.EventUid" class="btn btn-primary">
         Edit
       </a>
-	  <a href="/events/delete/@Model.EventUid" class="btn btn-danger">
-		Delete
-	  </a>
+	  @using(Html.BeginForm("Delete", "Events", FormMethod.Post, new { @class = "button_to" })){
+		@Html.HiddenFor(model => model.CalendarId)
+		@Html.HiddenFor(model => model.EventId)
+		<input type="submit" value="Delete" class="btn btn-danger" />
+	  }
     </div>
     }
 </div>

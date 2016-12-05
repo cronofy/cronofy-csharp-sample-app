@@ -125,6 +125,11 @@ namespace CronofyCSharpSampleApp
 			});
 		}
 
+		public static void DeleteEvent(string calendarId, string eventId)
+		{
+			CronofyAccountRequest(() => { AccountClient.DeleteEvent(calendarId, eventId); });
+		}
+
 		static void CronofyAccountRequest(Action request)
 		{
 			CronofyAccountRequest<bool>(() => { request(); return true; });

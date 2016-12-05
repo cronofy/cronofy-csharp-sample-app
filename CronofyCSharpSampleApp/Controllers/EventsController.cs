@@ -86,5 +86,12 @@ namespace CronofyCSharpSampleApp.Controllers
 
 			return View("Edit", editEvent);
 		}
+
+		public ActionResult Delete(Models.Event deleteEvent)
+		{
+			CronofyHelper.DeleteEvent(deleteEvent.CalendarId, deleteEvent.EventId);
+
+			return new RedirectResult($"/calendars/show/{deleteEvent.CalendarId}");
+		}
     }
 }

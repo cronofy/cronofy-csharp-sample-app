@@ -1,0 +1,40 @@
+﻿@model IEnumerable<Cronofy.Channel>
+
+<div class="row">
+  <div class="col-xs-8">
+    <h2>Channels</h2>
+  </div>
+  <div class="col-xs-4 text-right">
+    <a href="/channels/new" class="btn btn-primary">
+      Create Channel
+    </a>
+  </div>
+</div>
+
+<table class="table table-striped table-hover">
+  <thead>
+    <tr>
+      <th>Channel ID</th>
+      <th>Path</th>
+      <th></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    @foreach(var channel in Model){
+      <tr>
+        <td>
+          @channel.Id
+        </td>
+        <td>
+          @channel.CallbackUrl
+        </td>
+        <td>
+          <a href="/channels/show/@channel.Id">
+            View
+          </a>
+        </td>
+      </tr>
+     }
+  </tbody>
+</table>

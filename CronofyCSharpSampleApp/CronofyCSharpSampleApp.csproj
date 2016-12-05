@@ -80,6 +80,7 @@
     <Folder Include="Views\Profiles\" />
     <Folder Include="Views\Calendars\" />
     <Folder Include="Views\Events\" />
+    <Folder Include="Views\Channels\" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Controllers\HomeController.cs" />
@@ -99,6 +100,7 @@
     <Compile Include="Controllers\CalendarsController.cs" />
     <Compile Include="Controllers\EventsController.cs" />
     <Compile Include="Models\Event.cs" />
+    <Compile Include="Controllers\ChannelsController.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Web.config" />
@@ -118,6 +120,7 @@
     <Content Include="Views\Events\Show.cshtml" />
     <Content Include="Views\Events\New.cshtml" />
     <Content Include="Views\Events\Edit.cshtml" />
+    <Content Include="Views\Channels\Index.cshtml" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ProjectExtensions>

@@ -130,6 +130,11 @@ namespace CronofyCSharpSampleApp
 			CronofyAccountRequest(() => { AccountClient.DeleteEvent(calendarId, eventId); });
 		}
 
+		public static IEnumerable<Cronofy.Channel> GetChannels()
+		{
+			return CronofyAccountRequest<IEnumerable<Cronofy.Channel>>(() => { return AccountClient.GetChannels(); });
+		}
+
 		static void CronofyAccountRequest(Action request)
 		{
 			CronofyAccountRequest<bool>(() => { request(); return true; });

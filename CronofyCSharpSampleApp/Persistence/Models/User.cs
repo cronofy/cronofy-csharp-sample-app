@@ -20,9 +20,9 @@ namespace CronofyCSharpSampleApp
 
 		public ITableRowModel Initialize(SqliteDataReader row)
 		{
-			CronofyUID = row.GetString(1);
-			AccessToken = row.GetString(2);
-			RefreshToken = row.GetString(3);
+			CronofyUID = row.GetString(0);
+			AccessToken = row.GetString(1);
+			RefreshToken = row.GetString(2);
 
 			return this;
 		}

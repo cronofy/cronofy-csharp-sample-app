@@ -29,6 +29,6 @@
     <dd>@data.Max(x => x.OccurredOn)</dd>
 
     <dt>Received Data</dt>
-    <dd><pre>@String.Join("<br />", data.Select(x => x.Record))</pre></dd>
+    <dd><pre>@String.Join("\n\n", data.Select(x => x.Record))</pre></dd>
   }
 </dl>

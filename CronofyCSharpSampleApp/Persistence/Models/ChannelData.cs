@@ -20,9 +20,9 @@ namespace CronofyCSharpSampleApp
 
 		public ITableRowModel Initialize(SqliteDataReader row)
 		{
-			ChannelId = row.GetString(1);
-			Record = row.GetString(2);
-			OccurredOn = row.GetDateTime(3);
+			ChannelId = row.GetString(0);
+			Record = row.GetString(1);
+			OccurredOn = DateTime.Parse(row.GetString(2));
 
 			return this;
 		}

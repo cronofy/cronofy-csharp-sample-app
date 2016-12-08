@@ -10,8 +10,8 @@
 	      <div class="form-group">
 			<label class="control-label col-lg-2">Channel Path</label>
 	        <div class="col-lg-10">
-	          <div class="col-xs-6 col-sm-5 col-md-4 text-right" style="margin-top: 8px">@ViewData["domain"]/push/</div>
-	          <div class="col-xs-6 col-sm-7 col-md-8">
+	          <div class="col-xs-7 col-sm-6 col-md-5 text-right" style="margin-top: 8px">@ViewData["domain"]/push/channel/</div>
+	          <div class="col-xs-5 col-sm-6 col-md-7">
 				@Html.TextBoxFor(model => model.Path, new { @class = "form-control" })
 				@Html.ValidationMessageFor(model => model.Path)
 	          </div>

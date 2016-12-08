@@ -41,7 +41,7 @@ namespace CronofyCSharpSampleApp
 
 		public static bool LoadUser(string cronofyUid)
 		{
-			var user = DatabaseHandler.Get<User>("SELECT * FROM Users WHERE CronofyUID='" + cronofyUid + "'");
+			var user = DatabaseHandler.Get<User>("SELECT CronofyUid, AccessToken, RefreshToken FROM Users WHERE CronofyUID='" + cronofyUid + "'");
 
 			if (user == null)
 				return false;

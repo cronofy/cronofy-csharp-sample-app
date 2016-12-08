@@ -34,32 +34,24 @@ namespace CronofyCSharpSampleApp
 			if (!_initialized)
 				Initialize();
 
-			try
+			using (var conn = new SqliteConnection(_connectionString))
 			{
-				using (var conn = new SqliteConnection(_connectionString))
+				conn.Open();
+				using (var cmd = conn.CreateCommand())
 				{
-					conn.Open();
-					using (var cmd = conn.CreateCommand())
+					cmd.CommandText = sql;
+					cmd.CommandType = System.Data.CommandType.Text;
+					SqliteDataReader reader = cmd.ExecuteReader();
+
+					var rows = new List<T>();
+
+					while (reader.Read())
 					{
-						cmd.CommandText = sql;
-						cmd.CommandType = System.Data.CommandType.Text;
-						SqliteDataReader reader = cmd.ExecuteReader();
-
-						var rows = new List<T>();
-
-						while (reader.Read())
-						{
-							rows.Add((T)(new T().Initialize(reader)));
-						}
-
-						return rows;
+						rows.Add((T)(new T().Initialize(reader)));
 					}
-				}
-			}catch(Exception ex){
-				var mynum = 12;
-				mynum *= 15;
 
-				return new T[0];
+					return rows;
+				}
 			}
 		}
 

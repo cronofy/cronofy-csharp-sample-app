@@ -18,7 +18,7 @@ namespace CronofyCSharpSampleApp.Controllers
 		{
 			var channel = CronofyHelper.GetChannels().First(x => x.Id == id);
 
-			ViewData["Data"] = DatabaseHandler.Many<ChannelData>($"SELECT * FROM ChannelData WHERE ChannelId='{channel.Id}'");
+			ViewData["Data"] = DatabaseHandler.Many<ChannelData>($"SELECT ChannelId, Record, OccurredOn FROM ChannelData WHERE ChannelId='{channel.Id}' ORDER BY OccurredOn DESC");
 
 			return View("Show", channel);
 		}
@@ -42,7 +42,7 @@ namespace CronofyCSharpSampleApp.Controllers
 		{
 			if (ModelState.IsValid)
 			{
-				var url = ConfigurationManager.AppSettings["domain"] + "/push/" + channel.Path;
+				var url = ConfigurationManager.AppSettings["domain"] + "/push/channel/" + channel.Path;
 
 				CronofyHelper.CreateChannel(url, channel.OnlyManaged, channel.CalendarIds);
 

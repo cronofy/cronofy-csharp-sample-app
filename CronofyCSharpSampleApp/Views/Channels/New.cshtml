@@ -1,0 +1,52 @@
+﻿@model CronofyCSharpSampleApp.Models.Channel
+
+<h2>New Channel</h2>
+
+<div class="well">
+  	@using(Html.BeginForm("Create", "Channels", FormMethod.Post, new { @class = "form-horizontal" })){
+		@Html.ValidationSummary(true);
+	
+	    <fieldset>
+	      <div class="form-group">
+			<label class="control-label col-lg-2">Channel Path</label>
+	        <div class="col-lg-10">
+	          <div class="col-xs-6 col-sm-5 col-md-4 text-right" style="margin-top: 8px">@ViewData["domain"]/push/</div>
+	          <div class="col-xs-6 col-sm-7 col-md-8">
+				@Html.TextBoxFor(model => model.Path, new { @class = "form-control" })
+				@Html.ValidationMessageFor(model => model.Path)
+	          </div>
+	        </div>
+	      </div>
+
+	      <div class="form-group">
+	        <label class="control-label col-lg-2">Interested Events</label>
+	        <div class="col-lg-10 checkbox">
+	          <label>
+	          	@Html.CheckBoxFor(model => model.OnlyManaged)
+	          	@Html.LabelFor(model => model.OnlyManaged)
+	          </label>
+	        </div>
+	      </div>
+
+	      <div class="form-group">
+	        <label class="control-label col-lg-2">Interested Calendars</label>
+	        <div class="col-lg-10">
+	          @foreach(var calendar in ViewData["calendars"] as IEnumerable<Cronofy.Calendar>){
+	          <div class="checkbox">
+				<label>
+					<input type="checkbox" value="@calendar.CalendarId" name="CalendarIds[]" checked />
+					@calendar.Profile.Name - @calendar.Name
+	          	</label>
+	          </div>
+	          }
+	        </div>
+	      </div>
+
+	      <div class="form-group">
+	        <div class="col-lg-10">
+	          <input type="submit" value="Create" class="btn btn-success btn-primary" />
+	        </div>
+	      </div>
+	    </fieldset>
+  	}
+</div>

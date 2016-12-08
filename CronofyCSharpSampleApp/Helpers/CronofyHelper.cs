@@ -135,6 +135,17 @@ namespace CronofyCSharpSampleApp
 			return CronofyAccountRequest<IEnumerable<Cronofy.Channel>>(() => { return AccountClient.GetChannels(); });
 		}
 
+		public static Cronofy.Channel CreateChannel(string path, bool onlyManaged, IEnumerable<string> calendarIds)
+		{
+			var builtChannel = new CreateChannelBuilder()
+				.CallbackUrl(path)
+				.OnlyManaged(onlyManaged)
+				.CalendarIds(calendarIds)
+				.Build();
+
+			return CronofyAccountRequest<Cronofy.Channel>(() => { return AccountClient.CreateChannel(builtChannel); });
+		}
+
 		static void CronofyAccountRequest(Action request)
 		{
 			CronofyAccountRequest<bool>(() => { request(); return true; });

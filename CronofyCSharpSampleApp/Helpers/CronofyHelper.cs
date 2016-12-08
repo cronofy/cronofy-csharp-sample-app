@@ -91,6 +91,11 @@ namespace CronofyCSharpSampleApp
 			return CronofyAccountRequest<Cronofy.Calendar>(() => { return AccountClient.CreateCalendar(profileId, name); });
 		}
 
+		public static IEnumerable<Cronofy.FreeBusy> GetFreeBusy()
+		{
+			return CronofyAccountRequest<IEnumerable<Cronofy.FreeBusy>>(() => { return AccountClient.GetFreeBusy(); });
+		}
+
 		public static IEnumerable<Cronofy.Event> ReadEventsForCalendar(string calendarId)
 		{
 			var readEvents = new GetEventsRequestBuilder()

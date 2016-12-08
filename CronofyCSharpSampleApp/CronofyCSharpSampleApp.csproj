@@ -81,6 +81,7 @@
     <Folder Include="Views\Calendars\" />
     <Folder Include="Views\Events\" />
     <Folder Include="Views\Channels\" />
+    <Folder Include="Views\FreeBusy\" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Controllers\HomeController.cs" />
@@ -105,6 +106,7 @@
     <Compile Include="Persistence\Models\ChannelData.cs" />
     <Compile Include="Controllers\PushController.cs" />
     <Compile Include="Models\ChannelData.cs" />
+    <Compile Include="Controllers\FreeBusyController.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Web.config" />
@@ -127,6 +129,7 @@
     <Content Include="Views\Channels\Index.cshtml" />
     <Content Include="Views\Channels\New.cshtml" />
     <Content Include="Views\Channels\Show.cshtml" />
+    <Content Include="Views\FreeBusy\Index.cshtml" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ProjectExtensions>

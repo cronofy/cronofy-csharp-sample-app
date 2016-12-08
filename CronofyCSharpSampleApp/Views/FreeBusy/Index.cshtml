@@ -1,0 +1,33 @@
+﻿@model IDictionary<Cronofy.Calendar, List<Cronofy.FreeBusy>>
+
+<h2>Free Busy</h2>
+
+@foreach(var calendar in Model){
+  <h3>@calendar.Key.Name</h3>
+
+  <table class="table table-striped table-hover">
+    <thead>
+      <tr>
+        <th>Status</th>
+        <th>Start Time</th>
+        <th>End Time</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      @foreach(var freeBusy in calendar.Value){
+        <tr>
+          <td>
+            @freeBusy.FreeBusyStatus
+          </td>
+          <td>
+            @(freeBusy.Start.HasTime ? freeBusy.Start.DateTimeOffset.ToString() : freeBusy.Start.Date.ToString())
+          </td>
+          <td>
+			@(freeBusy.End.HasTime ? freeBusy.End.DateTimeOffset.ToString() : freeBusy.End.Date.ToString())
+          </td>
+        </tr>
+      }
+    </tbody>
+  </table>
+}

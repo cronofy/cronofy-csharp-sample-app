@@ -14,6 +14,15 @@ namespace CronofyCSharpSampleApp.Controllers
             return View("Index", CronofyHelper.GetChannels());
         }
 
+		public ActionResult Show(string id)
+		{
+			var channel = CronofyHelper.GetChannels().First(x => x.Id == id);
+
+			ViewData["Data"] = DatabaseHandler.Many<ChannelData>($"SELECT * FROM ChannelData WHERE ChannelId='{channel.Id}'");
+
+			return View("Show", channel);
+		}
+
 		public ActionResult New()
 		{
 			var calendars = CronofyHelper.GetCalendars();

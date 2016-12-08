@@ -1,0 +1,34 @@
+﻿@model Cronofy.Channel
+
+<div class="row">
+  <div class="col-xs-offset-8 col-xs-4 text-right">
+    <a href="/channels/delete/@Model.Id" class="btn btn-danger">
+      Close
+    </a>
+  </div>
+</div>
+
+<dl class="dl-horizontal">
+  <dt>Channel ID</dt>
+  <dd>@Model.Id</dd>
+
+  <dt>Callback URL</dt>
+  <dd>@Model.CallbackUrl</dd>
+
+  <dt>Only Managed</dt>
+  <dd>@Model.Filters.OnlyManaged</dd>
+
+  @if(Model.Filters.CalendarIds.Any()){
+    <dt>Calendar IDs</dt>
+    <dd><pre>@String.Join("\n", Model.Filters.CalendarIds)</pre></dd>
+  }
+
+  @{ var data = ViewData["Data"] as IEnumerable<ChannelData>; }
+  @if(data.Any()){
+    <dt>Last Called</dt>
+    <dd>@data.Max(x => x.OccurredOn)</dd>
+
+    <dt>Received Data</dt>
+    <dd><pre>@String.Join("<br />", data.Select(x => x.Record))</pre></dd>
+  }
+</dl>

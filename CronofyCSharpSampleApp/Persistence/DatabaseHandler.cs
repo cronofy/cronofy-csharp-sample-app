@@ -15,7 +15,7 @@ namespace CronofyCSharpSampleApp
 		public static void Initialize()
 		{
 			var documents = Environment.GetFolderPath(Environment.SpecialFolder.Personal);
-			var pathToDatabase = Path.Combine(documents, "db_adonet.db");
+			var pathToDatabase = Path.Combine(documents, "cronofy_sample_app.db");
 
 			_connectionString = String.Format("Data Source={0};Version=3;", pathToDatabase);
 			_initialized = true;
@@ -25,6 +25,7 @@ namespace CronofyCSharpSampleApp
 				SqliteConnection.CreateFile(pathToDatabase);
 
 				ExecuteNonQuery("CREATE TABLE Users (UserID INTEGER PRIMARY KEY AUTOINCREMENT, CronofyUID ntext, AccessToken ntext, RefreshToken ntext)");
+				ExecuteNonQuery("CREATE TABLE ChannelData (Id INTEGER PRIMARY KEY AUTOINCREMENT, ChannelId ntext, Record ntext, OccurredOn datetime2)");
 			}
 		}
 
@@ -32,25 +33,33 @@ namespace CronofyCSharpSampleApp
 		{
 			if (!_initialized)
 				Initialize();
-			
-			using (var conn = new SqliteConnection(_connectionString))
+
+			try
 			{
-				conn.Open();
-				using (var cmd = conn.CreateCommand())
+				using (var conn = new SqliteConnection(_connectionString))
 				{
-					cmd.CommandText = sql;
-					cmd.CommandType = System.Data.CommandType.Text;
-					SqliteDataReader reader = cmd.ExecuteReader();
-
-					var rows = new List<T>();
-
-					while (reader.Read())
+					conn.Open();
+					using (var cmd = conn.CreateCommand())
 					{
-						rows.Add((T)(new T().Initialize(reader)));
-					}
+						cmd.CommandText = sql;
+						cmd.CommandType = System.Data.CommandType.Text;
+						SqliteDataReader reader = cmd.ExecuteReader();
 
-					return rows;
+						var rows = new List<T>();
+
+						while (reader.Read())
+						{
+							rows.Add((T)(new T().Initialize(reader)));
+						}
+
+						return rows;
+					}
 				}
+			}catch(Exception ex){
+				var mynum = 12;
+				mynum *= 15;
+
+				return new T[0];
 			}
 		}
 

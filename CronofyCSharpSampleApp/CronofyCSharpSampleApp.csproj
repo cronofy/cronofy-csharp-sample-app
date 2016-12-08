@@ -102,6 +102,7 @@
     <Compile Include="Models\Event.cs" />
     <Compile Include="Controllers\ChannelsController.cs" />
     <Compile Include="Models\Channel.cs" />
+    <Compile Include="Persistence\Models\ChannelData.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Web.config" />
@@ -123,6 +124,7 @@
     <Content Include="Views\Events\Edit.cshtml" />
     <Content Include="Views\Channels\Index.cshtml" />
     <Content Include="Views\Channels\New.cshtml" />
+    <Content Include="Views\Channels\Show.cshtml" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ProjectExtensions>

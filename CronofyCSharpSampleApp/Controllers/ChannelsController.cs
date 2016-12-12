@@ -18,7 +18,7 @@ namespace CronofyCSharpSampleApp.Controllers
 		{
 			var channel = CronofyHelper.GetChannels().First(x => x.Id == id);
 
-			ViewData["Data"] = DatabaseHandler.Many<ChannelData>($"SELECT ChannelId, Record, OccurredOn FROM ChannelData WHERE ChannelId='{channel.Id}' ORDER BY OccurredOn DESC");
+			ViewData["Data"] = DatabaseHandler.Many<Persistence.Models.ChannelData>($"SELECT ChannelId, Record, OccurredOn FROM ChannelData WHERE ChannelId='{channel.Id}' ORDER BY OccurredOn DESC");
 
 			return View("Show", channel);
 		}

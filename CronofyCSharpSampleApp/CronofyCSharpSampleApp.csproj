@@ -82,6 +82,7 @@
     <Folder Include="Views\Events\" />
     <Folder Include="Views\Channels\" />
     <Folder Include="Views\FreeBusy\" />
+    <Folder Include="Views\EnterpriseConnect\" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Controllers\HomeController.cs" />
@@ -107,6 +108,8 @@
     <Compile Include="Controllers\PushController.cs" />
     <Compile Include="Models\ChannelData.cs" />
     <Compile Include="Controllers\FreeBusyController.cs" />
+    <Compile Include="Controllers\EnterpriseConnectController.cs" />
+    <Compile Include="Controllers\EnterpriseConnectControllerBase.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Web.config" />

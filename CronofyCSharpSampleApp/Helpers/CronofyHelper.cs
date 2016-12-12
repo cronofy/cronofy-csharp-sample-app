@@ -9,6 +9,7 @@ namespace CronofyCSharpSampleApp
 	public class CronofyHelper
 	{
 		public const string CookieName = "CronofyUID";
+		public const string EnterpriseConnectCookieName = "EnterpriseConnectUID";
 
 		private static string _cronofyUid;
 		private static string _accessToken;
@@ -38,10 +39,11 @@ namespace CronofyCSharpSampleApp
 		}
 
 		private static string _oauthCallbackUrl = $"{ConfigurationManager.AppSettings["domain"]}/oauth";
+		private static string _enterpriseConnectOAuthCallbackUrl = $"{ConfigurationManager.AppSettings["domain"]}/oauth/enterpriseconnect";
 
-		public static bool LoadUser(string cronofyUid)
+		public static bool LoadUser(string cronofyUid, bool serviceAccount)
 		{
-			var user = DatabaseHandler.Get<User>("SELECT CronofyUid, AccessToken, RefreshToken FROM Users WHERE CronofyUID='" + cronofyUid + "'");
+            var user = DatabaseHandler.Get<Persistence.Models.User>($"SELECT CronofyUid, AccessToken, RefreshToken FROM Users WHERE CronofyUID='{cronofyUid}' AND ServiceAccount='{(serviceAccount ? 1 : 0)}'");
 
 			if (user == null)
 				return false;
@@ -66,9 +68,21 @@ namespace CronofyCSharpSampleApp
 			return OAuthClient.GetAuthorizationUrlBuilder(_oauthCallbackUrl).ToString();
 		}
 
+		public static string GetEnterpriseConnectAuthUrl()
+		{
+			return OAuthClient.GetAuthorizationUrlBuilder(_enterpriseConnectOAuthCallbackUrl)
+							  .EnterpriseConnect()
+							  .ToString();
+		}
+
 		public static OAuthToken GetOAuthToken(string code)
 		{
 			return OAuthClient.GetTokenFromCode(code, _oauthCallbackUrl);
+		}
+
+		public static OAuthToken GetEnterpriseConnectOAuthToken(string code)
+		{
+			return OAuthClient.GetTokenFromCode(code, _enterpriseConnectOAuthCallbackUrl);
 		}
 
 		public static Account GetAccount()
@@ -151,6 +165,11 @@ namespace CronofyCSharpSampleApp
 			return CronofyAccountRequest<Cronofy.Channel>(() => { return AccountClient.CreateChannel(builtChannel); });
 		}
 
+        public static Cronofy.UserInfo GetUserInfo()
+        {
+            return CronofyAccountRequest<Cronofy.UserInfo>(() => { return AccountClient.GetUserInfo(); });
+        }
+
 		static void CronofyAccountRequest(Action request)
 		{
 			CronofyAccountRequest<bool>(() => { request(); return true; });
@@ -164,7 +183,7 @@ namespace CronofyCSharpSampleApp
 			{
 				response = request();
 			}
-			catch (CronofyException)
+			catch (CronofyException ex)
 			{
 				var token = OAuthClient.GetTokenFromRefreshToken(_refreshToken);
 

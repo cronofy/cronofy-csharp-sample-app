@@ -6,20 +6,16 @@ using System.Web.Mvc;
 
 namespace CronofyCSharpSampleApp.Controllers
 {
-    public class LoginController : Controller
+    public class EnterpriseConnectController : EnterpriseConnectControllerBase
     {
         public ActionResult Index()
         {
-			ViewData["authUrl"] = CronofyHelper.GetAuthUrl();
-
             return View ();
         }
 
-		public ActionResult EnterpriseConnect()
+		public ActionResult Login()
 		{
-			ViewData["authUrl"] = CronofyHelper.GetEnterpriseConnectAuthUrl();
-
-			return View("EnterpriseConnect");
+			return View("Login");
 		}
     }
 }

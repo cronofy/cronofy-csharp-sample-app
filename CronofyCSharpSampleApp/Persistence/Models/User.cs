@@ -1,7 +1,7 @@
 ﻿using System;
 using Mono.Data.Sqlite;
 
-namespace CronofyCSharpSampleApp
+namespace CronofyCSharpSampleApp.Persistence.Models
 {
 	public class User : ITableRowModel
 	{

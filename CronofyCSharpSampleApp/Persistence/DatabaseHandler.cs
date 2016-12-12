@@ -24,8 +24,8 @@ namespace CronofyCSharpSampleApp
 			{
 				SqliteConnection.CreateFile(pathToDatabase);
 
-				ExecuteNonQuery("CREATE TABLE Users (UserID INTEGER PRIMARY KEY AUTOINCREMENT, CronofyUID ntext, AccessToken ntext, RefreshToken ntext)");
-				ExecuteNonQuery("CREATE TABLE ChannelData (Id INTEGER PRIMARY KEY AUTOINCREMENT, ChannelId ntext, Record ntext, OccurredOn datetime2)");
+                ExecuteNonQuery("CREATE TABLE ChannelData (Id INTEGER PRIMARY KEY AUTOINCREMENT, ChannelId ntext, Record ntext, OccurredOn datetime2)");
+                ExecuteNonQuery("CREATE TABLE Users (UserID INTEGER PRIMARY KEY AUTOINCREMENT, CronofyUID ntext, AccessToken ntext, RefreshToken ntext, ServiceAccount bit)");
 			}
 		}
 
@@ -64,17 +64,17 @@ namespace CronofyCSharpSampleApp
 		{
 			if (!_initialized)
 				Initialize();
-
-			using (var conn = new SqliteConnection(_connectionString))
-			{
-				conn.Open();
-				using (var cmd = conn.CreateCommand())
-				{
-					cmd.CommandText = sql;
-					cmd.CommandType = System.Data.CommandType.Text;
-					return cmd.ExecuteScalar();
-				}
-			}
+            
+            using (var conn = new SqliteConnection(_connectionString))
+            {
+                conn.Open();
+                using (var cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = sql;
+                    cmd.CommandType = System.Data.CommandType.Text;
+                    return cmd.ExecuteScalar();
+                }
+            }
 		}
 
 		public static void ExecuteNonQuery(string sql)

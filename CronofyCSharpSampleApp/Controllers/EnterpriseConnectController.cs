@@ -10,6 +10,8 @@ namespace CronofyCSharpSampleApp.Controllers
     {
         public ActionResult Index()
         {
+            ViewData["resources"] = CronofyHelper.GetResources();
+
             return View ();
         }
 

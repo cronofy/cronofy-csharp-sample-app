@@ -170,6 +170,11 @@ namespace CronofyCSharpSampleApp
             return CronofyAccountRequest<Cronofy.UserInfo>(() => { return AccountClient.GetUserInfo(); });
         }
 
+        public static IEnumerable<Cronofy.Resource> GetResources()
+        {
+            return CronofyAccountRequest<IEnumerable<Cronofy.Resource>>(() => { return AccountClient.GetResources(); });
+        }
+
 		static void CronofyAccountRequest(Action request)
 		{
 			CronofyAccountRequest<bool>(() => { request(); return true; });
@@ -183,7 +188,7 @@ namespace CronofyCSharpSampleApp
 			{
 				response = request();
 			}
-			catch (CronofyException ex)
+			catch (CronofyException)
 			{
 				var token = OAuthClient.GetTokenFromRefreshToken(_refreshToken);
 

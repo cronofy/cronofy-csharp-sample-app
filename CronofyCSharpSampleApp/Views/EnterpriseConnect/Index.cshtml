@@ -1,1 +1,58 @@
-﻿Enterprise Connect Index
+﻿<div class="row">
+  <div class="col-xs-8">
+    <h2>Enterprise Connect</h2>
+  </div>
+
+  <div class="col-xs-4 text-right">
+    <a href="/enterpriseconnect/new" class="btn btn-primary btn-success">
+      Authorize User
+    </a>
+  </div>
+</div>
+
+<h3>Resources</h3>
+
+<table class="table table-striped table-hover">
+<thead>
+  <tr>
+    <th>Name</th>
+    <th>Email</th>
+  </tr>
+</thead>
+
+<tbody>
+  @foreach(var resource in ViewData["resources"] as IEnumerable<Cronofy.Resource>){
+    <tr>
+      <td>@resource.Name</td>
+      <td>@resource.Email</td>
+    </tr>
+  }
+</tbody>
+</table>
+
+<h3>Users</h3>
+
+<table class="table table-striped table-hover">
+<thead>
+  <tr>
+    <th>Name</th>
+    <th>Status</th>
+    <th></th>
+  </tr>
+</thead>
+
+<tbody>
+  <? for($i = 0; $i < count($users); $i++){ ?>
+    <tr>
+      <td><?= $users[$i]["email"] ?></td>
+      <td><?= $users[$i]["status"] ?></td>
+      <td>
+        <? if($users[$i]["status"] == "Linked"){ ?>
+          <a href="/service_account_users/show.php?email=<?= $users[$i]["email"] ?>">
+            View
+          </a>
+        <? } ?>
+      </td>
+    </tr>
+</tbody>
+</table>

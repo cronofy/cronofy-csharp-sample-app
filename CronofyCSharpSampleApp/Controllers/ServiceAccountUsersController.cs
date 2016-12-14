@@ -61,5 +61,60 @@ namespace CronofyCSharpSampleApp.Controllers
 
             return View("Show", enterpriseConnectData);
         }
+
+        public ActionResult Calendar(string userId, string calendarId)
+        {
+            var user = DatabaseHandler.Get<User>($"SELECT CronofyUID, AccessToken, RefreshToken from Users WHERE CronofyUID='{userId}' AND ServiceAccount=0");
+
+            CronofyHelper.SetToken(user.AccessToken, user.RefreshToken, false);
+
+            var calendar = CronofyHelper.GetCalendars().First(x => x.CalendarId == calendarId);
+
+            ViewData["userId"] = userId;
+            ViewData["events"] = CronofyHelper.ReadEventsForCalendar(calendarId);
+
+            return View("Calendar", calendar);            
+        }
+
+        public ActionResult NewEvent(string userId, string calendarId)
+        {
+            var user = DatabaseHandler.Get<User>($"SELECT CronofyUID, AccessToken, RefreshToken from Users WHERE CronofyUID='{userId}' AND ServiceAccount=0");
+
+            CronofyHelper.SetToken(user.AccessToken, user.RefreshToken, false);
+
+            ViewData["calendarName"] = CronofyHelper.GetCalendars().First(x => x.CalendarId == calendarId).Name;
+
+            var newEvent = new Models.Event
+            {
+                UserId = userId,
+                CalendarId = calendarId,
+                EventId = "unique_event_id_" + (new Random().Next(0, 1000000).ToString("D6"))
+            };
+
+            return View("NewEvent", newEvent);
+        }
+
+        public ActionResult CreateEvent(Models.Event newEvent)
+        {
+            var user = DatabaseHandler.Get<User>($"SELECT CronofyUID, AccessToken, RefreshToken from Users WHERE CronofyUID='{newEvent.UserId}' AND ServiceAccount=0");
+
+            CronofyHelper.SetToken(user.AccessToken, user.RefreshToken, false);
+
+            if (newEvent.Start > newEvent.End)
+            {
+                ModelState.AddModelError("End", "End time cannot be before start time");
+            }
+
+            if (ModelState.IsValid)
+            {
+                CronofyHelper.UpsertEvent(newEvent.EventId, newEvent.CalendarId, newEvent.Summary, newEvent.Description, newEvent.Start, newEvent.End);
+
+                return new RedirectResult($"/serviceaccountusers/show/{newEvent.UserId}/calendars/{newEvent.CalendarId}");
+            }
+
+            ViewData["calendarName"] = CronofyHelper.GetCalendars().First(x => x.CalendarId == newEvent.CalendarId).Name;
+
+            return View("NewEvent", newEvent);
+        }
     }
 }

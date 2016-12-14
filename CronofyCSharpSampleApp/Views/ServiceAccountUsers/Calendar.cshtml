@@ -1,0 +1,39 @@
+﻿@model Cronofy.Calendar
+
+<div class="row">
+    <div class="col-xs-8">
+        <h2>@Model.Name - Events</h2>
+    </div>
+
+    <div class="col-xs-4 text-right">
+        <a href="/serviceaccountusers/show/@ViewData["userId"]/calendar/@Model.CalendarId/newevent" class="btn btn-primary">
+            Create Event
+        </a>
+    </div>
+</div>
+
+<table class="table table-striped table-hover">
+  <thead>
+    <tr>
+      <th>Event Summary</th>
+      <th>Start</th>
+      <th>End</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    @foreach(var calEvent in ViewData["events"] as IEnumerable<Cronofy.Event>){
+    <tr>
+      <td>
+        @calEvent.Summary
+      </td>
+      <td>
+        @(calEvent.Start.HasTime ? calEvent.Start.DateTimeOffset.ToString() : calEvent.Start.Date.ToString())
+      </td>
+      <td>
+        @(calEvent.Start.HasTime ? calEvent.Start.DateTimeOffset.ToString() : calEvent.Start.Date.ToString())
+      </td>
+    </tr>
+    }
+  </tbody>
+</table>

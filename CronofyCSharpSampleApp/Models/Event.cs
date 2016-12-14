@@ -5,6 +5,9 @@ namespace CronofyCSharpSampleApp.Models
 {
 	public class Event
 	{
+        // Used to track enterprise connected user's ID
+        public string UserId { get; set; }
+
 		[Required(ErrorMessage = "Calendar ID is required")]
 		public string CalendarId { get; set; }
 

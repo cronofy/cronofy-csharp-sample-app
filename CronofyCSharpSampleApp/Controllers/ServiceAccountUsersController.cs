@@ -41,5 +41,25 @@ namespace CronofyCSharpSampleApp.Controllers
 
             return View("New", user);
         }
+
+        public ActionResult Show([Bind(Prefix = "id")] string userId)
+        {
+            var enterpriseConnectData = DatabaseHandler.Get<EnterpriseConnectUserData>($"SELECT CronofyUID, Email, Status FROM EnterpriseConnectUserData WHERE CronofyUID='{userId}' AND OwnedBy='{uidCookie.Value}'");
+            var user = DatabaseHandler.Get<User>($"SELECT CronofyUID, AccessToken, RefreshToken from Users WHERE CronofyUID='{userId}' AND ServiceAccount=0");
+
+            CronofyHelper.SetToken(user.AccessToken, user.RefreshToken, false);
+
+            var profiles = new Dictionary<Cronofy.Profile, Cronofy.Calendar[]>();
+            var calendars = CronofyHelper.GetCalendars();
+
+            foreach (var profile in CronofyHelper.GetProfiles())
+            {
+                profiles.Add(profile, calendars.Where(x => x.Profile.ProfileId == profile.Id).ToArray());
+            }
+
+            ViewData["profiles"] = profiles;
+
+            return View("Show", enterpriseConnectData);
+        }
     }
 }

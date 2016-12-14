@@ -141,6 +141,8 @@
     <Content Include="Views\FreeBusy\Index.cshtml" />
     <Content Include="Views\EnterpriseConnect\Index.cshtml" />
     <Content Include="Views\Login\EnterpriseConnect.cshtml" />
+    <Content Include="Views\ServiceAccountUsers\New.cshtml" />
+    <Content Include="Views\ServiceAccountUsers\Show.cshtml" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ProjectExtensions>

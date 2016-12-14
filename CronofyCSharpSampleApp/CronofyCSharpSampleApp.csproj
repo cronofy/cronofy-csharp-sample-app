@@ -83,6 +83,7 @@
     <Folder Include="Views\Channels\" />
     <Folder Include="Views\FreeBusy\" />
     <Folder Include="Views\EnterpriseConnect\" />
+    <Folder Include="Views\ServiceAccountUsers\" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Controllers\HomeController.cs" />
@@ -110,6 +111,11 @@
     <Compile Include="Controllers\FreeBusyController.cs" />
     <Compile Include="Controllers\EnterpriseConnectController.cs" />
     <Compile Include="Controllers\EnterpriseConnectControllerBase.cs" />
+    <Compile Include="Persistence\Models\EnterpriseConnectUserData.cs" />
+    <Compile Include="Controllers\ServiceAccountUsersController.cs" />
+    <Compile Include="Models\EnterpriseConnectUser.cs" />
+    <Compile Include="Models\ServiceAccountAuthorizationData.cs" />
+    <Compile Include="Controllers\ServiceAccountCallbackController.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Web.config" />

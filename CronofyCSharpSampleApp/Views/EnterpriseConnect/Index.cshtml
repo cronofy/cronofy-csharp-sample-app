@@ -1,10 +1,12 @@
-﻿<div class="row">
+﻿@using CronofyCSharpSampleApp.Persistence.Models
+
+<div class="row">
   <div class="col-xs-8">
     <h2>Enterprise Connect</h2>
   </div>
 
   <div class="col-xs-4 text-right">
-    <a href="/enterpriseconnect/new" class="btn btn-primary btn-success">
+    <a href="/serviceaccountusers/new" class="btn btn-primary btn-success">
       Authorize User
     </a>
   </div>
@@ -40,19 +42,20 @@
     <th></th>
   </tr>
 </thead>
-
+	
 <tbody>
-  <? for($i = 0; $i < count($users); $i++){ ?>
+  @foreach(var user in ViewData["users"] as IEnumerable<EnterpriseConnectUserData>){
     <tr>
-      <td><?= $users[$i]["email"] ?></td>
-      <td><?= $users[$i]["status"] ?></td>
+      <td>@user.Email</td>
+      <td>@user.Status</td>
       <td>
-        <? if($users[$i]["status"] == "Linked"){ ?>
-          <a href="/service_account_users/show.php?email=<?= $users[$i]["email"] ?>">
+        @if(user.Status == EnterpriseConnectUserData.ConnectedStatus.Linked){
+          <a href="/serviceaccountusers/show/@user.CronofyUID">
             View
           </a>
-        <? } ?>
+        }
       </td>
     </tr>
+  }
 </tbody>
 </table>

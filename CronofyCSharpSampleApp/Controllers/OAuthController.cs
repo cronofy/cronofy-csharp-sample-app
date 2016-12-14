@@ -13,7 +13,7 @@ namespace CronofyCSharpSampleApp.Controllers
         public ActionResult Index()
         {
 			var token = CronofyHelper.GetOAuthToken(Request.QueryString["code"]);
-			CronofyHelper.SetToken(token);
+			CronofyHelper.SetToken(token, false);
 
 			var account = CronofyHelper.GetAccount();
 
@@ -36,9 +36,9 @@ namespace CronofyCSharpSampleApp.Controllers
 		public ActionResult EnterpriseConnect()
 		{
 			var token = CronofyHelper.GetEnterpriseConnectOAuthToken(Request.QueryString["code"]);
-			CronofyHelper.SetToken(token);
+			CronofyHelper.SetToken(token, true);
 
-			var userInfo = CronofyHelper.GetUserInfo();
+			var userInfo = CronofyHelper.GetEnterpriseConnectUserInfo();
 
 			var recordCount = Convert.ToInt32(DatabaseHandler.Scalar($"SELECT COUNT(*) FROM Users WHERE CronofyUID='{userInfo.Sub}' AND ServiceAccount=1"));
 

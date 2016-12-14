@@ -12,6 +12,10 @@ namespace CronofyCSharpSampleApp.Controllers
         {
             ViewData["resources"] = CronofyHelper.GetResources();
 
+            var users = DatabaseHandler.Many<Persistence.Models.EnterpriseConnectUserData>($"SELECT CronofyUID, Email, Status FROM EnterpriseConnectUserData");// WHERE OwnedBy='{uidCookie.Value}'");
+
+            ViewData["users"] = users;
+
             return View ();
         }
 

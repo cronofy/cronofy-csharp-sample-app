@@ -9,11 +9,13 @@ namespace CronofyCSharpSampleApp.Controllers
 {
     public class EnterpriseConnectControllerBase : Controller
     {
+        protected HttpCookie uidCookie;
+
 		protected override void OnActionExecuting(ActionExecutingContext filterContext)
 		{
-			var cronofyCookie = Request.Cookies.Get(CronofyHelper.EnterpriseConnectCookieName);
+			uidCookie = Request.Cookies.Get(CronofyHelper.EnterpriseConnectCookieName);
 
-			if (cronofyCookie == null || !CronofyHelper.LoadUser(cronofyCookie.Value, true))
+			if (uidCookie == null || !CronofyHelper.LoadUser(uidCookie.Value, true))
 			{
 				filterContext.Result = new RedirectResult("/login/enterpriseconnect");
 			}

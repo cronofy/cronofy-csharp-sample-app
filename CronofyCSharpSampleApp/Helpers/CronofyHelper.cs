@@ -15,6 +15,10 @@ namespace CronofyCSharpSampleApp
 		private static string _accessToken;
 		private static string _refreshToken;
 
+        private static string _enterpriseConnectCronofyUid;
+        private static string _enterpriseConnectAccessToken;
+        private static string _enterpriseConnectRefreshToken;
+
 		private static CronofyOAuthClient _oauthClient;
 
 		private static CronofyOAuthClient OAuthClient
@@ -38,8 +42,20 @@ namespace CronofyCSharpSampleApp
 			}
 		}
 
+        private static CronofyEnterpriseConnectAccountClient _enterpriseConnectAccountClient;
+        private static CronofyEnterpriseConnectAccountClient EnterpriseConnectAccountClient
+        {
+            get
+            {
+                if (_enterpriseConnectAccountClient == null)
+                    _enterpriseConnectAccountClient = new CronofyEnterpriseConnectAccountClient(_enterpriseConnectAccessToken);
+                return _enterpriseConnectAccountClient;
+            }
+        }
+
 		private static string _oauthCallbackUrl = $"{ConfigurationManager.AppSettings["domain"]}/oauth";
 		private static string _enterpriseConnectOAuthCallbackUrl = $"{ConfigurationManager.AppSettings["domain"]}/oauth/enterpriseconnect";
+        private static string _enterpriseConnectUserAuthCallbackUrl = $"{ConfigurationManager.AppSettings["domain"]}/serviceaccountcallback/authorize/";
 
 		public static bool LoadUser(string cronofyUid, bool serviceAccount)
 		{
@@ -48,20 +64,43 @@ namespace CronofyCSharpSampleApp
 			if (user == null)
 				return false;
 
-			_cronofyUid = cronofyUid;
-			_accessToken = user.AccessToken;
-			_refreshToken = user.RefreshToken;
+
+            if (serviceAccount)
+            {
+                _enterpriseConnectCronofyUid = cronofyUid;
+                _enterpriseConnectAccessToken = user.AccessToken;
+                _enterpriseConnectRefreshToken = user.RefreshToken;
+            }
+            else {
+                _cronofyUid = cronofyUid;
+                _accessToken = user.AccessToken;
+                _refreshToken = user.RefreshToken;
+            }
 
 			return true;
 		}
 
-		public static void SetToken(OAuthToken token)
-		{
-			_accessToken = token.AccessToken;
-			_refreshToken = token.RefreshToken;
+        public static void SetToken(OAuthToken token, bool serviceAccount)
+        {
+            SetToken(token.AccessToken, token.RefreshToken, serviceAccount);
+        }
 
-			_accountClient = new CronofyAccountClient(_accessToken);
-		}
+        public static void SetToken(string accessToken, string refreshToken, bool serviceAccount)
+        {
+            if (serviceAccount)
+            {
+                _enterpriseConnectAccessToken = accessToken;
+                _enterpriseConnectRefreshToken = refreshToken;
+
+                _enterpriseConnectAccountClient = new CronofyEnterpriseConnectAccountClient(_enterpriseConnectAccessToken);
+            }
+            else {
+                _accessToken = accessToken;
+                _refreshToken = refreshToken;
+
+                _accountClient = new CronofyAccountClient(_accessToken);
+            }
+        }
 
 		public static string GetAuthUrl()
 		{
@@ -79,6 +118,11 @@ namespace CronofyCSharpSampleApp
 		{
 			return OAuthClient.GetTokenFromCode(code, _oauthCallbackUrl);
 		}
+
+        public static OAuthToken GetEnterpriseConnectUserOAuthToken(string enterpriseConnectId, string code)
+        {
+            return OAuthClient.GetTokenFromCode(code, _enterpriseConnectUserAuthCallbackUrl + enterpriseConnectId);
+        }
 
 		public static OAuthToken GetEnterpriseConnectOAuthToken(string code)
 		{
@@ -165,14 +209,19 @@ namespace CronofyCSharpSampleApp
 			return CronofyAccountRequest<Cronofy.Channel>(() => { return AccountClient.CreateChannel(builtChannel); });
 		}
 
-        public static Cronofy.UserInfo GetUserInfo()
+        public static Cronofy.UserInfo GetEnterpriseConnectUserInfo()
         {
-            return CronofyAccountRequest<Cronofy.UserInfo>(() => { return AccountClient.GetUserInfo(); });
+            return CronofyAccountRequest<Cronofy.UserInfo>(() => { return EnterpriseConnectAccountClient.GetUserInfo(); });
         }
 
         public static IEnumerable<Cronofy.Resource> GetResources()
         {
-            return CronofyAccountRequest<IEnumerable<Cronofy.Resource>>(() => { return AccountClient.GetResources(); });
+            return CronofyEnterpriseConnectAccountRequest<IEnumerable<Cronofy.Resource>>(() => { return EnterpriseConnectAccountClient.GetResources(); });
+        }
+
+        public static void AuthorizeWithServiceAccount(string enterpriseConnectId, string email, string scopes)
+        {
+            CronofyEnterpriseConnectAccountRequest(() => { EnterpriseConnectAccountClient.AuthorizeUser(email, _enterpriseConnectUserAuthCallbackUrl + enterpriseConnectId, scopes); });
         }
 
 		static void CronofyAccountRequest(Action request)
@@ -192,8 +241,8 @@ namespace CronofyCSharpSampleApp
 			{
 				var token = OAuthClient.GetTokenFromRefreshToken(_refreshToken);
 
-				DatabaseHandler.ExecuteNonQuery($"UPDATE Users SET AccessToken='{token.AccessToken}', RefreshToken='{token.RefreshToken}' WHERE CronofyUID='{_cronofyUid}'");
-				SetToken(token);
+				DatabaseHandler.ExecuteNonQuery($"UPDATE Users SET AccessToken='{token.AccessToken}', RefreshToken='{token.RefreshToken}' WHERE CronofyUID='{_cronofyUid}' AND ServiceAccount=0");
+				SetToken(token, false);
 
 				try
 				{
@@ -201,7 +250,7 @@ namespace CronofyCSharpSampleApp
 				}
 				catch (CronofyException)
 				{
-					DatabaseHandler.ExecuteNonQuery($"UPDATE Users SET AccessToken='', RefreshToken='' WHERE CronofyUID={_cronofyUid}");
+					DatabaseHandler.ExecuteNonQuery($"UPDATE Users SET AccessToken='', RefreshToken='' WHERE CronofyUID='{_cronofyUid}' AND ServiceAccount=0");
 
 					throw new CredentialsInvalidError();
 				}
@@ -209,6 +258,41 @@ namespace CronofyCSharpSampleApp
 
 			return response;
 		}
+
+        static void CronofyEnterpriseConnectAccountRequest(Action request)
+        {
+            CronofyEnterpriseConnectAccountRequest<bool>(() => { request(); return true; });
+        }
+
+        static T CronofyEnterpriseConnectAccountRequest<T>(Func<T> request)
+        {
+            T response = default(T);
+
+            try
+            {
+                response = request();
+            }
+            catch (CronofyException)
+            {
+                var token = OAuthClient.GetTokenFromRefreshToken(_enterpriseConnectRefreshToken);
+
+                DatabaseHandler.ExecuteNonQuery($"UPDATE Users SET AccessToken='{token.AccessToken}', RefreshToken='{token.RefreshToken}' WHERE CronofyUID='{_enterpriseConnectCronofyUid}' AND ServiceAccount=1");
+                SetToken(token, true);
+
+                try
+                {
+                    response = request();
+                }
+                catch (CronofyException)
+                {
+                    DatabaseHandler.ExecuteNonQuery($"UPDATE Users SET AccessToken='', RefreshToken='' WHERE CronofyUID='{_enterpriseConnectCronofyUid}' AND ServiceAccount=1");
+
+                    throw new CredentialsInvalidError();
+                }
+            }
+
+            return response;
+        }
 	}
 
 	public class CredentialsInvalidError : Exception

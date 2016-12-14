@@ -25,11 +25,11 @@ namespace CronofyCSharpSampleApp.Persistence.Models
 			RefreshToken = row.GetString(2);
 
 			return this;
-		}
+        }
 
-		public ITableRowModel Initialize(object obj)
-		{
-			return this;
-		}
+        public ITableRowModel Initialize(object obj)
+        {
+            return this;
+        }
 	}
 }

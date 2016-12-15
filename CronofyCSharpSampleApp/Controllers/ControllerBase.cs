@@ -30,10 +30,11 @@ namespace CronofyCSharpSampleApp.Controllers
 		{
 			var ex = filterContext.Exception;
 
-			if (ex is CronofyResponseException)
+			if (ex is CronofyResponseException || ex is CredentialsInvalidError)
 			{
 				Response.Cookies.Remove(CronofyHelper.CookieName);
 				filterContext.Result = new RedirectResult("/login");
+                filterContext.ExceptionHandled = true;
 			}
 
 			base.OnException(filterContext);

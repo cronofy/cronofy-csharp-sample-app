@@ -22,10 +22,12 @@ namespace CronofyCSharpSampleApp.Controllers
 			if (recordCount == 0)
 			{
 				DatabaseHandler.ExecuteNonQuery($"INSERT INTO Users(CronofyUID, AccessToken, RefreshToken, ServiceAccount) VALUES('{account.Id}', '{token.AccessToken}', '{token.RefreshToken}', 0)");
+                LogHelper.Log($"Create user credentials record - accountId=`{account.Id}`");
 			}
 			else 
 			{
 				DatabaseHandler.ExecuteNonQuery($"UPDATE Users SET AccessToken='{token.AccessToken}', RefreshToken='{token.RefreshToken}' WHERE CronofyUID='{account.Id}'");
+                LogHelper.Log($"Update user credentials record - accountId=`{account.Id}`");
 			}
 
 			Response.SetCookie(new HttpCookie(CronofyHelper.CookieName, account.Id));
@@ -45,10 +47,12 @@ namespace CronofyCSharpSampleApp.Controllers
 			if (recordCount == 0)
 			{
 				DatabaseHandler.ExecuteNonQuery($"INSERT INTO Users(CronofyUID, AccessToken, RefreshToken, ServiceAccount) VALUES('{userInfo.Sub}', '{token.AccessToken}', '{token.RefreshToken}', 1)");
+                LogHelper.Log($"Create enterprise connect user credentials record - sub=`{userInfo.Sub}`");
 			}
 			else
 			{
 				DatabaseHandler.ExecuteNonQuery($"UPDATE Users SET AccessToken='{token.AccessToken}', RefreshToken='{token.RefreshToken}' WHERE CronofyUID='{userInfo.Sub}'");
+                LogHelper.Log($"Update enterprise connect user credentials record - sub=`{userInfo.Sub}`");
 			}
 
 			Response.SetCookie(new HttpCookie(CronofyHelper.EnterpriseConnectCookieName, userInfo.Sub));

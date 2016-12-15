@@ -15,15 +15,26 @@ namespace CronofyCSharpSampleApp.Controllers
 		[HttpPost]
 		public ActionResult Channel(string id)
 		{
-			var inputStream = Request.InputStream;
-			inputStream.Seek(0, SeekOrigin.Begin);
-			var body = new StreamReader(inputStream).ReadToEnd();
+            LogHelper.Log($"Receive push notification - id=`{id}`");
 
-			var data = JsonConvert.DeserializeObject<ChannelData>(body);
+            try
+            {
+                var inputStream = Request.InputStream;
+                inputStream.Seek(0, SeekOrigin.Begin);
+                var body = new StreamReader(inputStream).ReadToEnd();
 
-			var records = data.Notification.Select(x => $"{x.Key}: {x.Value}");
+                var data = JsonConvert.DeserializeObject<ChannelData>(body);
 
-			DatabaseHandler.ExecuteNonQuery($"INSERT INTO ChannelData(ChannelId, Record, OccurredOn) VALUES('{data.Channel.ChannelId}', '{String.Join("\n", records)}', '{DateTime.Now}')");
+                var records = data.Notification.Select(x => $"{x.Key}: {x.Value}");
+
+                DatabaseHandler.ExecuteNonQuery($"INSERT INTO ChannelData(ChannelId, Record, OccurredOn) VALUES('{data.Channel.ChannelId}', '{String.Join("\n", records)}', '{DateTime.Now}')");
+
+                LogHelper.Log($"Push notification success - channelId=`{data.Channel.ChannelId}`");
+            }
+            catch (Exception ex)
+            {
+                LogHelper.Log($"Push notification failure - ex.Source=`{ex.Source}` - ex.Message=`{ex.Message}`");
+            }
 
 			return new EmptyResult();
 		}
@@ -41,15 +52,6 @@ namespace CronofyCSharpSampleApp.Controllers
 				[JsonProperty("channel_id")]
 				public string ChannelId { get; set; }
 			}
-
-			/*public class NotificationData
-			{
-				[JsonProperty("type")]
-				public string Type { get; set; }
-
-				[JsonProperty("changes_since")]
-				public DateTime ChangesSince { get; set; }
-			}*/
 		}
     }
 }

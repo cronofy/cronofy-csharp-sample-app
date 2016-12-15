@@ -442,11 +442,14 @@ namespace CronofyCSharpSampleApp
 
                     DatabaseHandler.ExecuteNonQuery($"UPDATE Users SET AccessToken='{token.AccessToken}', RefreshToken='{token.RefreshToken}' WHERE CronofyUID='{_cronofyUid}' AND ServiceAccount=0");
                     SetToken(token, false);
+
+                    LogHelper.Log($"Access Token out of date, tokens have been refreshed - _cronofyUid=`{_cronofyUid}` - serviceAccount=0");
                 }
                 catch (CronofyException)
                 {
-                    // If getting a new oauth token fails then clear the user's credentials and throw an exception
-                    DatabaseHandler.ExecuteNonQuery($"UPDATE Users SET AccessToken='', RefreshToken='' WHERE CronofyUID='{_cronofyUid}' AND ServiceAccount=0");
+                    // If getting a new oauth token fails then delete the user's credentials and throw an exception
+                    DatabaseHandler.ExecuteNonQuery($"DELETE FROM Users WHERE CronofyUID='{_cronofyUid}' AND ServiceAccount=0");
+                    LogHelper.Log($"Credentials invalid, deleting account - _cronofyUid=`{_cronofyUid}` - serviceAccount=1");
 
                     throw new CredentialsInvalidError();
                 }
@@ -482,11 +485,14 @@ namespace CronofyCSharpSampleApp
 
                     DatabaseHandler.ExecuteNonQuery($"UPDATE Users SET AccessToken='{token.AccessToken}', RefreshToken='{token.RefreshToken}' WHERE CronofyUID='{_enterpriseConnectCronofyUid}' AND ServiceAccount=1");
                     SetToken(token, true);
+
+                    LogHelper.Log($"Access Token out of date, tokens have been refreshed - _enterpriseConnectCronofyUid=`{_enterpriseConnectCronofyUid}` - serviceAccount=1");
                 }
                 catch (CronofyException)
                 {
-                    // If getting a new oauth token fails then clear the user's credentials and throw an exception
-                    DatabaseHandler.ExecuteNonQuery($"UPDATE Users SET AccessToken='', RefreshToken='' WHERE CronofyUID='{_enterpriseConnectCronofyUid}' AND ServiceAccount=1");
+                    // If getting a new oauth token fails then delete the user's credentials and throw an exception
+                    DatabaseHandler.ExecuteNonQuery($"DELETE FROM Users WHERE CronofyUID='{_enterpriseConnectCronofyUid}' AND ServiceAccount=1");
+                    LogHelper.Log($"Credentials invalid, deleting account - _enterpriseConnectCronofyUid=`{_enterpriseConnectCronofyUid}` - serviceAccount=1");
 
                     throw new CredentialsInvalidError();
                 }

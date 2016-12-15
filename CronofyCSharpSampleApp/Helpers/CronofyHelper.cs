@@ -136,13 +136,13 @@ namespace CronofyCSharpSampleApp
             return token;
 		}
 
-        public static OAuthToken GetEnterpriseConnectUserOAuthToken(string enterpriseConnectId, string code)
+        public static OAuthToken GetEnterpriseConnectUserOAuthToken(string enterpriseConnectId, string email, string code)
         {
             OAuthToken token = null;
 
             try
             {
-                token = OAuthClient.GetTokenFromCode(code, _enterpriseConnectUserAuthCallbackUrl + enterpriseConnectId);
+                token = OAuthClient.GetTokenFromCode(code, _enterpriseConnectUserAuthCallbackUrl + enterpriseConnectId + "?email=" + email);
                 LogHelper.Log($"GetEnterpriseConnectUserOAuthToken success - enterpriseConnectId=`{enterpriseConnectId}` - code=`{code}`");
             }
             catch (CronofyException)
@@ -410,7 +410,7 @@ namespace CronofyCSharpSampleApp
         {
             try
             {
-                CronofyEnterpriseConnectAccountRequest(() => { EnterpriseConnectAccountClient.AuthorizeUser(email, _enterpriseConnectUserAuthCallbackUrl + enterpriseConnectId, scopes); });
+                CronofyEnterpriseConnectAccountRequest(() => { EnterpriseConnectAccountClient.AuthorizeUser(email, _enterpriseConnectUserAuthCallbackUrl + enterpriseConnectId + "?email=" + email, scopes); });
                 LogHelper.Log($"AuthorizeWithServiceAccount success - enterpriseConnectId=`{enterpriseConnectId}` - email=`{email}` - scopes=`{scopes}`");
             }
             catch (CronofyException)

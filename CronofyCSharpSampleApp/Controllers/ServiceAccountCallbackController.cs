@@ -33,7 +33,7 @@ namespace CronofyCSharpSampleApp.Controllers
                 {
                     var userToken = CronofyHelper.GetEnterpriseConnectUserOAuthToken(enterpriseConnectId, email, data.Authorization.Code);
 
-                    DatabaseHandler.ExecuteNonQuery($"INSERT INTO Users(CronofyUID, AccessToken, RefreshToken, ServiceAccount) VALUES('{userToken.LinkingProfile.Id}', '{userToken.AccessToken}', '{userToken.RefreshToken}', 0)");
+                    DatabaseHandler.ExecuteNonQuery($"INSERT INTO UserCredentials(CronofyUID, AccessToken, RefreshToken, ServiceAccount) VALUES('{userToken.LinkingProfile.Id}', '{userToken.AccessToken}', '{userToken.RefreshToken}', 0)");
                     DatabaseHandler.ExecuteNonQuery($"UPDATE EnterpriseConnectUserData SET Status='{(int)EnterpriseConnectUserData.ConnectedStatus.Linked}', CronofyUID='{userToken.LinkingProfile.Id}' WHERE Email='{userToken.LinkingProfile.Name}' AND OwnedBy='{enterpriseConnectId}'");
 
                     LogHelper.Log($"Service Account callback success - id=`{userToken.LinkingProfile.Id}` - email=`{userToken.LinkingProfile.Name}`");

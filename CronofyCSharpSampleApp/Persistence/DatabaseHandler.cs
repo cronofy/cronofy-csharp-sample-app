@@ -25,7 +25,7 @@ namespace CronofyCSharpSampleApp
 				SqliteConnection.CreateFile(pathToDatabase);
 
                 ExecuteNonQuery("CREATE TABLE ChannelData (Id INTEGER PRIMARY KEY AUTOINCREMENT, ChannelId ntext, Record ntext, OccurredOn datetime2)");
-                ExecuteNonQuery("CREATE TABLE Users (UserID INTEGER PRIMARY KEY AUTOINCREMENT, CronofyUID ntext, AccessToken ntext, RefreshToken ntext, ServiceAccount bit NOT NULL)");
+                ExecuteNonQuery("CREATE TABLE UserCredentials (UserID INTEGER PRIMARY KEY AUTOINCREMENT, CronofyUID ntext, AccessToken ntext, RefreshToken ntext, ServiceAccount bit NOT NULL)");
                 ExecuteNonQuery("CREATE TABLE EnterpriseConnectUserData (Id INTEGER PRIMARY KEY AUTOINCREMENT, CronofyUID ntext, OwnedBy ntext, Email ntext, status integer)");
 			}
 		}

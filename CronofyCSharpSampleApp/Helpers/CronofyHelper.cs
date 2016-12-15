@@ -59,7 +59,7 @@ namespace CronofyCSharpSampleApp
 
 		public static bool LoadUser(string cronofyUid, bool serviceAccount)
 		{
-            var user = DatabaseHandler.Get<Persistence.Models.User>($"SELECT CronofyUid, AccessToken, RefreshToken FROM Users WHERE CronofyUID='{cronofyUid}' AND ServiceAccount='{(serviceAccount ? 1 : 0)}'");
+            var user = DatabaseHandler.Get<Persistence.Models.User>($"SELECT CronofyUid, AccessToken, RefreshToken FROM UserCredentials WHERE CronofyUID='{cronofyUid}' AND ServiceAccount='{(serviceAccount ? 1 : 0)}'");
 
             if (user == null)
             {
@@ -440,7 +440,7 @@ namespace CronofyCSharpSampleApp
                     // First time this fails, attempt to get a new access token and store it for the user
                     var token = OAuthClient.GetTokenFromRefreshToken(_refreshToken);
 
-                    DatabaseHandler.ExecuteNonQuery($"UPDATE Users SET AccessToken='{token.AccessToken}', RefreshToken='{token.RefreshToken}' WHERE CronofyUID='{_cronofyUid}' AND ServiceAccount=0");
+                    DatabaseHandler.ExecuteNonQuery($"UPDATE UserCredentials SET AccessToken='{token.AccessToken}', RefreshToken='{token.RefreshToken}' WHERE CronofyUID='{_cronofyUid}' AND ServiceAccount=0");
                     SetToken(token, false);
 
                     LogHelper.Log($"Access Token out of date, tokens have been refreshed - _cronofyUid=`{_cronofyUid}` - serviceAccount=0");
@@ -448,7 +448,7 @@ namespace CronofyCSharpSampleApp
                 catch (CronofyException)
                 {
                     // If getting a new oauth token fails then delete the user's credentials and throw an exception
-                    DatabaseHandler.ExecuteNonQuery($"DELETE FROM Users WHERE CronofyUID='{_cronofyUid}' AND ServiceAccount=0");
+                    DatabaseHandler.ExecuteNonQuery($"DELETE FROM UserCredentials WHERE CronofyUID='{_cronofyUid}' AND ServiceAccount=0");
                     LogHelper.Log($"Credentials invalid, deleting account - _cronofyUid=`{_cronofyUid}` - serviceAccount=1");
 
                     throw new CredentialsInvalidError();
@@ -483,7 +483,7 @@ namespace CronofyCSharpSampleApp
                     // First time this fails, attempt to get a new access token and store it for the user
                     var token = OAuthClient.GetTokenFromRefreshToken(_enterpriseConnectRefreshToken);
 
-                    DatabaseHandler.ExecuteNonQuery($"UPDATE Users SET AccessToken='{token.AccessToken}', RefreshToken='{token.RefreshToken}' WHERE CronofyUID='{_enterpriseConnectCronofyUid}' AND ServiceAccount=1");
+                    DatabaseHandler.ExecuteNonQuery($"UPDATE UserCredentials SET AccessToken='{token.AccessToken}', RefreshToken='{token.RefreshToken}' WHERE CronofyUID='{_enterpriseConnectCronofyUid}' AND ServiceAccount=1");
                     SetToken(token, true);
 
                     LogHelper.Log($"Access Token out of date, tokens have been refreshed - _enterpriseConnectCronofyUid=`{_enterpriseConnectCronofyUid}` - serviceAccount=1");
@@ -491,7 +491,7 @@ namespace CronofyCSharpSampleApp
                 catch (CronofyException)
                 {
                     // If getting a new oauth token fails then delete the user's credentials and throw an exception
-                    DatabaseHandler.ExecuteNonQuery($"DELETE FROM Users WHERE CronofyUID='{_enterpriseConnectCronofyUid}' AND ServiceAccount=1");
+                    DatabaseHandler.ExecuteNonQuery($"DELETE FROM UserCredentials WHERE CronofyUID='{_enterpriseConnectCronofyUid}' AND ServiceAccount=1");
                     LogHelper.Log($"Credentials invalid, deleting account - _enterpriseConnectCronofyUid=`{_enterpriseConnectCronofyUid}` - serviceAccount=1");
 
                     throw new CredentialsInvalidError();

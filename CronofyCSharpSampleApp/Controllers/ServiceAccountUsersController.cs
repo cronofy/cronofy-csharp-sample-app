@@ -45,7 +45,7 @@ namespace CronofyCSharpSampleApp.Controllers
         public ActionResult Show([Bind(Prefix = "id")] string userId)
         {
             var enterpriseConnectData = DatabaseHandler.Get<EnterpriseConnectUserData>($"SELECT CronofyUID, Email, Status FROM EnterpriseConnectUserData WHERE CronofyUID='{userId}' AND OwnedBy='{uidCookie.Value}'");
-            var user = DatabaseHandler.Get<User>($"SELECT CronofyUID, AccessToken, RefreshToken from Users WHERE CronofyUID='{userId}' AND ServiceAccount=0");
+            var user = DatabaseHandler.Get<User>($"SELECT CronofyUID, AccessToken, RefreshToken from UserCredentials WHERE CronofyUID='{userId}' AND ServiceAccount=0");
 
             CronofyHelper.SetToken(user.AccessToken, user.RefreshToken, false);
 
@@ -64,7 +64,7 @@ namespace CronofyCSharpSampleApp.Controllers
 
         public ActionResult Calendar(string userId, string calendarId)
         {
-            var user = DatabaseHandler.Get<User>($"SELECT CronofyUID, AccessToken, RefreshToken from Users WHERE CronofyUID='{userId}' AND ServiceAccount=0");
+            var user = DatabaseHandler.Get<User>($"SELECT CronofyUID, AccessToken, RefreshToken from UserCredentials WHERE CronofyUID='{userId}' AND ServiceAccount=0");
 
             CronofyHelper.SetToken(user.AccessToken, user.RefreshToken, false);
 
@@ -78,7 +78,7 @@ namespace CronofyCSharpSampleApp.Controllers
 
         public ActionResult NewEvent(string userId, string calendarId)
         {
-            var user = DatabaseHandler.Get<User>($"SELECT CronofyUID, AccessToken, RefreshToken from Users WHERE CronofyUID='{userId}' AND ServiceAccount=0");
+            var user = DatabaseHandler.Get<User>($"SELECT CronofyUID, AccessToken, RefreshToken from UserCredentials WHERE CronofyUID='{userId}' AND ServiceAccount=0");
 
             CronofyHelper.SetToken(user.AccessToken, user.RefreshToken, false);
 
@@ -96,7 +96,7 @@ namespace CronofyCSharpSampleApp.Controllers
 
         public ActionResult CreateEvent(Models.Event newEvent)
         {
-            var user = DatabaseHandler.Get<User>($"SELECT CronofyUID, AccessToken, RefreshToken from Users WHERE CronofyUID='{newEvent.UserId}' AND ServiceAccount=0");
+            var user = DatabaseHandler.Get<User>($"SELECT CronofyUID, AccessToken, RefreshToken from UserCredentials WHERE CronofyUID='{newEvent.UserId}' AND ServiceAccount=0");
 
             CronofyHelper.SetToken(user.AccessToken, user.RefreshToken, false);
 

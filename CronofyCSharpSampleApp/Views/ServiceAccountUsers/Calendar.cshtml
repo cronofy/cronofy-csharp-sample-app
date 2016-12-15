@@ -6,9 +6,11 @@
     </div>
 
     <div class="col-xs-4 text-right">
-        <a href="/serviceaccountusers/show/@ViewData["userId"]/calendar/@Model.CalendarId/newevent" class="btn btn-primary">
-            Create Event
-        </a>
+		@if(!Model.ReadOnly){
+            <a href="/serviceaccountusers/show/@ViewData["userId"]/calendar/@Model.CalendarId/newevent" class="btn btn-primary">
+                Create Event
+            </a>
+        }
     </div>
 </div>
 

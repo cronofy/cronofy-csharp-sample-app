@@ -109,7 +109,7 @@ namespace CronofyCSharpSampleApp.Controllers
             {
                 CronofyHelper.UpsertEvent(newEvent.EventId, newEvent.CalendarId, newEvent.Summary, newEvent.Description, newEvent.Start, newEvent.End);
 
-                return new RedirectResult($"/serviceaccountusers/show/{newEvent.UserId}/calendars/{newEvent.CalendarId}");
+                return new RedirectResult($"/serviceaccountusers/show/{newEvent.UserId}/calendar/{newEvent.CalendarId}");
             }
 
             ViewData["calendarName"] = CronofyHelper.GetCalendars().First(x => x.CalendarId == newEvent.CalendarId).Name;

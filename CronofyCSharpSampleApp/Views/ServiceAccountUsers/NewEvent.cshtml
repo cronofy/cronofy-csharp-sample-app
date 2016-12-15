@@ -3,7 +3,7 @@
 <h2>@ViewData["calendarName"] - New Event</h2>
 
 <div class="well">
-    @using(Html.BeginForm("Create", "Events", FormMethod.Post, new { @class = "form-horizontal" })){
+    @using(Html.BeginForm("CreateEvent", "ServiceAccountUsers", FormMethod.Post, new { @class = "form-horizontal" })){
         @Html.ValidationSummary(true);
 
 	    @Html.HiddenFor(model => model.UserId)

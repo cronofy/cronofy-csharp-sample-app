@@ -13,9 +13,14 @@ namespace CronofyCSharpSampleApp.Controllers
 		{
 			var cronofyCookie = Request.Cookies.Get(CronofyHelper.CookieName);
 
-			if (cronofyCookie == null || !CronofyHelper.LoadUser(cronofyCookie.Value, false))
+            if (cronofyCookie == null)
+            {
+                filterContext.Result = new RedirectResult("/login");
+            } 
+            else if(!CronofyHelper.LoadUser(cronofyCookie.Value, false))
 			{
-				filterContext.Result = new RedirectResult("/login");
+                Response.Cookies.Remove(CronofyHelper.CookieName);
+                filterContext.Result = new RedirectResult("/login");
 			}
 
 			base.OnActionExecuting(filterContext);

@@ -15,10 +15,15 @@ namespace CronofyCSharpSampleApp.Controllers
 		{
 			uidCookie = Request.Cookies.Get(CronofyHelper.EnterpriseConnectCookieName);
 
-			if (uidCookie == null || !CronofyHelper.LoadUser(uidCookie.Value, true))
-			{
-				filterContext.Result = new RedirectResult("/login/enterpriseconnect");
-			}
+            if (uidCookie == null)
+            {
+                filterContext.Result = new RedirectResult("/login/enterpriseconnect");
+            }
+            else if (!CronofyHelper.LoadUser(uidCookie.Value, true))
+            {
+                Response.Cookies.Remove(CronofyHelper.EnterpriseConnectCookieName);
+                filterContext.Result = new RedirectResult("/login/enterpriseconnect");
+            }
 
 			base.OnActionExecuting(filterContext);
 		}

@@ -15,7 +15,7 @@ namespace CronofyCSharpSampleApp
 		public static void Initialize()
 		{
 			var currentDirectory = Environment.CurrentDirectory;
-			var pathToDatabase = Path.Combine(currentDirectory, "/Persistence/cronofy_sample_app.db");
+			var pathToDatabase = Path.Combine(currentDirectory, "Persistence/cronofy_sample_app.db");
 
 			_connectionString = String.Format("Data Source={0};Version=3;", pathToDatabase);
 			_initialized = true;
@@ -58,7 +58,7 @@ namespace CronofyCSharpSampleApp
 
 		public static T Get<T>(string sql) where T : ITableRowModel, new()
 		{
-			return Many<T>(sql).First();
+			return Many<T>(sql).FirstOrDefault();
 		}
 
 		public static object Scalar(string sql)

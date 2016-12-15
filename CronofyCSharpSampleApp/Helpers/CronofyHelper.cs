@@ -61,9 +61,14 @@ namespace CronofyCSharpSampleApp
 		{
             var user = DatabaseHandler.Get<Persistence.Models.User>($"SELECT CronofyUid, AccessToken, RefreshToken FROM Users WHERE CronofyUID='{cronofyUid}' AND ServiceAccount='{(serviceAccount ? 1 : 0)}'");
 
-			if (user == null)
-				return false;
+            if (user == null)
+            {
+                LogHelper.Log($"LoadUser failed - Unable to find user - CronofyUID=`{cronofyUid}` - ServiceAccount=`{serviceAccount}`");
 
+                return false;
+            }
+
+            LogHelper.Log($"LoadUser success - CronofyUID=`{cronofyUid}` - ServiceAccount=`{serviceAccount}`");
 
             if (serviceAccount)
             {

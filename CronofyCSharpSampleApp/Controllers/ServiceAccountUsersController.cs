@@ -45,9 +45,8 @@ namespace CronofyCSharpSampleApp.Controllers
         public ActionResult Show([Bind(Prefix = "id")] string userId)
         {
             var enterpriseConnectData = DatabaseHandler.Get<EnterpriseConnectUserData>($"SELECT CronofyUID, Email, Status FROM EnterpriseConnectUserData WHERE CronofyUID='{userId}' AND OwnedBy='{uidCookie.Value}'");
-            var user = DatabaseHandler.Get<User>($"SELECT CronofyUID, AccessToken, RefreshToken from UserCredentials WHERE CronofyUID='{userId}' AND ServiceAccount=0");
 
-            CronofyHelper.SetToken(user.AccessToken, user.RefreshToken, false);
+            ImpersonateUser(userId);
 
             var profiles = new Dictionary<Cronofy.Profile, Cronofy.Calendar[]>();
             var calendars = CronofyHelper.GetCalendars();
@@ -64,9 +63,7 @@ namespace CronofyCSharpSampleApp.Controllers
 
         public ActionResult Calendar(string userId, string calendarId)
         {
-            var user = DatabaseHandler.Get<User>($"SELECT CronofyUID, AccessToken, RefreshToken from UserCredentials WHERE CronofyUID='{userId}' AND ServiceAccount=0");
-
-            CronofyHelper.SetToken(user.AccessToken, user.RefreshToken, false);
+            ImpersonateUser(userId);
 
             var calendar = CronofyHelper.GetCalendars().First(x => x.CalendarId == calendarId);
 
@@ -78,9 +75,7 @@ namespace CronofyCSharpSampleApp.Controllers
 
         public ActionResult NewEvent(string userId, string calendarId)
         {
-            var user = DatabaseHandler.Get<User>($"SELECT CronofyUID, AccessToken, RefreshToken from UserCredentials WHERE CronofyUID='{userId}' AND ServiceAccount=0");
-
-            CronofyHelper.SetToken(user.AccessToken, user.RefreshToken, false);
+            ImpersonateUser(userId);
 
             ViewData["calendarName"] = CronofyHelper.GetCalendars().First(x => x.CalendarId == calendarId).Name;
 
@@ -96,9 +91,7 @@ namespace CronofyCSharpSampleApp.Controllers
 
         public ActionResult CreateEvent(Models.Event newEvent)
         {
-            var user = DatabaseHandler.Get<User>($"SELECT CronofyUID, AccessToken, RefreshToken from UserCredentials WHERE CronofyUID='{newEvent.UserId}' AND ServiceAccount=0");
-
-            CronofyHelper.SetToken(user.AccessToken, user.RefreshToken, false);
+            ImpersonateUser(newEvent.UserId);
 
             if (newEvent.Start > newEvent.End)
             {
@@ -115,6 +108,13 @@ namespace CronofyCSharpSampleApp.Controllers
             ViewData["calendarName"] = CronofyHelper.GetCalendars().First(x => x.CalendarId == newEvent.CalendarId).Name;
 
             return View("NewEvent", newEvent);
+        }
+
+        private void ImpersonateUser(string userId)
+        {
+            var user = DatabaseHandler.Get<User>($"SELECT CronofyUID, AccessToken, RefreshToken from UserCredentials WHERE CronofyUID='{userId}' AND ServiceAccount=0");
+
+            CronofyHelper.SetToken(user.AccessToken, user.RefreshToken, false);
         }
     }
 }

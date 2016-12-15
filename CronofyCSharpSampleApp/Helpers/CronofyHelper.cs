@@ -121,61 +121,181 @@ namespace CronofyCSharpSampleApp
 
 		public static OAuthToken GetOAuthToken(string code)
 		{
-			return OAuthClient.GetTokenFromCode(code, _oauthCallbackUrl);
+            OAuthToken token = null;
+
+            try
+            {
+                token = OAuthClient.GetTokenFromCode(code, _oauthCallbackUrl);
+                LogHelper.Log($"GetOAuthToken success - code=`{code}`");
+            }
+            catch (CronofyException)
+            {
+                LogHelper.Log($"GetOAuthToken failure - code=`{code}`");
+            }
+
+            return token;
 		}
 
         public static OAuthToken GetEnterpriseConnectUserOAuthToken(string enterpriseConnectId, string code)
         {
-            return OAuthClient.GetTokenFromCode(code, _enterpriseConnectUserAuthCallbackUrl + enterpriseConnectId);
+            OAuthToken token = null;
+
+            try
+            {
+                token = OAuthClient.GetTokenFromCode(code, _enterpriseConnectUserAuthCallbackUrl + enterpriseConnectId);
+                LogHelper.Log($"GetEnterpriseConnectUserOAuthToken success - enterpriseConnectId=`{enterpriseConnectId}` - code=`{code}`");
+            }
+            catch (CronofyException)
+            {
+                LogHelper.Log($"GetEnterpriseConnectUserOAuthToken failure - enterpriseConnectId=`{enterpriseConnectId}` - code=`{code}`");
+            }
+
+            return token;
         }
 
-		public static OAuthToken GetEnterpriseConnectOAuthToken(string code)
-		{
-			return OAuthClient.GetTokenFromCode(code, _enterpriseConnectOAuthCallbackUrl);
-		}
+        public static OAuthToken GetEnterpriseConnectOAuthToken(string code)
+        {
+            OAuthToken token = null;
+
+            try
+            {
+                token = OAuthClient.GetTokenFromCode(code, _enterpriseConnectOAuthCallbackUrl);
+                LogHelper.Log($"GetEnterpriseConnectOAuthToken success - code=`{code}`");
+            }
+            catch (CronofyException)
+            {
+                LogHelper.Log($"GetEnterpriseConnectOAuthToken failure - code=`{code}`");
+            }
+
+            return token;
+        }
 
 		public static Account GetAccount()
 		{
-			return CronofyAccountRequest<Account>(() => { return AccountClient.GetAccount(); });
+            Account account = null;
+
+            try
+            {
+                account = CronofyAccountRequest<Account>(() => { return AccountClient.GetAccount(); });
+                LogHelper.Log($"GetAccount success");
+            }
+            catch (CronofyException)
+            {
+                LogHelper.Log($"GetAccount failure");
+            }
+
+            return account;
 		}
 
 		public static IEnumerable<Cronofy.Profile> GetProfiles()
 		{
-			return CronofyAccountRequest<IEnumerable<Cronofy.Profile>>(() => { return AccountClient.GetProfiles(); });
+            IEnumerable<Cronofy.Profile> profiles = new Cronofy.Profile[0];
+
+            try
+            {
+                profiles = CronofyAccountRequest<IEnumerable<Cronofy.Profile>>(() => { return AccountClient.GetProfiles(); });
+                LogHelper.Log($"GetProfiles success");
+            }
+            catch (CronofyException)
+            {
+                LogHelper.Log($"GetProfiles failure");
+            }
+
+            return profiles;
 		}
 
 		public static IEnumerable<Cronofy.Calendar> GetCalendars()
 		{
-			return CronofyAccountRequest<IEnumerable<Cronofy.Calendar>>(() => { return AccountClient.GetCalendars(); });
+            IEnumerable<Cronofy.Calendar> calendars = new Cronofy.Calendar[0];
+
+            try
+            {
+                calendars = CronofyAccountRequest<IEnumerable<Cronofy.Calendar>>(() => { return AccountClient.GetCalendars(); });
+                LogHelper.Log($"GetCalendars success");
+            }
+            catch (CronofyException)
+            {
+                LogHelper.Log($"GetCalendars failure");
+            }
+
+            return calendars;
 		}
 
 		public static Cronofy.Calendar CreateCalendar(string profileId, string name)
 		{
-			return CronofyAccountRequest<Cronofy.Calendar>(() => { return AccountClient.CreateCalendar(profileId, name); });
+            Cronofy.Calendar calendar = null;
+
+            try
+            {
+                calendar = CronofyAccountRequest<Cronofy.Calendar>(() => { return AccountClient.CreateCalendar(profileId, name); });
+                LogHelper.Log($"CreateCalendar success - profileId=`{profileId}` - name=`{name}`");
+            }
+            catch (CronofyException)
+            {
+                LogHelper.Log($"CreateCalendar failure - profileId=`{profileId}` - name=`{name}`");
+            }
+
+            return calendar;
 		}
 
 		public static IEnumerable<Cronofy.FreeBusy> GetFreeBusy()
 		{
-			return CronofyAccountRequest<IEnumerable<Cronofy.FreeBusy>>(() => { return AccountClient.GetFreeBusy(); });
+            IEnumerable<Cronofy.FreeBusy> freeBusy = new Cronofy.FreeBusy[0];
+
+            try
+            {
+                freeBusy = CronofyAccountRequest<IEnumerable<Cronofy.FreeBusy>>(() => { return AccountClient.GetFreeBusy(); });
+                LogHelper.Log($"GetFreeBusy success");
+            }
+            catch (CronofyException)
+            {
+                LogHelper.Log($"GetFreeBusy failure");
+            }
+
+            return freeBusy;
 		}
 
 		public static IEnumerable<Cronofy.Event> ReadEventsForCalendar(string calendarId)
 		{
+            IEnumerable<Cronofy.Event> events = new Cronofy.Event[0];
+
 			var readEvents = new GetEventsRequestBuilder()
 				.IncludeManaged(true)
 				.CalendarId(calendarId)
 				.Build();
 
-			return CronofyAccountRequest<IEnumerable<Cronofy.Event>>(() => { return AccountClient.GetEvents(readEvents); });
+            try
+            {
+                events = CronofyAccountRequest<IEnumerable<Cronofy.Event>>(() => { return AccountClient.GetEvents(readEvents); });
+                LogHelper.Log($"ReadEventsForCalendar success - calendarId=`{calendarId}`");
+            }
+            catch (CronofyException)
+            {
+                LogHelper.Log($"ReadEventsForCalendar failure - calendarId=`{calendarId}`");
+            }
+
+            return events;
 		}
 
 		public static IEnumerable<Cronofy.Event> ReadEvents()
 		{
+            IEnumerable<Cronofy.Event> events = new Cronofy.Event[0];
+
 			var readEvents = new GetEventsRequestBuilder()
 				.IncludeManaged(true)
 				.Build();
 
-			return CronofyAccountRequest<IEnumerable<Cronofy.Event>>(() => { return AccountClient.GetEvents(readEvents); });
+            try
+            {
+                events = CronofyAccountRequest<IEnumerable<Cronofy.Event>>(() => { return AccountClient.GetEvents(readEvents); });
+                LogHelper.Log($"ReadEvents success");
+            }
+            catch (CronofyException)
+            {
+                LogHelper.Log($"ReadEvents failure");
+            }
+
+            return events;
 		}
 
 		public static void UpsertEvent(string eventId, string calendarId, string summary, string description, DateTime start, DateTime end)
@@ -188,45 +308,115 @@ namespace CronofyCSharpSampleApp
 				.End(end)
 				.Build();
 
-			CronofyAccountRequest(() => { 
-				AccountClient.UpsertEvent(calendarId, builtEvent); 
-			});
+            try
+            {
+                CronofyAccountRequest(() => { AccountClient.UpsertEvent(calendarId, builtEvent); });
+                LogHelper.Log($"UpsertEvent success - eventId=`{eventId}` - calendarId=`{calendarId}` - summary=`{summary}` - description=`{description}` - start=`{start}` - end=`{end}`");
+            }
+            catch (CronofyException)
+            {
+                LogHelper.Log($"UpsertEvent failure - eventId=`{eventId}` - calendarId=`{calendarId}` - summary=`{summary}` - description=`{description}` - start=`{start}` - end=`{end}`");
+            }
 		}
 
 		public static void DeleteEvent(string calendarId, string eventId)
 		{
-			CronofyAccountRequest(() => { AccountClient.DeleteEvent(calendarId, eventId); });
+            try
+            {
+                CronofyAccountRequest(() => { AccountClient.DeleteEvent(calendarId, eventId); });
+                LogHelper.Log($"DeleteEvent success - calendarId=`{calendarId}` - eventId=`{eventId}`");
+            }
+            catch (CronofyException)
+            {
+                LogHelper.Log($"DeleteEvent failure - calendarId=`{calendarId}` - eventId=`{eventId}`");
+            }
 		}
 
 		public static IEnumerable<Cronofy.Channel> GetChannels()
 		{
-			return CronofyAccountRequest<IEnumerable<Cronofy.Channel>>(() => { return AccountClient.GetChannels(); });
+            IEnumerable<Cronofy.Channel> channels = new Cronofy.Channel[0];
+
+            try
+            {
+                channels = CronofyAccountRequest<IEnumerable<Cronofy.Channel>>(() => { return AccountClient.GetChannels(); });
+                LogHelper.Log("GetChannels success");
+            }
+            catch (CronofyException)
+            {
+                LogHelper.Log("GetChannels failure");
+            }
+
+            return channels;
 		}
 
 		public static Cronofy.Channel CreateChannel(string path, bool onlyManaged, IEnumerable<string> calendarIds)
 		{
+            Cronofy.Channel channel = null;
+
 			var builtChannel = new CreateChannelBuilder()
 				.CallbackUrl(path)
 				.OnlyManaged(onlyManaged)
 				.CalendarIds(calendarIds)
 				.Build();
 
-			return CronofyAccountRequest<Cronofy.Channel>(() => { return AccountClient.CreateChannel(builtChannel); });
+            try
+            {
+                channel = CronofyAccountRequest<Cronofy.Channel>(() => { return AccountClient.CreateChannel(builtChannel); });
+                LogHelper.Log($"CreateChannel success - path=`{path}` - onlyManaged=`{onlyManaged}` - calendarIds=`{String.Join(",", calendarIds)}`");
+            }
+            catch (CronofyException)
+            {
+                LogHelper.Log($"CreateChannel failure - path=`{path}` - onlyManaged=`{onlyManaged}` - calendarIds=`{String.Join(",", calendarIds)}`");
+            }
+
+            return channel;
 		}
 
         public static Cronofy.UserInfo GetEnterpriseConnectUserInfo()
         {
-            return CronofyAccountRequest<Cronofy.UserInfo>(() => { return EnterpriseConnectAccountClient.GetUserInfo(); });
+            Cronofy.UserInfo userInfo = null;
+
+            try
+            {
+                userInfo = CronofyAccountRequest<Cronofy.UserInfo>(() => { return EnterpriseConnectAccountClient.GetUserInfo(); });
+                LogHelper.Log("GetEnterpriseConnectUserInfo success");
+            }
+            catch (CronofyException)
+            {
+                LogHelper.Log("GetEnterpriseConnectUserInfo failure");
+            }
+
+            return userInfo;
         }
 
         public static IEnumerable<Cronofy.Resource> GetResources()
         {
-            return CronofyEnterpriseConnectAccountRequest<IEnumerable<Cronofy.Resource>>(() => { return EnterpriseConnectAccountClient.GetResources(); });
+            IEnumerable<Cronofy.Resource> resources = new Cronofy.Resource[0];
+
+            try
+            {
+                resources = CronofyEnterpriseConnectAccountRequest<IEnumerable<Cronofy.Resource>>(() => { return EnterpriseConnectAccountClient.GetResources(); });
+                LogHelper.Log("GetResources success");
+            }
+            catch (CronofyException)
+            {
+                LogHelper.Log("GetResources failure");
+            }
+
+            return resources;
         }
 
         public static void AuthorizeWithServiceAccount(string enterpriseConnectId, string email, string scopes)
         {
-            CronofyEnterpriseConnectAccountRequest(() => { EnterpriseConnectAccountClient.AuthorizeUser(email, _enterpriseConnectUserAuthCallbackUrl + enterpriseConnectId, scopes); });
+            try
+            {
+                CronofyEnterpriseConnectAccountRequest(() => { EnterpriseConnectAccountClient.AuthorizeUser(email, _enterpriseConnectUserAuthCallbackUrl + enterpriseConnectId, scopes); });
+                LogHelper.Log($"AuthorizeWithServiceAccount success - enterpriseConnectId=`{enterpriseConnectId}` - email=`{email}` - scopes=`{scopes}`");
+            }
+            catch (CronofyException)
+            {
+                LogHelper.Log($"AuthorizeWithServiceAccount failure - enterpriseConnectId=`{enterpriseConnectId}` - email=`{email}` - scopes=`{scopes}`");
+            }
         }
 
 		static void CronofyAccountRequest(Action request)
@@ -240,25 +430,30 @@ namespace CronofyCSharpSampleApp
 
 			try
 			{
+                // This may fail due to an out of day access token
 				response = request();
 			}
 			catch (CronofyException)
 			{
-				var token = OAuthClient.GetTokenFromRefreshToken(_refreshToken);
+                try
+                {
+                    // First time this fails, attempt to get a new access token and store it for the user
+                    var token = OAuthClient.GetTokenFromRefreshToken(_refreshToken);
 
-				DatabaseHandler.ExecuteNonQuery($"UPDATE Users SET AccessToken='{token.AccessToken}', RefreshToken='{token.RefreshToken}' WHERE CronofyUID='{_cronofyUid}' AND ServiceAccount=0");
-				SetToken(token, false);
+                    DatabaseHandler.ExecuteNonQuery($"UPDATE Users SET AccessToken='{token.AccessToken}', RefreshToken='{token.RefreshToken}' WHERE CronofyUID='{_cronofyUid}' AND ServiceAccount=0");
+                    SetToken(token, false);
+                }
+                catch (CronofyException)
+                {
+                    // If getting a new oauth token fails then clear the user's credentials and throw an exception
+                    DatabaseHandler.ExecuteNonQuery($"UPDATE Users SET AccessToken='', RefreshToken='' WHERE CronofyUID='{_cronofyUid}' AND ServiceAccount=0");
 
-				try
-				{
-					response = request();
-				}
-				catch (CronofyException)
-				{
-					DatabaseHandler.ExecuteNonQuery($"UPDATE Users SET AccessToken='', RefreshToken='' WHERE CronofyUID='{_cronofyUid}' AND ServiceAccount=0");
+                    throw new CredentialsInvalidError();
+                }
 
-					throw new CredentialsInvalidError();
-				}
+                // Second time we perform the request, if it fails we want it to propagate up to the method that
+                // called CronofyAccountRequest to log the appropriate information
+				response = request();
 			}
 
 			return response;
@@ -275,25 +470,30 @@ namespace CronofyCSharpSampleApp
 
             try
             {
+                // This may fail due to an out of day access token
                 response = request();
             }
             catch (CronofyException)
             {
-                var token = OAuthClient.GetTokenFromRefreshToken(_enterpriseConnectRefreshToken);
-
-                DatabaseHandler.ExecuteNonQuery($"UPDATE Users SET AccessToken='{token.AccessToken}', RefreshToken='{token.RefreshToken}' WHERE CronofyUID='{_enterpriseConnectCronofyUid}' AND ServiceAccount=1");
-                SetToken(token, true);
-
                 try
                 {
-                    response = request();
+                    // First time this fails, attempt to get a new access token and store it for the user
+                    var token = OAuthClient.GetTokenFromRefreshToken(_enterpriseConnectRefreshToken);
+
+                    DatabaseHandler.ExecuteNonQuery($"UPDATE Users SET AccessToken='{token.AccessToken}', RefreshToken='{token.RefreshToken}' WHERE CronofyUID='{_enterpriseConnectCronofyUid}' AND ServiceAccount=1");
+                    SetToken(token, true);
                 }
                 catch (CronofyException)
                 {
+                    // If getting a new oauth token fails then clear the user's credentials and throw an exception
                     DatabaseHandler.ExecuteNonQuery($"UPDATE Users SET AccessToken='', RefreshToken='' WHERE CronofyUID='{_enterpriseConnectCronofyUid}' AND ServiceAccount=1");
 
                     throw new CredentialsInvalidError();
                 }
+
+                // Second time we perform the request, if it fails we want it to propagate up to the method that
+                // called CronofyEnterpriseConnectAccountRequest to log the appropriate information
+                response = request();
             }
 
             return response;

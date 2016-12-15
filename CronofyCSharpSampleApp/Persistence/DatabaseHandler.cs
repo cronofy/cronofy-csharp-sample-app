@@ -14,8 +14,8 @@ namespace CronofyCSharpSampleApp
 
 		public static void Initialize()
 		{
-			var documents = Environment.GetFolderPath(Environment.SpecialFolder.Personal);
-			var pathToDatabase = Path.Combine(documents, "cronofy_sample_app.db");
+			var currentDirectory = Environment.CurrentDirectory;
+			var pathToDatabase = Path.Combine(currentDirectory, "/Persistence/cronofy_sample_app.db");
 
 			_connectionString = String.Format("Data Source={0};Version=3;", pathToDatabase);
 			_initialized = true;

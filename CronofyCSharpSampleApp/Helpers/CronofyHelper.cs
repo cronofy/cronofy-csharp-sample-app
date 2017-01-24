@@ -53,7 +53,9 @@ namespace CronofyCSharpSampleApp
             }
         }
 
-		private static string _oauthCallbackUrl = $"{ConfigurationManager.AppSettings["domain"]}/oauth";
+        private static string _oauthCallbackUrl = $"{ConfigurationManager.AppSettings["domain"]}/oauth";
+        private static string _oauthAccountIdCallbackUrl = $"{ConfigurationManager.AppSettings["domain"]}/availability/AccountId";
+
 		private static string _enterpriseConnectOAuthCallbackUrl = $"{ConfigurationManager.AppSettings["domain"]}/oauth/enterpriseconnect";
         private static string _enterpriseConnectUserAuthCallbackUrl = $"{ConfigurationManager.AppSettings["domain"]}/serviceaccountcallback/authorize/";
 
@@ -107,10 +109,15 @@ namespace CronofyCSharpSampleApp
             }
         }
 
-		public static string GetAuthUrl()
-		{
-			return OAuthClient.GetAuthorizationUrlBuilder(_oauthCallbackUrl).ToString();
-		}
+        public static string GetAuthUrl()
+        {
+            return OAuthClient.GetAuthorizationUrlBuilder(_oauthCallbackUrl).ToString();
+        }
+
+        public static string GetAccountIdAuthUrl()
+        {
+            return OAuthClient.GetAuthorizationUrlBuilder(_oauthAccountIdCallbackUrl).ToString();
+        }
 
 		public static string GetEnterpriseConnectAuthUrl()
 		{
@@ -135,6 +142,23 @@ namespace CronofyCSharpSampleApp
 
             return token;
 		}
+
+        public static OAuthToken GetAccountIdOAuthToken(string code)
+        {
+            OAuthToken token = null;
+
+            try
+            {
+                token = OAuthClient.GetTokenFromCode(code, _oauthAccountIdCallbackUrl);
+                LogHelper.Log($"GetAccountIdOAuthToken success - code=`{code}`");
+            }
+            catch (CronofyException)
+            {
+                LogHelper.Log($"GetAccountIdOAuthToken failure - code=`{code}`");
+            }
+
+            return token;
+        }
 
         public static OAuthToken GetEnterpriseConnectUserOAuthToken(string enterpriseConnectId, string email, string code)
         {

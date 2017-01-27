@@ -120,6 +120,7 @@
     <Compile Include="Controllers\ServiceAccountCallbackController.cs" />
     <Compile Include="Helpers\LogHelper.cs" />
     <Compile Include="Controllers\AvailabilityController.cs" />
+    <Compile Include="Models\Availability.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Web.config" />
@@ -150,6 +151,7 @@
     <Content Include="Views\ServiceAccountUsers\Calendar.cshtml" />
     <Content Include="Views\ServiceAccountUsers\NewEvent.cshtml" />
     <Content Include="Views\Availability\AccountId.cshtml" />
+    <Content Include="Views\Availability\Index.cshtml" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ProjectExtensions>

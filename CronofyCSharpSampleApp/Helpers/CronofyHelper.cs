@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Configuration;
 using Cronofy;
+using Newtonsoft.Json;
 
 namespace CronofyCSharpSampleApp
 {
@@ -441,6 +442,36 @@ namespace CronofyCSharpSampleApp
             {
                 LogHelper.Log($"AuthorizeWithServiceAccount failure - enterpriseConnectId=`{enterpriseConnectId}` - email=`{email}` - scopes=`{scopes}`");
             }
+        }
+
+        public static IEnumerable<Cronofy.AvailablePeriod> Availability(Models.Availability availability)
+        {
+            IEnumerable<Cronofy.AvailablePeriod> availablePeriods = null;
+
+            var participants = new ParticipantGroupBuilder()
+                .AddParticipant(availability.AccountId1)
+                .AddParticipant(availability.AccountId2);
+
+            if (availability.RequiredParticipants == "All")
+                participants.AllRequired();
+
+            var builtAvailabilityRequest = new AvailabilityRequestBuilder()
+                .AddParticipantGroup(participants)
+                .RequiredDuration(availability.Duration)
+                .AddAvailablePeriod(availability.Start, availability.End)
+                .Build();
+
+            try
+            {
+                availablePeriods = CronofyAccountRequest<IEnumerable<Cronofy.AvailablePeriod>>(() => { return AccountClient.GetAvailability(builtAvailabilityRequest); });
+                LogHelper.Log($"Availability success - accountId1=`{availability.AccountId1}` - accountId2=`{availability.AccountId2}` - requiredParticipants=`{availability.RequiredParticipants}` - duration=`{availability.Duration}` - start=`{availability.Start}` - end=`{availability.End}` - periods=`{JsonConvert.SerializeObject(availablePeriods)}`");
+            }
+            catch (CronofyException)
+            {
+                LogHelper.Log($"Availability failure - accountId1=`{availability.AccountId1}` - accountId2=`{availability.AccountId2}` - requiredParticipants=`{availability.RequiredParticipants}` - duration=`{availability.Duration}` - start=`{availability.Start}` - end=`{availability.End}`");
+            }
+
+            return availablePeriods;
         }
 
 		static void CronofyAccountRequest(Action request)

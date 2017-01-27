@@ -1,0 +1,90 @@
+﻿@model CronofyCSharpSampleApp.Models.Availability
+
+<h2>Availability</h2>
+
+<div class="well">
+    @using(Html.BeginForm("ViewAvailability", "Availability", FormMethod.Post, new { @class = "form-horizontal" })){
+        @Html.ValidationSummary(true);
+
+        <fieldset>
+        <div class="form-group">
+            @Html.LabelFor(model => model.AccountId1, new { @class = "control-label col-lg-2" })
+            <div class="col-lg-10">
+                @Html.TextBoxFor(model => model.AccountId1, new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.AccountId1)
+                <span class="help-block">Click <a href="@Model.AuthUrl" target="_blank">here</a> to find your Account ID</span>
+            </div>
+        </div>
+        
+        <div class="form-group">
+            @Html.LabelFor(model => model.AccountId2, new { @class = "control-label col-lg-2" })
+            <div class="col-lg-10">
+                @Html.TextBoxFor(model => model.AccountId2, new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.AccountId2)
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.RequiredParticipants, new { @class = "control-label col-lg-2" })
+            <div class="col-lg-10">
+                @Html.DropDownListFor(model => model.RequiredParticipants, new SelectList(new [] { "All", "1" }), new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.RequiredParticipants)
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Duration, new { @class = "control-label col-lg-2" })
+            <div class="col-lg-10">
+                @Html.TextBoxFor(model => model.Duration, new { @class = "form-control", type = "number" })
+                @Html.ValidationMessageFor(model => model.Duration)
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Start, new { @class = "control-label col-lg-2" })
+            <div class="col-lg-10">
+                @Html.TextBoxFor(model => model.Start, new { @class = "form-control", type = "datetime-local" })
+                @Html.ValidationMessageFor(model => model.Start)
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.End, new { @class = "control-label col-lg-2" })
+            <div class="col-lg-10">
+                @Html.TextBoxFor(model => model.End, new { @class = "form-control", type = "datetime-local" })
+                @Html.ValidationMessageFor(model => model.End)
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-lg-10">
+                <input type="submit" value="Create" class="btn btn-success btn-primary" />
+            </div>
+        </div>
+        </fieldset>
+    }
+</div>
+
+<table class="table table-striped table-hover">
+    <thead>
+        <tr>
+            <th>Start Time</th>
+			<th>End Time</th>
+			<th>Participants</th>
+		</tr>
+	</thead>
+
+	<tbody>
+		@foreach(var period in Model.AvailablePeriods){
+		<tr>
+            <td>@period.Start</td>
+			<td>@period.End</td>
+            <td>
+			@foreach(var participant in period.Participants){
+            @participant.Sub<br />
+            }
+			</td>
+		</tr>
+        }
+	</tbody>
+</table>

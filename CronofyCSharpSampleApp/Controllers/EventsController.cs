@@ -18,12 +18,12 @@ namespace CronofyCSharpSampleApp.Controllers
 		}
 
 		public ActionResult New([Bind(Prefix = "id")] string calendarId)
-		{
-			ViewData["calendarName"] = CronofyHelper.GetCalendars().First(x => x.CalendarId == calendarId).Name;
-
+        {
 			var newEvent = new Models.Event
 			{
-				CalendarId = calendarId,
+				Calendar = CronofyHelper.GetCalendars().First(x => x.CalendarId == calendarId),
+                CalendarId = calendarId,
+
 				EventId = "unique_event_id_" + (new Random().Next(0, 1000000).ToString("D6"))
 			};
 
@@ -37,14 +37,14 @@ namespace CronofyCSharpSampleApp.Controllers
 				ModelState.AddModelError("End", "End time cannot be before start time");
 			}
 
-			if (ModelState.IsValid)
+            if (ModelState.IsValid)
 			{
-				CronofyHelper.UpsertEvent(newEvent.EventId, newEvent.CalendarId, newEvent.Summary, newEvent.Description, newEvent.Start, newEvent.End);
+                CronofyHelper.UpsertEvent(newEvent.EventId, newEvent.CalendarId, newEvent.Summary, newEvent.Description, newEvent.Start, newEvent.End, new Cronofy.Location("", newEvent.Latitude, newEvent.Longitude));
 
-				return new RedirectResult($"/calendars/show/{newEvent.CalendarId}");
-			}
-
-			ViewData["calendarName"] = CronofyHelper.GetCalendars().First(x => x.CalendarId == newEvent.CalendarId).Name;
+                return new RedirectResult($"/calendars/show/{newEvent.CalendarId}");
+            }
+			
+            newEvent.Calendar = CronofyHelper.GetCalendars().First(x => x.CalendarId == newEvent.CalendarId);
 
 			return View("New", newEvent);
 		}
@@ -77,7 +77,7 @@ namespace CronofyCSharpSampleApp.Controllers
 
 			if (ModelState.IsValid)
 			{
-				CronofyHelper.UpsertEvent(editEvent.EventId, editEvent.CalendarId, editEvent.Summary, editEvent.Description, editEvent.Start, editEvent.End);
+				CronofyHelper.UpsertEvent(editEvent.EventId, editEvent.CalendarId, editEvent.Summary, editEvent.Description, editEvent.Start, editEvent.End, new Cronofy.Location("", editEvent.Latitude, editEvent.Longitude));
 
 				return new RedirectResult($"/calendars/show/{editEvent.CalendarId}");
 			}

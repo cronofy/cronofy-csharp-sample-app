@@ -55,16 +55,18 @@ namespace CronofyCSharpSampleApp.Controllers
 		{
 			var gotEvent = CronofyHelper.ReadEvents().First(x => x.EventUid == id);
 
-			ViewData["calendarName"] = CronofyHelper.GetCalendars().First(x => x.CalendarId == gotEvent.CalendarId).Name;
-
 			var editEvent = new Models.Event
 			{
+                Calendar = CronofyHelper.GetCalendars().First(x => x.CalendarId == gotEvent.CalendarId),
 				CalendarId = gotEvent.CalendarId,
-				EventId = gotEvent.EventId,
+				
+                EventId = gotEvent.EventId,
 				Summary = gotEvent.Summary,
 				Description = gotEvent.Description,
 				Start = (gotEvent.Start.HasTime ? gotEvent.Start.DateTimeOffset.DateTime : gotEvent.Start.Date.DateTime),
-				End = (gotEvent.End.HasTime ? gotEvent.End.DateTimeOffset.DateTime : gotEvent.End.Date.DateTime)
+				End = (gotEvent.End.HasTime ? gotEvent.End.DateTimeOffset.DateTime : gotEvent.End.Date.DateTime),
+                Latitude = gotEvent.Location?.Latitude,
+                Longitude = gotEvent.Location?.Longitude
 			};
 
 			return View("Edit", editEvent);
@@ -84,7 +86,7 @@ namespace CronofyCSharpSampleApp.Controllers
 				return new RedirectResult($"/calendars/show/{editEvent.CalendarId}");
 			}
 
-			ViewData["calendarName"] = CronofyHelper.GetCalendars().First(x => x.CalendarId == editEvent.CalendarId).Name;
+			editEvent.Calendar = CronofyHelper.GetCalendars().First(x => x.CalendarId == editEvent.CalendarId);
 
 			return View("Edit", editEvent);
 		}

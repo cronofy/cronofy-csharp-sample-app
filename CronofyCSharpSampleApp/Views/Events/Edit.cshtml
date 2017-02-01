@@ -1,6 +1,6 @@
 ﻿@model CronofyCSharpSampleApp.Models.Event
 
-<h2>@ViewData["calendarName"] - @Model.Summary - Edit</h2>
+<h2>@Model.Calendar.Name - @Model.Summary - Edit</h2>
 
 <div class="well">
 	@using(Html.BeginForm("Update", "Events", FormMethod.Post, new { @class = "form-horizontal" })){
@@ -47,6 +47,21 @@
 				@Html.ValidationMessageFor(model => model.End)
 			</div>
 		</div>
+
+    @if(Model.Calendar.Profile.ProviderName == "apple" || Model.Calendar.Profile.ProviderName == "google"){
+        <div class="form-group">
+            @Html.LabelFor(model => model.Latitude, new { @class = "control-label col-lg-2" })
+            <div class="col-lg-10">
+                @Html.TextBoxFor(model => model.Latitude, new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.Latitude)
+            </div>
+            @Html.LabelFor(model => model.Longitude, new { @class = "control-label col-lg-2" })
+            <div class="col-lg-10">
+                @Html.TextBoxFor(model => model.Longitude, new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.Longitude)
+            </div>
+        </div>
+    }
 
 		<div class="form-group">
 			<div class="col-lg-10">

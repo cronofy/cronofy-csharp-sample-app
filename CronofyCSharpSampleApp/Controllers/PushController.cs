@@ -12,9 +12,9 @@ namespace CronofyCSharpSampleApp.Controllers
 {
     public class PushController : Controller
     {
-		[HttpPost]
-		public ActionResult Channel(string id)
-		{
+        [HttpPost]
+        public ActionResult Channel(string id)
+        {
             LogHelper.Log($"Receive push notification - id=`{id}`");
 
             try
@@ -36,22 +36,22 @@ namespace CronofyCSharpSampleApp.Controllers
                 LogHelper.Log($"Push notification failure - ex.Source=`{ex.Source}` - ex.Message=`{ex.Message}`");
             }
 
-			return new EmptyResult();
-		}
+            return new EmptyResult();
+        }
 
-		public class ChannelData
-		{
-			[JsonProperty("notification")]
-			public IDictionary<string, string> Notification { get; set; }
+        public class ChannelData
+        {
+            [JsonProperty("notification")]
+            public IDictionary<string, string> Notification { get; set; }
 
-			[JsonProperty("channel")]
-			public NotifyingChannel Channel { get; set; }
+            [JsonProperty("channel")]
+            public NotifyingChannel Channel { get; set; }
 
-			public class NotifyingChannel
-			{
-				[JsonProperty("channel_id")]
-				public string ChannelId { get; set; }
-			}
-		}
+            public class NotifyingChannel
+            {
+                [JsonProperty("channel_id")]
+                public string ChannelId { get; set; }
+            }
+        }
     }
 }

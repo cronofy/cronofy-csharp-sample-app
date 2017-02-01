@@ -14,45 +14,45 @@ namespace CronofyCSharpSampleApp.Controllers
             return View("Index", CronofyHelper.GetChannels());
         }
 
-		public ActionResult Show(string id)
-		{
-			var channel = CronofyHelper.GetChannels().First(x => x.Id == id);
+        public ActionResult Show(string id)
+        {
+            var channel = CronofyHelper.GetChannels().First(x => x.Id == id);
 
-			ViewData["Data"] = DatabaseHandler.Many<Persistence.Models.ChannelData>($"SELECT ChannelId, Record, OccurredOn FROM ChannelData WHERE ChannelId='{channel.Id}' ORDER BY OccurredOn DESC");
+            ViewData["Data"] = DatabaseHandler.Many<Persistence.Models.ChannelData>($"SELECT ChannelId, Record, OccurredOn FROM ChannelData WHERE ChannelId='{channel.Id}' ORDER BY OccurredOn DESC");
 
-			return View("Show", channel);
-		}
+            return View("Show", channel);
+        }
 
-		public ActionResult New()
-		{
-			var calendars = CronofyHelper.GetCalendars();
+        public ActionResult New()
+        {
+            var calendars = CronofyHelper.GetCalendars();
 
-			var channel = new Models.Channel
-			{
-				CalendarIds = calendars.Select(x => x.CalendarId).ToArray(),
-			};
+            var channel = new Models.Channel
+            {
+                CalendarIds = calendars.Select(x => x.CalendarId).ToArray(),
+            };
 
-			ViewData["domain"] = ConfigurationManager.AppSettings["domain"];
-			ViewData["calendars"] = calendars;
-			
-			return View("New", channel);
-		}
+            ViewData["domain"] = ConfigurationManager.AppSettings["domain"];
+            ViewData["calendars"] = calendars;
+            
+            return View("New", channel);
+        }
 
-		public ActionResult Create(Models.Channel channel)
-		{
-			if (ModelState.IsValid)
-			{
-				var url = ConfigurationManager.AppSettings["domain"] + "/push/channel/" + channel.Path;
+        public ActionResult Create(Models.Channel channel)
+        {
+            if (ModelState.IsValid)
+            {
+                var url = ConfigurationManager.AppSettings["domain"] + "/push/channel/" + channel.Path;
 
-				CronofyHelper.CreateChannel(url, channel.OnlyManaged, channel.CalendarIds);
+                CronofyHelper.CreateChannel(url, channel.OnlyManaged, channel.CalendarIds);
 
-				return new RedirectResult("/channels");
-			}
+                return new RedirectResult("/channels");
+            }
 
-			ViewData["domain"] = ConfigurationManager.AppSettings["domain"];
-			ViewData["calendars"] = CronofyHelper.GetCalendars();
+            ViewData["domain"] = ConfigurationManager.AppSettings["domain"];
+            ViewData["calendars"] = CronofyHelper.GetCalendars();
 
-			return View("New", channel);
-		}
+            return View("New", channel);
+        }
     }
 }

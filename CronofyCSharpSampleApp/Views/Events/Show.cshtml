@@ -5,16 +5,16 @@
     <h2>@ViewData["calendarName"] - @Model.Summary</h2>
   </div>
 
-	@if(!@Model.EventId.IsEmpty()){
+    @if(!@Model.EventId.IsEmpty()){
     <div class="col-xs-4 text-right">
       <a href="/events/edit/@Model.EventUid" class="btn btn-primary">
         Edit
       </a>
-	  @using(Html.BeginForm("Delete", "Events", FormMethod.Post, new { @class = "button_to" })){
-		@Html.HiddenFor(model => model.CalendarId)
-		@Html.HiddenFor(model => model.EventId)
-		<input type="submit" value="Delete" class="btn btn-danger" />
-	  }
+      @using(Html.BeginForm("Delete", "Events", FormMethod.Post, new { @class = "button_to" })){
+        @Html.HiddenFor(model => model.CalendarId)
+        @Html.HiddenFor(model => model.EventId)
+        <input type="submit" value="Delete" class="btn btn-danger" />
+      }
     </div>
     }
 </div>

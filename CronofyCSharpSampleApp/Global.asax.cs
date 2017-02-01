@@ -4,12 +4,12 @@ using System.Web.Routing;
 
 namespace CronofyCSharpSampleApp
 {
-	public class Global : HttpApplication
-	{
-		protected void Application_Start()
-		{
-			AreaRegistration.RegisterAllAreas();
-			RouteConfig.RegisterRoutes(RouteTable.Routes);
-		}
-	}
+    public class Global : HttpApplication
+    {
+        protected void Application_Start()
+        {
+            AreaRegistration.RegisterAllAreas();
+            RouteConfig.RegisterRoutes(RouteTable.Routes);
+        }
+    }
 }

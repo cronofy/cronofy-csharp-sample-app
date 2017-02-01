@@ -4,29 +4,29 @@ using System.ComponentModel.DataAnnotations;
 
 namespace CronofyCSharpSampleApp.Models
 {
-	public class Event : IValidatableObject
-	{
+    public class Event : IValidatableObject
+    {
         public Cronofy.Calendar Calendar { get; set; }
 
         // Used to track enterprise connected user's ID
         public string UserId { get; set; }
 
-		[Required(ErrorMessage = "Calendar ID is required")]
-		public string CalendarId { get; set; }
+        [Required(ErrorMessage = "Calendar ID is required")]
+        public string CalendarId { get; set; }
 
-		[Required(ErrorMessage = "Event ID is required")]
-		public string EventId { get; set; }
+        [Required(ErrorMessage = "Event ID is required")]
+        public string EventId { get; set; }
 
-		[Required(ErrorMessage = "Summary is required")]
-		public string Summary { get; set; }
+        [Required(ErrorMessage = "Summary is required")]
+        public string Summary { get; set; }
 
-		public string Description { get; set; }
+        public string Description { get; set; }
 
-		[Required(ErrorMessage = "Start time is required")]
-		public DateTime Start { get; set; }
+        [Required(ErrorMessage = "Start time is required")]
+        public DateTime Start { get; set; }
 
-		[Required(ErrorMessage = "End time is required")]
-		public DateTime End { get; set; }
+        [Required(ErrorMessage = "End time is required")]
+        public DateTime End { get; set; }
 
         public string Latitude { get; set; }
         public string Longitude { get; set; }
@@ -68,5 +68,5 @@ namespace CronofyCSharpSampleApp.Models
 
             return results;
         }
-	}
+    }
 }

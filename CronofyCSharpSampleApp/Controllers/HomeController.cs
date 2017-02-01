@@ -5,13 +5,13 @@ using System;
 
 namespace CronofyCSharpSampleApp.Controllers
 {
-	public class HomeController : ControllerBase
-	{
-		public ActionResult Index()
-		{
-			CronofyHelper.GetAccount();
+    public class HomeController : ControllerBase
+    {
+        public ActionResult Index()
+        {
+            CronofyHelper.GetAccount();
 
-			return View();
-		}
-	}
+            return View();
+        }
+    }
 }

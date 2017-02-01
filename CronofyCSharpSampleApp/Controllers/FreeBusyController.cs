@@ -10,14 +10,14 @@ namespace CronofyCSharpSampleApp.Controllers
     {
         public ActionResult Index()
         {
-			var calendars = CronofyHelper.GetCalendars();
-			var freeBusy = CronofyHelper.GetFreeBusy();
+            var calendars = CronofyHelper.GetCalendars();
+            var freeBusy = CronofyHelper.GetFreeBusy();
 
-			var model = freeBusy
-				.GroupBy(x => x.CalendarId)
-				.ToDictionary(x => calendars.First(cal => cal.CalendarId == x.Key), x => x.ToList());
+            var model = freeBusy
+                .GroupBy(x => x.CalendarId)
+                .ToDictionary(x => calendars.First(cal => cal.CalendarId == x.Key), x => x.ToList());
 
-			return View ("Index", model);
+            return View ("Index", model);
         }
     }
 }

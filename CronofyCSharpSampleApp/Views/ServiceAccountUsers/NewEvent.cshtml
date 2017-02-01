@@ -6,7 +6,7 @@
     @using(Html.BeginForm("CreateEvent", "ServiceAccountUsers", FormMethod.Post, new { @class = "form-horizontal" })){
         @Html.ValidationSummary(true);
 
-	    @Html.HiddenFor(model => model.UserId)
+        @Html.HiddenFor(model => model.UserId)
         @Html.HiddenFor(model => model.CalendarId)
         <fieldset>
         <div class="form-group">

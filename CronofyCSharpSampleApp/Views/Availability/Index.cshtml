@@ -69,22 +69,22 @@
     <thead>
         <tr>
             <th>Start Time</th>
-			<th>End Time</th>
-			<th>Participants</th>
-		</tr>
-	</thead>
+            <th>End Time</th>
+            <th>Participants</th>
+        </tr>
+    </thead>
 
-	<tbody>
-		@foreach(var period in Model.AvailablePeriods){
-		<tr>
+    <tbody>
+        @foreach(var period in Model.AvailablePeriods){
+        <tr>
             <td>@period.Start</td>
-			<td>@period.End</td>
+            <td>@period.End</td>
             <td>
-			@foreach(var participant in period.Participants){
+            @foreach(var participant in period.Participants){
             @participant.Sub<br />
             }
-			</td>
-		</tr>
+            </td>
+        </tr>
         }
-	</tbody>
+    </tbody>
 </table>

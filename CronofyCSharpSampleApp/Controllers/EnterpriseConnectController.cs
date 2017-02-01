@@ -19,9 +19,9 @@ namespace CronofyCSharpSampleApp.Controllers
             return View ();
         }
 
-		public ActionResult Login()
-		{
-			return View("Login");
-		}
+        public ActionResult Login()
+        {
+            return View("Login");
+        }
     }
 }

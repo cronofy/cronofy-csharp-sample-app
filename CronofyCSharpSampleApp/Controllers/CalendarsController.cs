@@ -8,39 +8,39 @@ namespace CronofyCSharpSampleApp.Controllers
 {
     public class CalendarsController : ControllerBase
     {
-		public ActionResult Show(string id)
-		{
-			var calendar = CronofyHelper.GetCalendars().First(x => x.CalendarId == id);
+        public ActionResult Show(string id)
+        {
+            var calendar = CronofyHelper.GetCalendars().First(x => x.CalendarId == id);
 
-			ViewData["events"] = CronofyHelper.ReadEventsForCalendar(id);
+            ViewData["events"] = CronofyHelper.ReadEventsForCalendar(id);
 
-			return View("Show", calendar);
-		}
+            return View("Show", calendar);
+        }
 
         public ActionResult New([Bind(Prefix = "id")] string profileId)
         {
-			ViewData["profileName"] = CronofyHelper.GetProfiles().First(x => x.Id == profileId).Name;
+            ViewData["profileName"] = CronofyHelper.GetProfiles().First(x => x.Id == profileId).Name;
 
-			var calendar = new Models.Calendar
-			{
-				ProfileId = profileId,
-			};
+            var calendar = new Models.Calendar
+            {
+                ProfileId = profileId,
+            };
 
             return View("New", calendar);
         }
 
-		public ActionResult Create(Models.Calendar calendar)
-		{
-			if (ModelState.IsValid)
-			{
-				CronofyHelper.CreateCalendar(calendar.ProfileId, calendar.Name);
+        public ActionResult Create(Models.Calendar calendar)
+        {
+            if (ModelState.IsValid)
+            {
+                CronofyHelper.CreateCalendar(calendar.ProfileId, calendar.Name);
 
-				return new RedirectResult("/profiles");
-			}
+                return new RedirectResult("/profiles");
+            }
 
-			ViewData["profileName"] = CronofyHelper.GetProfiles().First(x => x.Id == calendar.ProfileId).Name;
+            ViewData["profileName"] = CronofyHelper.GetProfiles().First(x => x.Id == calendar.ProfileId).Name;
 
-			return View("New", calendar);
-		}
+            return View("New", calendar);
+        }
     }
 }

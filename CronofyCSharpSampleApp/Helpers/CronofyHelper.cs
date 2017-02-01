@@ -7,41 +7,41 @@ using Newtonsoft.Json;
 
 namespace CronofyCSharpSampleApp
 {
-	public class CronofyHelper
-	{
-		public const string CookieName = "CronofyUID";
-		public const string EnterpriseConnectCookieName = "EnterpriseConnectUID";
+    public class CronofyHelper
+    {
+        public const string CookieName = "CronofyUID";
+        public const string EnterpriseConnectCookieName = "EnterpriseConnectUID";
 
-		private static string _cronofyUid;
-		private static string _accessToken;
-		private static string _refreshToken;
+        private static string _cronofyUid;
+        private static string _accessToken;
+        private static string _refreshToken;
 
         private static string _enterpriseConnectCronofyUid;
         private static string _enterpriseConnectAccessToken;
         private static string _enterpriseConnectRefreshToken;
 
-		private static CronofyOAuthClient _oauthClient;
+        private static CronofyOAuthClient _oauthClient;
 
-		private static CronofyOAuthClient OAuthClient
-		{
-			get
-			{
-				if (_oauthClient == null)
-					_oauthClient = new CronofyOAuthClient(ConfigurationManager.AppSettings["cronofy_client_id"], ConfigurationManager.AppSettings["cronofy_client_secret"]);
-				return _oauthClient;
-			}
-		}
+        private static CronofyOAuthClient OAuthClient
+        {
+            get
+            {
+                if (_oauthClient == null)
+                    _oauthClient = new CronofyOAuthClient(ConfigurationManager.AppSettings["cronofy_client_id"], ConfigurationManager.AppSettings["cronofy_client_secret"]);
+                return _oauthClient;
+            }
+        }
 
-		private static CronofyAccountClient _accountClient;
-		private static CronofyAccountClient AccountClient
-		{
-			get
-			{
-				if (_accountClient == null)
-					_accountClient = new CronofyAccountClient(_accessToken);
-				return _accountClient;
-			}
-		}
+        private static CronofyAccountClient _accountClient;
+        private static CronofyAccountClient AccountClient
+        {
+            get
+            {
+                if (_accountClient == null)
+                    _accountClient = new CronofyAccountClient(_accessToken);
+                return _accountClient;
+            }
+        }
 
         private static CronofyEnterpriseConnectAccountClient _enterpriseConnectAccountClient;
         private static CronofyEnterpriseConnectAccountClient EnterpriseConnectAccountClient
@@ -57,11 +57,11 @@ namespace CronofyCSharpSampleApp
         private static string _oauthCallbackUrl = $"{ConfigurationManager.AppSettings["domain"]}/oauth";
         private static string _oauthAccountIdCallbackUrl = $"{ConfigurationManager.AppSettings["domain"]}/availability/AccountId";
 
-		private static string _enterpriseConnectOAuthCallbackUrl = $"{ConfigurationManager.AppSettings["domain"]}/oauth/enterpriseconnect";
+        private static string _enterpriseConnectOAuthCallbackUrl = $"{ConfigurationManager.AppSettings["domain"]}/oauth/enterpriseconnect";
         private static string _enterpriseConnectUserAuthCallbackUrl = $"{ConfigurationManager.AppSettings["domain"]}/serviceaccountcallback/authorize/";
 
-		public static bool LoadUser(string cronofyUid, bool serviceAccount)
-		{
+        public static bool LoadUser(string cronofyUid, bool serviceAccount)
+        {
             var user = DatabaseHandler.Get<Persistence.Models.User>($"SELECT CronofyUid, AccessToken, RefreshToken FROM UserCredentials WHERE CronofyUID='{cronofyUid}' AND ServiceAccount='{(serviceAccount ? 1 : 0)}'");
 
             if (user == null)
@@ -85,8 +85,8 @@ namespace CronofyCSharpSampleApp
                 _refreshToken = user.RefreshToken;
             }
 
-			return true;
-		}
+            return true;
+        }
 
         public static void SetToken(OAuthToken token, bool serviceAccount)
         {
@@ -120,15 +120,15 @@ namespace CronofyCSharpSampleApp
             return OAuthClient.GetAuthorizationUrlBuilder(_oauthAccountIdCallbackUrl).ToString();
         }
 
-		public static string GetEnterpriseConnectAuthUrl()
-		{
-			return OAuthClient.GetAuthorizationUrlBuilder(_enterpriseConnectOAuthCallbackUrl)
-							  .EnterpriseConnect()
-							  .ToString();
-		}
+        public static string GetEnterpriseConnectAuthUrl()
+        {
+            return OAuthClient.GetAuthorizationUrlBuilder(_enterpriseConnectOAuthCallbackUrl)
+                              .EnterpriseConnect()
+                              .ToString();
+        }
 
-		public static OAuthToken GetOAuthToken(string code)
-		{
+        public static OAuthToken GetOAuthToken(string code)
+        {
             OAuthToken token = null;
 
             try
@@ -142,7 +142,7 @@ namespace CronofyCSharpSampleApp
             }
 
             return token;
-		}
+        }
 
         public static OAuthToken GetAccountIdOAuthToken(string code)
         {
@@ -195,8 +195,8 @@ namespace CronofyCSharpSampleApp
             return token;
         }
 
-		public static Account GetAccount()
-		{
+        public static Account GetAccount()
+        {
             Account account = null;
 
             try
@@ -210,10 +210,10 @@ namespace CronofyCSharpSampleApp
             }
 
             return account;
-		}
+        }
 
-		public static IEnumerable<Cronofy.Profile> GetProfiles()
-		{
+        public static IEnumerable<Cronofy.Profile> GetProfiles()
+        {
             IEnumerable<Cronofy.Profile> profiles = new Cronofy.Profile[0];
 
             try
@@ -227,10 +227,10 @@ namespace CronofyCSharpSampleApp
             }
 
             return profiles;
-		}
+        }
 
-		public static IEnumerable<Cronofy.Calendar> GetCalendars()
-		{
+        public static IEnumerable<Cronofy.Calendar> GetCalendars()
+        {
             IEnumerable<Cronofy.Calendar> calendars = new Cronofy.Calendar[0];
 
             try
@@ -244,10 +244,10 @@ namespace CronofyCSharpSampleApp
             }
 
             return calendars;
-		}
+        }
 
-		public static Cronofy.Calendar CreateCalendar(string profileId, string name)
-		{
+        public static Cronofy.Calendar CreateCalendar(string profileId, string name)
+        {
             Cronofy.Calendar calendar = null;
 
             try
@@ -261,10 +261,10 @@ namespace CronofyCSharpSampleApp
             }
 
             return calendar;
-		}
+        }
 
-		public static IEnumerable<Cronofy.FreeBusy> GetFreeBusy()
-		{
+        public static IEnumerable<Cronofy.FreeBusy> GetFreeBusy()
+        {
             IEnumerable<Cronofy.FreeBusy> freeBusy = new Cronofy.FreeBusy[0];
 
             try
@@ -278,16 +278,16 @@ namespace CronofyCSharpSampleApp
             }
 
             return freeBusy;
-		}
+        }
 
-		public static IEnumerable<Cronofy.Event> ReadEventsForCalendar(string calendarId)
-		{
+        public static IEnumerable<Cronofy.Event> ReadEventsForCalendar(string calendarId)
+        {
             IEnumerable<Cronofy.Event> events = new Cronofy.Event[0];
 
-			var readEvents = new GetEventsRequestBuilder()
-				.IncludeManaged(true)
-				.CalendarId(calendarId)
-				.Build();
+            var readEvents = new GetEventsRequestBuilder()
+                .IncludeManaged(true)
+                .CalendarId(calendarId)
+                .Build();
 
             try
             {
@@ -300,15 +300,15 @@ namespace CronofyCSharpSampleApp
             }
 
             return events;
-		}
+        }
 
-		public static IEnumerable<Cronofy.Event> ReadEvents()
-		{
+        public static IEnumerable<Cronofy.Event> ReadEvents()
+        {
             IEnumerable<Cronofy.Event> events = new Cronofy.Event[0];
 
-			var readEvents = new GetEventsRequestBuilder()
-				.IncludeManaged(true)
-				.Build();
+            var readEvents = new GetEventsRequestBuilder()
+                .IncludeManaged(true)
+                .Build();
 
             try
             {
@@ -321,17 +321,17 @@ namespace CronofyCSharpSampleApp
             }
 
             return events;
-		}
+        }
 
-		public static void UpsertEvent(string eventId, string calendarId, string summary, string description, DateTime start, DateTime end)
-		{
-			var builtEvent = new UpsertEventRequestBuilder()
-				.EventId(eventId)
-				.Summary(summary)
-				.Description(description)
-				.Start(start)
-				.End(end)
-				.Build();
+        public static void UpsertEvent(string eventId, string calendarId, string summary, string description, DateTime start, DateTime end)
+        {
+            var builtEvent = new UpsertEventRequestBuilder()
+                .EventId(eventId)
+                .Summary(summary)
+                .Description(description)
+                .Start(start)
+                .End(end)
+                .Build();
 
             try
             {
@@ -342,10 +342,10 @@ namespace CronofyCSharpSampleApp
             {
                 LogHelper.Log($"UpsertEvent failure - eventId=`{eventId}` - calendarId=`{calendarId}` - summary=`{summary}` - description=`{description}` - start=`{start}` - end=`{end}`");
             }
-		}
+        }
 
-		public static void DeleteEvent(string calendarId, string eventId)
-		{
+        public static void DeleteEvent(string calendarId, string eventId)
+        {
             try
             {
                 CronofyAccountRequest(() => { AccountClient.DeleteEvent(calendarId, eventId); });
@@ -355,10 +355,10 @@ namespace CronofyCSharpSampleApp
             {
                 LogHelper.Log($"DeleteEvent failure - calendarId=`{calendarId}` - eventId=`{eventId}`");
             }
-		}
+        }
 
-		public static IEnumerable<Cronofy.Channel> GetChannels()
-		{
+        public static IEnumerable<Cronofy.Channel> GetChannels()
+        {
             IEnumerable<Cronofy.Channel> channels = new Cronofy.Channel[0];
 
             try
@@ -372,17 +372,17 @@ namespace CronofyCSharpSampleApp
             }
 
             return channels;
-		}
+        }
 
-		public static Cronofy.Channel CreateChannel(string path, bool onlyManaged, IEnumerable<string> calendarIds)
-		{
+        public static Cronofy.Channel CreateChannel(string path, bool onlyManaged, IEnumerable<string> calendarIds)
+        {
             Cronofy.Channel channel = null;
 
-			var builtChannel = new CreateChannelBuilder()
-				.CallbackUrl(path)
-				.OnlyManaged(onlyManaged)
-				.CalendarIds(calendarIds)
-				.Build();
+            var builtChannel = new CreateChannelBuilder()
+                .CallbackUrl(path)
+                .OnlyManaged(onlyManaged)
+                .CalendarIds(calendarIds)
+                .Build();
 
             try
             {
@@ -395,7 +395,7 @@ namespace CronofyCSharpSampleApp
             }
 
             return channel;
-		}
+        }
 
         public static Cronofy.UserInfo GetEnterpriseConnectUserInfo()
         {
@@ -474,22 +474,22 @@ namespace CronofyCSharpSampleApp
             return availablePeriods;
         }
 
-		static void CronofyAccountRequest(Action request)
-		{
-			CronofyAccountRequest<bool>(() => { request(); return true; });
-		}
+        static void CronofyAccountRequest(Action request)
+        {
+            CronofyAccountRequest<bool>(() => { request(); return true; });
+        }
 
-		static T CronofyAccountRequest<T>(Func<T> request)
-		{
-			T response = default(T);
+        static T CronofyAccountRequest<T>(Func<T> request)
+        {
+            T response = default(T);
 
-			try
-			{
+            try
+            {
                 // This may fail due to an out of day access token
-				response = request();
-			}
-			catch (CronofyException)
-			{
+                response = request();
+            }
+            catch (CronofyException)
+            {
                 try
                 {
                     // First time this fails, attempt to get a new access token and store it for the user
@@ -511,11 +511,11 @@ namespace CronofyCSharpSampleApp
 
                 // Second time we perform the request, if it fails we want it to propagate up to the method that
                 // called CronofyAccountRequest to log the appropriate information
-				response = request();
-			}
+                response = request();
+            }
 
-			return response;
-		}
+            return response;
+        }
 
         static void CronofyEnterpriseConnectAccountRequest(Action request)
         {
@@ -559,12 +559,12 @@ namespace CronofyCSharpSampleApp
 
             return response;
         }
-	}
+    }
 
-	public class CredentialsInvalidError : Exception
-	{
-		public CredentialsInvalidError()
-		{
-		}
-	}
+    public class CredentialsInvalidError : Exception
+    {
+        public CredentialsInvalidError()
+        {
+        }
+    }
 }

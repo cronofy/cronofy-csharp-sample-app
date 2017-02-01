@@ -10,16 +10,16 @@ namespace CronofyCSharpSampleApp.Controllers
     {
         public ActionResult Index()
         {
-			ViewData["authUrl"] = CronofyHelper.GetAuthUrl();
+            ViewData["authUrl"] = CronofyHelper.GetAuthUrl();
 
             return View ();
         }
 
-		public ActionResult EnterpriseConnect()
-		{
-			ViewData["authUrl"] = CronofyHelper.GetEnterpriseConnectAuthUrl();
+        public ActionResult EnterpriseConnect()
+        {
+            ViewData["authUrl"] = CronofyHelper.GetEnterpriseConnectAuthUrl();
 
-			return View("EnterpriseConnect");
-		}
+            return View("EnterpriseConnect");
+        }
     }
 }

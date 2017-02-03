@@ -1,11 +1,11 @@
 ﻿using System;
-using Mono.Data.Sqlite;
+using System.Data.SQLite;
 
 namespace CronofyCSharpSampleApp
 {
     public interface ITableRowModel
     {
-        ITableRowModel Initialize(SqliteDataReader row);
+        ITableRowModel Initialize(SQLiteDataReader row);
         ITableRowModel Initialize(object obj);
     }
 }

@@ -1,5 +1,5 @@
 ﻿using System;
-using Mono.Data.Sqlite;
+using System.Data.SQLite;
 using System.IO;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,7 +14,7 @@ namespace CronofyCSharpSampleApp
 
         public static void Initialize()
         {
-            var currentDirectory = Environment.CurrentDirectory;
+            var currentDirectory = AppDomain.CurrentDomain.BaseDirectory;
             var pathToDatabase = Path.Combine(currentDirectory, "Persistence/cronofy_sample_app.db");
 
             _connectionString = String.Format("Data Source={0};Version=3;", pathToDatabase);
@@ -22,7 +22,7 @@ namespace CronofyCSharpSampleApp
 
             if (!File.Exists(pathToDatabase))
             {
-                SqliteConnection.CreateFile(pathToDatabase);
+                SQLiteConnection.CreateFile(pathToDatabase);
 
                 ExecuteNonQuery("CREATE TABLE ChannelData (Id INTEGER PRIMARY KEY AUTOINCREMENT, ChannelId ntext, Record ntext, OccurredOn datetime2)");
                 ExecuteNonQuery("CREATE TABLE UserCredentials (UserID INTEGER PRIMARY KEY AUTOINCREMENT, CronofyUID ntext, AccessToken ntext, RefreshToken ntext, ServiceAccount bit NOT NULL)");
@@ -35,14 +35,14 @@ namespace CronofyCSharpSampleApp
             if (!_initialized)
                 Initialize();
 
-            using (var conn = new SqliteConnection(_connectionString))
+            using (var conn = new SQLiteConnection(_connectionString))
             {
                 conn.Open();
                 using (var cmd = conn.CreateCommand())
                 {
                     cmd.CommandText = sql;
                     cmd.CommandType = System.Data.CommandType.Text;
-                    SqliteDataReader reader = cmd.ExecuteReader();
+                    SQLiteDataReader reader = cmd.ExecuteReader();
 
                     var rows = new List<T>();
 
@@ -66,7 +66,7 @@ namespace CronofyCSharpSampleApp
             if (!_initialized)
                 Initialize();
             
-            using (var conn = new SqliteConnection(_connectionString))
+            using (var conn = new SQLiteConnection(_connectionString))
             {
                 conn.Open();
                 using (var cmd = conn.CreateCommand())
@@ -83,7 +83,7 @@ namespace CronofyCSharpSampleApp
             if (!_initialized)
                 Initialize();
 
-            using (var conn = new SqliteConnection(_connectionString))
+            using (var conn = new SQLiteConnection(_connectionString))
             {
                 conn.Open();
                 using (var cmd = conn.CreateCommand())

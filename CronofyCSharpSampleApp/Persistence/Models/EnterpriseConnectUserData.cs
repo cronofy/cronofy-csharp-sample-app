@@ -1,5 +1,5 @@
 ﻿using System;
-using Mono.Data.Sqlite;
+using System.Data.SQLite;
 
 namespace CronofyCSharpSampleApp.Persistence.Models
 {
@@ -18,7 +18,7 @@ namespace CronofyCSharpSampleApp.Persistence.Models
             Status = status;
         }
 
-        public ITableRowModel Initialize(SqliteDataReader row)
+        public ITableRowModel Initialize(SQLiteDataReader row)
         {
             CronofyUID = row.IsDBNull(0) ? String.Empty : row.GetString(0);
             Email = row.GetString(1);

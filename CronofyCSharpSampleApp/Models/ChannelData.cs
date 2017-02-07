@@ -15,8 +15,13 @@ namespace CronofyCSharpSampleApp.Models
         {
             [JsonProperty("channel_id")]
             public string ChannelId { get; set; }
-        }
 
+            [JsonProperty("callback_url")]
+            public string CallbackUrl { get; set; }
+
+            [JsonProperty("filters")]
+            public Cronofy.Channel.ChannelFilters Filters { get; set; }
+        }
         public class NotificationData
         {
             [JsonProperty("type")]

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Newtonsoft.Json;
 
 namespace CronofyCSharpSampleApp.Models
@@ -20,8 +21,18 @@ namespace CronofyCSharpSampleApp.Models
             public string CallbackUrl { get; set; }
 
             [JsonProperty("filters")]
-            public Cronofy.Channel.ChannelFilters Filters { get; set; }
+            public ChannelFilters Filters { get; set; }
         }
+
+        public class ChannelFilters
+        {
+            [JsonProperty("only_managed")]
+            public bool? OnlyManaged { get; set; }
+
+            [JsonProperty("calendar_ids")]
+            public IEnumerable<string> CalendarIds { get; set; }
+        }
+
         public class NotificationData
         {
             [JsonProperty("type")]

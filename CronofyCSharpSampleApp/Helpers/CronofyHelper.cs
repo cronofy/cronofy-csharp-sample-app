@@ -449,8 +449,12 @@ namespace CronofyCSharpSampleApp
             IEnumerable<Cronofy.AvailablePeriod> availablePeriods = null;
 
             var participants = new ParticipantGroupBuilder()
-                .AddParticipant(availability.AccountId1)
-                .AddParticipant(availability.AccountId2);
+                .AddParticipant(availability.AccountId1);
+
+            if (availability.AccountId2 != null)
+            {
+                participants.AddParticipant(availability.AccountId2);
+            }
 
             if (availability.RequiredParticipants == "All")
                 participants.AllRequired();

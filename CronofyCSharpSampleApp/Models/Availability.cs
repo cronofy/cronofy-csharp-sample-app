@@ -13,7 +13,6 @@ namespace CronofyCSharpSampleApp.Models
         [Required]
         public string AccountId1 { get; set; }
 
-        [Required]
         public string AccountId2 { get; set; }
 
         [Required]

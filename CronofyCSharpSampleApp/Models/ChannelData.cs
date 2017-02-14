@@ -39,7 +39,7 @@ namespace CronofyCSharpSampleApp.Models
             public string Type { get; set; }
 
             [JsonProperty("changes_since")]
-            public DateTime ChangesSince { get; set; }
+            public DateTime? ChangesSince { get; set; }
         }
     }
 }

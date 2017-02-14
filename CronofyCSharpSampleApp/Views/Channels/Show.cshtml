@@ -23,7 +23,7 @@
     <dd><pre>@String.Join("\n", Model.Filters.CalendarIds)</pre></dd>
   }
 
-  @{ var data = ViewData["Data"] as IEnumerable<ChannelData>; }
+  @{ var data = ViewData["Data"] as IEnumerable<CronofyCSharpSampleApp.Persistence.Models.ChannelData>; }
   @if(data.Any()){
     <dt>Last Called</dt>
     <dd>@data.Max(x => x.OccurredOn)</dd>

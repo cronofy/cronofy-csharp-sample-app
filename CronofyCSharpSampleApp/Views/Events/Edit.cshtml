@@ -48,6 +48,13 @@
             </div>
         </div>
 
+        <div class="form-group">
+            @Html.LabelFor(model => model.LocationDescription, new { @class = "control-label col-lg-2" })
+            <div class="col-lg-10">
+                @Html.TextBoxFor(model => model.LocationDescription, new { @class = "form-control" })
+            </div>
+        </div>
+
     @if(Model.Calendar.Profile.ProviderName == "apple" || Model.Calendar.Profile.ProviderName == "google"){
         <div class="form-group">
             @Html.LabelFor(model => model.Latitude, new { @class = "control-label col-lg-2" })

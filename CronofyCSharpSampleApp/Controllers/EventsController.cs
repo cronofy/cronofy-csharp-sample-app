@@ -41,7 +41,7 @@ namespace CronofyCSharpSampleApp.Controllers
 
             if (ModelState.IsValid)
             {
-                CronofyHelper.UpsertEvent(newEvent.EventId, newEvent.CalendarId, newEvent.Summary, newEvent.Description, newEvent.Start, newEvent.End, new Cronofy.Location("", newEvent.Latitude, newEvent.Longitude));
+                CronofyHelper.UpsertEvent(newEvent.EventId, newEvent.CalendarId, newEvent.Summary, newEvent.Description, newEvent.Start, newEvent.End, new Cronofy.Location(newEvent.LocationDescription, newEvent.Latitude, newEvent.Longitude));
 
                 return new RedirectResult($"/calendars/show/{newEvent.CalendarId}");
             }
@@ -65,6 +65,7 @@ namespace CronofyCSharpSampleApp.Controllers
                 Description = gotEvent.Description,
                 Start = (gotEvent.Start.HasTime ? gotEvent.Start.DateTimeOffset.DateTime : gotEvent.Start.Date.DateTime),
                 End = (gotEvent.End.HasTime ? gotEvent.End.DateTimeOffset.DateTime : gotEvent.End.Date.DateTime),
+                LocationDescription = gotEvent.Location?.Description,
                 Latitude = gotEvent.Location?.Latitude,
                 Longitude = gotEvent.Location?.Longitude
             };
@@ -81,7 +82,7 @@ namespace CronofyCSharpSampleApp.Controllers
 
             if (ModelState.IsValid)
             {
-                CronofyHelper.UpsertEvent(editEvent.EventId, editEvent.CalendarId, editEvent.Summary, editEvent.Description, editEvent.Start, editEvent.End, new Cronofy.Location("", editEvent.Latitude, editEvent.Longitude));
+                CronofyHelper.UpsertEvent(editEvent.EventId, editEvent.CalendarId, editEvent.Summary, editEvent.Description, editEvent.Start, editEvent.End, new Cronofy.Location(editEvent.LocationDescription, editEvent.Latitude, editEvent.Longitude));
 
                 return new RedirectResult($"/calendars/show/{editEvent.CalendarId}");
             }

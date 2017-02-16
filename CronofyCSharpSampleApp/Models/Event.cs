@@ -28,6 +28,8 @@ namespace CronofyCSharpSampleApp.Models
         [Required(ErrorMessage = "End time is required")]
         public DateTime End { get; set; }
 
+        public string LocationDescription { get; set; }
+
         public string Latitude { get; set; }
         public string Longitude { get; set; }
 

@@ -331,11 +331,10 @@ namespace CronofyCSharpSampleApp
                 .Description(description)
                 .Start(start)
                 .End(end);
-
-            if (!(String.IsNullOrEmpty(location.Latitude) || String.IsNullOrEmpty(location.Longitude)))
-            {
-                buildingEvent.Location(String.Empty, location.Longitude, location.Longitude);
-            }
+            
+            buildingEvent.Location(location.Description,
+                                   String.IsNullOrEmpty(location.Latitude) ? null : location.Latitude,
+                                   String.IsNullOrEmpty(location.Longitude) ? null : location.Longitude);
 
             var builtEvent = buildingEvent.Build();
 

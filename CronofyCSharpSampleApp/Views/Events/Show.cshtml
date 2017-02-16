@@ -43,8 +43,9 @@
   <dt>End Date</dt>
   <dd>@(Model.End.HasTime ? Model.End.DateTimeOffset.ToString() : Model.End.Date.ToString())</dd>
 
-@if(Model.Location?.Latitude != null && Model.Location?.Longitude != null && !String.IsNullOrEmpty(ViewData["google_maps_embed_api_key"].ToString())){
-  <dt>Location</dt>
+@if(Model.Location?.Latitude != null && Model.Location?.Longitude != null){
+  if(!String.IsNullOrEmpty(ViewData["google_maps_embed_api_key"]?.ToString())){
+  <dt>Map location</dt>
   <dd>
     <iframe
     width="600"
@@ -54,6 +55,10 @@
       &q=@Model.Location.Latitude,@Model.Location.Longitude" allowfullscreen>
   </iframe>
   </dd>
+  } else {
+  <dt>Latitude, Longitude</dt>
+  <dd>@Model.Location.Latitude, @Model.Location.Longitude</dd>
+  }
 }
 
 </dl>

@@ -43,6 +43,11 @@
   <dt>End Date</dt>
   <dd>@(Model.End.HasTime ? Model.End.DateTimeOffset.ToString() : Model.End.Date.ToString())</dd>
 
+@if(!String.IsNullOrEmpty(Model.Location.Description)){
+  <dt>Location</dt>
+  <dd>@Model.Location.Description</dd>
+}
+	
 @if(Model.Location?.Latitude != null && Model.Location?.Longitude != null){
   if(!String.IsNullOrEmpty(ViewData["google_maps_embed_api_key"]?.ToString())){
   <dt>Map location</dt>

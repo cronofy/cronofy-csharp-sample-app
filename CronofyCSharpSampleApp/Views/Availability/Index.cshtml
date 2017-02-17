@@ -65,7 +65,9 @@
     }
 </div>
 
+
 @if(Model.AvailablePeriods != null){
+if(Model.AvailablePeriods.Count() > 0){
 <table class="table table-striped table-hover">
     <thead>
         <tr>
@@ -89,4 +91,7 @@
         }
     </tbody>
 </table>
+} else {
+<p>No available periods for those options</p>
+}
 }

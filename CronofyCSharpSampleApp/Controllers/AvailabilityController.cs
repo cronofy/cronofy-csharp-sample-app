@@ -15,8 +15,11 @@ namespace CronofyCSharpSampleApp.Controllers
             {
                 AuthUrl = CronofyHelper.GetAccountIdAuthUrl(),
 
+                AccountId1 = CronofyHelper.GetAccount().Id,
                 RequiredParticipants = "all",
-                Duration = 60
+                Duration = 60,
+                Start = DateTime.Now.Date.AddDays(1),
+                End = DateTime.Now.Date.AddDays(2),
             });
         }
 

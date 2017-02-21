@@ -323,24 +323,40 @@ namespace CronofyCSharpSampleApp
             return events;
         }
 
-        public static void UpsertEvent(string eventId, string calendarId, string summary, string description, DateTime start, DateTime end)
+        public static void UpsertEvent(string eventId, string calendarId, string summary, string description, DateTime start, DateTime end, Cronofy.Location location = null)
         {
-            var builtEvent = new UpsertEventRequestBuilder()
+            var buildingEvent = new UpsertEventRequestBuilder()
                 .EventId(eventId)
                 .Summary(summary)
                 .Description(description)
                 .Start(start)
-                .End(end)
-                .Build();
+                .End(end);
+            
+            buildingEvent.Location(location.Description,
+                                   String.IsNullOrEmpty(location.Latitude) ? null : location.Latitude,
+                                   String.IsNullOrEmpty(location.Longitude) ? null : location.Longitude);
+
+            var builtEvent = buildingEvent.Build();
 
             try
             {
                 CronofyAccountRequest(() => { AccountClient.UpsertEvent(calendarId, builtEvent); });
-                LogHelper.Log($"UpsertEvent success - eventId=`{eventId}` - calendarId=`{calendarId}` - summary=`{summary}` - description=`{description}` - start=`{start}` - end=`{end}`");
+
+                var successLog = $"UpsertEvent success - eventId=`{eventId}` - calendarId=`{calendarId}` - summary=`{summary}` - description=`{description}` - start=`{start}` - end=`{end}`";
+
+                if (!(String.IsNullOrEmpty(location.Latitude) || String.IsNullOrEmpty(location.Longitude)))
+                    successLog += $" - location.lat=`{location.Latitude}` - location.long=`{location.Longitude}`";
+
+                LogHelper.Log(successLog);
             }
             catch (CronofyException)
             {
-                LogHelper.Log($"UpsertEvent failure - eventId=`{eventId}` - calendarId=`{calendarId}` - summary=`{summary}` - description=`{description}` - start=`{start}` - end=`{end}`");
+                var failureLog = $"UpsertEvent failure - eventId=`{eventId}` - calendarId=`{calendarId}` - summary=`{summary}` - description=`{description}` - start=`{start}` - end=`{end}`";
+
+                if (!(String.IsNullOrEmpty(location.Latitude) || String.IsNullOrEmpty(location.Longitude)))
+                    failureLog += $" - location.lat=`{location.Latitude}` - location.long=`{location.Longitude}`";
+                
+                LogHelper.Log(failureLog);
             }
         }
 

@@ -8,6 +8,7 @@ namespace CronofyCSharpSampleApp
 {
     public static class DatabaseHandler
     {
+        private static bool _mac = false;
         private static bool _initialized = false;
         private static string _connectionString;
 
@@ -19,10 +20,21 @@ namespace CronofyCSharpSampleApp
 
             _connectionString = String.Format("Data Source={0};Version=3;", pathToDatabase);
             _initialized = true;
+            _mac = Environment.OSVersion.Platform != PlatformID.WinCE 
+                              && Environment.OSVersion.Platform != PlatformID.Win32S 
+                              && Environment.OSVersion.Platform != PlatformID.Win32NT
+                              && Environment.OSVersion.Platform != PlatformID.Win32Windows;
 
             if (!File.Exists(pathToDatabase))
             {
-                SQLiteConnection.CreateFile(pathToDatabase);
+
+                if (_mac)
+                {
+                    Mono.Data.Sqlite.SqliteConnection.CreateFile(pathToDatabase);
+                }
+                else {
+                    SQLiteConnection.CreateFile(pathToDatabase);
+                }
 
                 ExecuteNonQuery("CREATE TABLE ChannelData (Id INTEGER PRIMARY KEY AUTOINCREMENT, ChannelId ntext, Record ntext, OccurredOn datetime2)");
                 ExecuteNonQuery("CREATE TABLE UserCredentials (UserID INTEGER PRIMARY KEY AUTOINCREMENT, CronofyUID ntext, AccessToken ntext, RefreshToken ntext, ServiceAccount bit NOT NULL)");
@@ -35,23 +47,47 @@ namespace CronofyCSharpSampleApp
             if (!_initialized)
                 Initialize();
 
-            using (var conn = new SQLiteConnection(_connectionString))
+            if (_mac)
             {
-                conn.Open();
-                using (var cmd = conn.CreateCommand())
+                using (var conn = new Mono.Data.Sqlite.SqliteConnection(_connectionString))
                 {
-                    cmd.CommandText = sql;
-                    cmd.CommandType = System.Data.CommandType.Text;
-                    SQLiteDataReader reader = cmd.ExecuteReader();
-
-                    var rows = new List<T>();
-
-                    while (reader.Read())
+                    conn.Open();
+                    using (var cmd = conn.CreateCommand())
                     {
-                        rows.Add((T)(new T().Initialize(reader)));
-                    }
+                        cmd.CommandText = sql;
+                        cmd.CommandType = System.Data.CommandType.Text;
+                        Mono.Data.Sqlite.SqliteDataReader reader = cmd.ExecuteReader();
 
-                    return rows;
+                        var rows = new List<T>();
+
+                        while (reader.Read())
+                        {
+                            rows.Add((T)(new T().Initialize(reader)));
+                        }
+
+                        return rows;
+                    }
+                }
+            }
+            else {
+                using (var conn = new SQLiteConnection(_connectionString))
+                {
+                    conn.Open();
+                    using (var cmd = conn.CreateCommand())
+                    {
+                        cmd.CommandText = sql;
+                        cmd.CommandType = System.Data.CommandType.Text;
+                        SQLiteDataReader reader = cmd.ExecuteReader();
+
+                        var rows = new List<T>();
+
+                        while (reader.Read())
+                        {
+                            rows.Add((T)(new T().Initialize(reader)));
+                        }
+
+                        return rows;
+                    }
                 }
             }
         }
@@ -65,15 +101,30 @@ namespace CronofyCSharpSampleApp
         {
             if (!_initialized)
                 Initialize();
-            
-            using (var conn = new SQLiteConnection(_connectionString))
+
+            if (_mac)
             {
-                conn.Open();
-                using (var cmd = conn.CreateCommand())
+                using (var conn = new Mono.Data.Sqlite.SqliteConnection(_connectionString))
                 {
-                    cmd.CommandText = sql;
-                    cmd.CommandType = System.Data.CommandType.Text;
-                    return cmd.ExecuteScalar();
+                    conn.Open();
+                    using (var cmd = conn.CreateCommand())
+                    {
+                        cmd.CommandText = sql;
+                        cmd.CommandType = System.Data.CommandType.Text;
+                        return cmd.ExecuteScalar();
+                    }
+                }
+            }
+            else {
+                using (var conn = new SQLiteConnection(_connectionString))
+                {
+                    conn.Open();
+                    using (var cmd = conn.CreateCommand())
+                    {
+                        cmd.CommandText = sql;
+                        cmd.CommandType = System.Data.CommandType.Text;
+                        return cmd.ExecuteScalar();
+                    }
                 }
             }
         }
@@ -83,14 +134,29 @@ namespace CronofyCSharpSampleApp
             if (!_initialized)
                 Initialize();
 
-            using (var conn = new SQLiteConnection(_connectionString))
+            if (_mac)
             {
-                conn.Open();
-                using (var cmd = conn.CreateCommand())
+                using (var conn = new Mono.Data.Sqlite.SqliteConnection(_connectionString))
                 {
-                    cmd.CommandText = sql;
-                    cmd.CommandType = System.Data.CommandType.Text;
-                    cmd.ExecuteNonQuery();
+                    conn.Open();
+                    using (var cmd = conn.CreateCommand())
+                    {
+                        cmd.CommandText = sql;
+                        cmd.CommandType = System.Data.CommandType.Text;
+                        cmd.ExecuteNonQuery();
+                    }
+                }
+            }
+            else {
+                using (var conn = new SQLiteConnection(_connectionString))
+                {
+                    conn.Open();
+                    using (var cmd = conn.CreateCommand())
+                    {
+                        cmd.CommandText = sql;
+                        cmd.CommandType = System.Data.CommandType.Text;
+                        cmd.ExecuteNonQuery();
+                    }
                 }
             }
         }

@@ -15,7 +15,7 @@ namespace CronofyCSharpSampleApp.Controllers
         [HttpPost]
         public ActionResult Channel(string id)
         {
-            LogHelper.Log($"Receive push notification - id=`{id}`");
+            LogHelper.Log(String.Format("Receive push notification - id=`{0}`", id));
 
             try
             {
@@ -25,19 +25,19 @@ namespace CronofyCSharpSampleApp.Controllers
 
                 var data = JsonConvert.DeserializeObject<Models.ChannelData>(body);
 
-                var record = $"{DateTime.UtcNow} - {data.Notification.Type}";
+                var record = String.Format("{0} - {1}", DateTime.UtcNow, data.Notification.Type);
                 if (data.Notification.ChangesSince.HasValue)
                 {
-                    record += $": {data.Notification.ChangesSince}";
+                    record += String.Format(": {0}", data.Notification.ChangesSince);
                 }
 
-                DatabaseHandler.ExecuteNonQuery($"INSERT INTO ChannelData(ChannelId, Record, OccurredOn) VALUES('{data.Channel.ChannelId}', '{record}', '{DateTime.Now}')");
+                DatabaseHandler.ExecuteNonQuery(String.Format("INSERT INTO ChannelData(ChannelId, Record, OccurredOn) VALUES('{0}', '{1}', '{2}')", data.Channel.ChannelId, record, DateTime.Now));
 
-                LogHelper.Log($"Push notification success - channelId=`{data.Channel.ChannelId}`");
+                LogHelper.Log(String.Format("Push notification success - channelId=`{0}`", data.Channel.ChannelId));
             }
             catch (Exception ex)
             {
-                LogHelper.Log($"Push notification failure - ex.Source=`{ex.Source}` - ex.Message=`{ex.Message}`");
+                LogHelper.Log(String.Format("Push notification failure - ex.Source=`{0}` - ex.Message=`{1}`", ex.Source, ex.Message));
             }
 
             return new EmptyResult();

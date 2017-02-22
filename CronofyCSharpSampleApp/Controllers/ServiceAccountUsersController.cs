@@ -26,14 +26,14 @@ namespace CronofyCSharpSampleApp.Controllers
             {
                 CronofyHelper.AuthorizeWithServiceAccount(uidCookie.Value, user.Email, user.Scopes);
 
-                var recordCount = Convert.ToInt32(DatabaseHandler.Scalar($"SELECT * FROM EnterpriseConnectUserData WHERE Email='{user.Email}' AND OwnedBy='{uidCookie.Value}'"));
+                var recordCount = Convert.ToInt32(DatabaseHandler.Scalar(String.Format("SELECT * FROM EnterpriseConnectUserData WHERE Email='{0}' AND OwnedBy='{1}'", user.Email, uidCookie.Value)));
 
                 if (recordCount == 0)
                 {
-                    DatabaseHandler.ExecuteNonQuery($"INSERT INTO EnterpriseConnectUserData(Email, OwnedBy, Status) VALUES('{user.Email}', '{uidCookie.Value}', '{(int)EnterpriseConnectUserData.ConnectedStatus.Pending}')");
+                    DatabaseHandler.ExecuteNonQuery(String.Format("INSERT INTO EnterpriseConnectUserData(Email, OwnedBy, Status) VALUES('{0}', '{1}', '{2}')", user.Email, uidCookie.Value, (int)EnterpriseConnectUserData.ConnectedStatus.Pending));
                 }
                 else {
-                    DatabaseHandler.ExecuteNonQuery($"UPDATE EnterpriseConnectUserData SET Status='{(int)EnterpriseConnectUserData.ConnectedStatus.Pending}' WHERE Email='{user.Email}' AND OwnedBy='{uidCookie.Value}'");
+                    DatabaseHandler.ExecuteNonQuery(String.Format("UPDATE EnterpriseConnectUserData SET Status='{0}' WHERE Email='{1}' AND OwnedBy='{2}'", (int)EnterpriseConnectUserData.ConnectedStatus.Pending, user.Email, uidCookie.Value));
                 }
 
                 return new RedirectResult("/enterpriseconnect");
@@ -44,7 +44,7 @@ namespace CronofyCSharpSampleApp.Controllers
 
         public ActionResult Show([Bind(Prefix = "id")] string userId)
         {
-            var enterpriseConnectData = DatabaseHandler.Get<EnterpriseConnectUserData>($"SELECT CronofyUID, Email, Status FROM EnterpriseConnectUserData WHERE CronofyUID='{userId}' AND OwnedBy='{uidCookie.Value}'");
+            var enterpriseConnectData = DatabaseHandler.Get<EnterpriseConnectUserData>(String.Format("SELECT CronofyUID, Email, Status FROM EnterpriseConnectUserData WHERE CronofyUID='{0}' AND OwnedBy='{1}'", userId, uidCookie.Value));
 
             ImpersonateUser(userId);
 
@@ -102,7 +102,7 @@ namespace CronofyCSharpSampleApp.Controllers
             {
                 CronofyHelper.UpsertEvent(newEvent.EventId, newEvent.CalendarId, newEvent.Summary, newEvent.Description, newEvent.Start, newEvent.End);
 
-                return new RedirectResult($"/serviceaccountusers/show/{newEvent.UserId}/calendar/{newEvent.CalendarId}");
+                return new RedirectResult(String.Format("/serviceaccountusers/show/{0}/calendar/{1}", newEvent.UserId, newEvent.CalendarId));
             }
 
             ViewData["calendarName"] = CronofyHelper.GetCalendars().First(x => x.CalendarId == newEvent.CalendarId).Name;
@@ -112,7 +112,7 @@ namespace CronofyCSharpSampleApp.Controllers
 
         private void ImpersonateUser(string userId)
         {
-            var user = DatabaseHandler.Get<User>($"SELECT CronofyUID, AccessToken, RefreshToken from UserCredentials WHERE CronofyUID='{userId}' AND ServiceAccount=0");
+            var user = DatabaseHandler.Get<User>(String.Format("SELECT CronofyUID, AccessToken, RefreshToken from UserCredentials WHERE CronofyUID='{0}' AND ServiceAccount=0", userId));
 
             CronofyHelper.SetToken(user.AccessToken, user.RefreshToken, false);
         }

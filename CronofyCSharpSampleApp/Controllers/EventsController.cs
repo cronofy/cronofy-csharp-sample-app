@@ -43,7 +43,7 @@ namespace CronofyCSharpSampleApp.Controllers
             {
                 CronofyHelper.UpsertEvent(newEvent.EventId, newEvent.CalendarId, newEvent.Summary, newEvent.Description, newEvent.Start, newEvent.End, new Cronofy.Location(newEvent.LocationDescription, newEvent.Latitude, newEvent.Longitude));
 
-                return new RedirectResult($"/calendars/show/{newEvent.CalendarId}");
+                return new RedirectResult(String.Format("/calendars/show/{0}", newEvent.CalendarId));
             }
             
             newEvent.Calendar = CronofyHelper.GetCalendars().First(x => x.CalendarId == newEvent.CalendarId);
@@ -65,9 +65,9 @@ namespace CronofyCSharpSampleApp.Controllers
                 Description = gotEvent.Description,
                 Start = (gotEvent.Start.HasTime ? gotEvent.Start.DateTimeOffset.DateTime : gotEvent.Start.Date.DateTime),
                 End = (gotEvent.End.HasTime ? gotEvent.End.DateTimeOffset.DateTime : gotEvent.End.Date.DateTime),
-                LocationDescription = gotEvent.Location?.Description,
-                Latitude = gotEvent.Location?.Latitude,
-                Longitude = gotEvent.Location?.Longitude
+                LocationDescription = gotEvent.Location == null ? null : gotEvent.Location.Description,
+                Latitude = gotEvent.Location == null ? null : gotEvent.Location.Latitude,
+                Longitude = gotEvent.Location == null ? null : gotEvent.Location.Longitude
             };
 
             return View("Edit", editEvent);
@@ -84,7 +84,7 @@ namespace CronofyCSharpSampleApp.Controllers
             {
                 CronofyHelper.UpsertEvent(editEvent.EventId, editEvent.CalendarId, editEvent.Summary, editEvent.Description, editEvent.Start, editEvent.End, new Cronofy.Location(editEvent.LocationDescription, editEvent.Latitude, editEvent.Longitude));
 
-                return new RedirectResult($"/calendars/show/{editEvent.CalendarId}");
+                return new RedirectResult(String.Format("/calendars/show/{0}", editEvent.CalendarId));
             }
 
             editEvent.Calendar = CronofyHelper.GetCalendars().First(x => x.CalendarId == editEvent.CalendarId);
@@ -96,7 +96,7 @@ namespace CronofyCSharpSampleApp.Controllers
         {
             CronofyHelper.DeleteEvent(deleteEvent.CalendarId, deleteEvent.EventId);
 
-            return new RedirectResult($"/calendars/show/{deleteEvent.CalendarId}");
+            return new RedirectResult(String.Format("/calendars/show/{0}", deleteEvent.CalendarId));
         }
     }
 }

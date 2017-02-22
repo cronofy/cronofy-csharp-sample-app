@@ -17,17 +17,17 @@ namespace CronofyCSharpSampleApp.Controllers
 
             var account = CronofyHelper.GetAccount();
 
-            var recordCount = Convert.ToInt32(DatabaseHandler.Scalar($"SELECT COUNT(*) FROM UserCredentials WHERE CronofyUID='{account.Id}' AND ServiceAccount=0"));
+            var recordCount = Convert.ToInt32(DatabaseHandler.Scalar(String.Format("SELECT COUNT(*) FROM UserCredentials WHERE CronofyUID='{0}' AND ServiceAccount=0", account.Id)));
 
             if (recordCount == 0)
             {
-                DatabaseHandler.ExecuteNonQuery($"INSERT INTO UserCredentials(CronofyUID, AccessToken, RefreshToken, ServiceAccount) VALUES('{account.Id}', '{token.AccessToken}', '{token.RefreshToken}', 0)");
-                LogHelper.Log($"Create user credentials record - accountId=`{account.Id}`");
+                DatabaseHandler.ExecuteNonQuery(String.Format("INSERT INTO UserCredentials(CronofyUID, AccessToken, RefreshToken, ServiceAccount) VALUES('{0}', '{1}', '{2}', 0)", account.Id, token.AccessToken, token.RefreshToken));
+                LogHelper.Log(String.Format("Create user credentials record - accountId=`{0}`", account.Id));
             }
             else 
             {
-                DatabaseHandler.ExecuteNonQuery($"UPDATE UserCredentials SET AccessToken='{token.AccessToken}', RefreshToken='{token.RefreshToken}' WHERE CronofyUID='{account.Id}'");
-                LogHelper.Log($"Update user credentials record - accountId=`{account.Id}`");
+                DatabaseHandler.ExecuteNonQuery(String.Format("UPDATE UserCredentials SET AccessToken='{0}', RefreshToken='{1}' WHERE CronofyUID='{2}'", token.AccessToken, token.RefreshToken, account.Id));
+                LogHelper.Log(String.Format("Update user credentials record - accountId=`{0}`", account.Id));
             }
 
             Response.SetCookie(new HttpCookie(CronofyHelper.CookieName, account.Id));
@@ -42,17 +42,17 @@ namespace CronofyCSharpSampleApp.Controllers
 
             var userInfo = CronofyHelper.GetEnterpriseConnectUserInfo();
 
-            var recordCount = Convert.ToInt32(DatabaseHandler.Scalar($"SELECT COUNT(*) FROM UserCredentials WHERE CronofyUID='{userInfo.Sub}' AND ServiceAccount=1"));
+            var recordCount = Convert.ToInt32(DatabaseHandler.Scalar(String.Format("SELECT COUNT(*) FROM UserCredentials WHERE CronofyUID='{0}' AND ServiceAccount=1", userInfo.Sub)));
 
             if (recordCount == 0)
             {
-                DatabaseHandler.ExecuteNonQuery($"INSERT INTO UserCredentials(CronofyUID, AccessToken, RefreshToken, ServiceAccount) VALUES('{userInfo.Sub}', '{token.AccessToken}', '{token.RefreshToken}', 1)");
-                LogHelper.Log($"Create enterprise connect user credentials record - sub=`{userInfo.Sub}`");
+                DatabaseHandler.ExecuteNonQuery(String.Format("INSERT INTO UserCredentials(CronofyUID, AccessToken, RefreshToken, ServiceAccount) VALUES('{0}', '{1}', '{2}', 1)", userInfo.Sub, token.AccessToken, token.RefreshToken));
+                LogHelper.Log(String.Format("Create enterprise connect user credentials record - sub=`{0}`", userInfo.Sub));
             }
             else
             {
-                DatabaseHandler.ExecuteNonQuery($"UPDATE UserCredentials SET AccessToken='{token.AccessToken}', RefreshToken='{token.RefreshToken}' WHERE CronofyUID='{userInfo.Sub}'");
-                LogHelper.Log($"Update enterprise connect user credentials record - sub=`{userInfo.Sub}`");
+                DatabaseHandler.ExecuteNonQuery(String.Format("UPDATE UserCredentials SET AccessToken='{0}', RefreshToken='{1}' WHERE CronofyUID='{2}'", token.AccessToken, token.RefreshToken, userInfo.Sub));
+                LogHelper.Log(String.Format("Update enterprise connect user credentials record - sub=`{0}`", userInfo.Sub));
             }
 
             Response.SetCookie(new HttpCookie(CronofyHelper.EnterpriseConnectCookieName, userInfo.Sub));

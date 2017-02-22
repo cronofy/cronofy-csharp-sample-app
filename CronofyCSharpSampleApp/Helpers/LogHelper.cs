@@ -7,9 +7,9 @@ namespace CronofyCSharpSampleApp
     {
         public static void Log(string line)
         {
-            using (StreamWriter w = File.AppendText($"{AppDomain.CurrentDomain.BaseDirectory}/Logs/info.txt"))
+            using (StreamWriter w = File.AppendText(String.Format("{0}/Logs/info.txt", AppDomain.CurrentDomain.BaseDirectory)))
             {
-                w.WriteLine($"{DateTime.Now} - {line}");
+                w.WriteLine(String.Format("{0} - {1}", DateTime.Now, line));
             }
         }
     }

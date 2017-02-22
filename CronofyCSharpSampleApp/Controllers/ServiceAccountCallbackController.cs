@@ -13,7 +13,7 @@ namespace CronofyCSharpSampleApp.Controllers
     {
         public ActionResult Authorize([Bind(Prefix = "id")] string enterpriseConnectId, string email)
         {
-            LogHelper.Log($"Receive Service Account callback - enterpriseConnectId=`{enterpriseConnectId}`");
+            LogHelper.Log(String.Format("Receive Service Account callback - enterpriseConnectId=`{0}`", enterpriseConnectId));
 
             try
             {
@@ -25,23 +25,23 @@ namespace CronofyCSharpSampleApp.Controllers
 
                 if (data.Authorization.Error != null)
                 {
-                    DatabaseHandler.ExecuteNonQuery($"UPDATE EnterpriseConnectUserData SET Status='{(int)EnterpriseConnectUserData.ConnectedStatus.Failed}' WHERE Email='{email}' AND OwnedBy='{enterpriseConnectId}'");
+                    DatabaseHandler.ExecuteNonQuery(String.Format("UPDATE EnterpriseConnectUserData SET Status='{0}' WHERE Email='{1}' AND OwnedBy='{2}'", (int)EnterpriseConnectUserData.ConnectedStatus.Failed, email, enterpriseConnectId));
 
-                    LogHelper.Log($"Service Account callback failure - error=`{data.Authorization.Error}` - error_key=`{data.Authorization.ErrorKey}` - error_description=`{data.Authorization.ErrorDescription}`");
+                    LogHelper.Log(String.Format("Service Account callback failure - error=`{0}` - error_key=`{1}` - error_description=`{2}`", data.Authorization.Error, data.Authorization.ErrorKey, data.Authorization.ErrorDescription));
                 }
                 else 
                 {
                     var userToken = CronofyHelper.GetEnterpriseConnectUserOAuthToken(enterpriseConnectId, email, data.Authorization.Code);
 
-                    DatabaseHandler.ExecuteNonQuery($"INSERT INTO UserCredentials(CronofyUID, AccessToken, RefreshToken, ServiceAccount) VALUES('{userToken.LinkingProfile.Id}', '{userToken.AccessToken}', '{userToken.RefreshToken}', 0)");
-                    DatabaseHandler.ExecuteNonQuery($"UPDATE EnterpriseConnectUserData SET Status='{(int)EnterpriseConnectUserData.ConnectedStatus.Linked}', CronofyUID='{userToken.LinkingProfile.Id}' WHERE Email='{userToken.LinkingProfile.Name}' AND OwnedBy='{enterpriseConnectId}'");
+                    DatabaseHandler.ExecuteNonQuery(String.Format("INSERT INTO UserCredentials(CronofyUID, AccessToken, RefreshToken, ServiceAccount) VALUES('{0}', '{1}', '{2}', 0)", userToken.LinkingProfile.Id, userToken.AccessToken, userToken.RefreshToken));
+                    DatabaseHandler.ExecuteNonQuery(String.Format("UPDATE EnterpriseConnectUserData SET Status='{0}', CronofyUID='{1}' WHERE Email='{2}' AND OwnedBy='{3}'", (int)EnterpriseConnectUserData.ConnectedStatus.Linked, userToken.LinkingProfile.Id, userToken.LinkingProfile.Name, enterpriseConnectId));
 
-                    LogHelper.Log($"Service Account callback success - id=`{userToken.LinkingProfile.Id}` - email=`{userToken.LinkingProfile.Name}`");
+                    LogHelper.Log(String.Format("Service Account callback success - id=`{0}` - email=`{1}`", userToken.LinkingProfile.Id, userToken.LinkingProfile.Name));
                 }
             }
             catch (Exception ex)
             {
-                LogHelper.Log($"Service Account callback failure - ex.Source=`{ex.Source}` - ex.Message=`{ex.Message}`");
+                LogHelper.Log(String.Format("Service Account callback failure - ex.Source=`{0}` - ex.Message=`{1}`", ex.Source, ex.Message));
             }
 
             return new EmptyResult();

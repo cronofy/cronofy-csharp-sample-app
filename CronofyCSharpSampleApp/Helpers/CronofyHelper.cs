@@ -54,24 +54,24 @@ namespace CronofyCSharpSampleApp
             }
         }
 
-        private static string _oauthCallbackUrl = $"{ConfigurationManager.AppSettings["domain"]}/oauth";
-        private static string _oauthAccountIdCallbackUrl = $"{ConfigurationManager.AppSettings["domain"]}/availability/AccountId";
+        private static string _oauthCallbackUrl = String.Format("{0}/oauth", ConfigurationManager.AppSettings["domain"]);
+        private static string _oauthAccountIdCallbackUrl = String.Format("{0}/availability/AccountId", ConfigurationManager.AppSettings["domain"]);
 
-        private static string _enterpriseConnectOAuthCallbackUrl = $"{ConfigurationManager.AppSettings["domain"]}/oauth/enterpriseconnect";
-        private static string _enterpriseConnectUserAuthCallbackUrl = $"{ConfigurationManager.AppSettings["domain"]}/serviceaccountcallback/authorize/";
+        private static string _enterpriseConnectOAuthCallbackUrl = String.Format("{0}/oauth/enterpriseconnect", ConfigurationManager.AppSettings["domain"]);
+        private static string _enterpriseConnectUserAuthCallbackUrl = String.Format("{0}/serviceaccountcallback/authorize/", ConfigurationManager.AppSettings["domain"]);
 
         public static bool LoadUser(string cronofyUid, bool serviceAccount)
         {
-            var user = DatabaseHandler.Get<Persistence.Models.User>($"SELECT CronofyUid, AccessToken, RefreshToken FROM UserCredentials WHERE CronofyUID='{cronofyUid}' AND ServiceAccount='{(serviceAccount ? 1 : 0)}'");
+            var user = DatabaseHandler.Get<Persistence.Models.User>(String.Format("SELECT CronofyUid, AccessToken, RefreshToken FROM UserCredentials WHERE CronofyUID='{0}' AND ServiceAccount='{1}'", cronofyUid, (serviceAccount ? 1 : 0)));
 
             if (user == null)
             {
-                LogHelper.Log($"LoadUser failed - Unable to find user - CronofyUID=`{cronofyUid}` - ServiceAccount=`{serviceAccount}`");
+                LogHelper.Log(String.Format("LoadUser failed - Unable to find user - CronofyUID=`{0}` - ServiceAccount=`{1}`", cronofyUid, serviceAccount));
 
                 return false;
             }
 
-            LogHelper.Log($"LoadUser success - CronofyUID=`{cronofyUid}` - ServiceAccount=`{serviceAccount}`");
+            LogHelper.Log(String.Format("LoadUser success - CronofyUID=`{0}` - ServiceAccount=`{1}`", cronofyUid, serviceAccount));
 
             if (serviceAccount)
             {
@@ -134,11 +134,11 @@ namespace CronofyCSharpSampleApp
             try
             {
                 token = OAuthClient.GetTokenFromCode(code, _oauthCallbackUrl);
-                LogHelper.Log($"GetOAuthToken success - code=`{code}`");
+                LogHelper.Log(String.Format("GetOAuthToken success - code=`{0}`", code));
             }
             catch (CronofyException)
             {
-                LogHelper.Log($"GetOAuthToken failure - code=`{code}`");
+                LogHelper.Log(String.Format("GetOAuthToken failure - code=`{0}`", code));
             }
 
             return token;
@@ -151,11 +151,11 @@ namespace CronofyCSharpSampleApp
             try
             {
                 token = OAuthClient.GetTokenFromCode(code, _oauthAccountIdCallbackUrl);
-                LogHelper.Log($"GetAccountIdOAuthToken success - code=`{code}`");
+                LogHelper.Log(String.Format("GetAccountIdOAuthToken success - code=`{0}`", code));
             }
             catch (CronofyException)
             {
-                LogHelper.Log($"GetAccountIdOAuthToken failure - code=`{code}`");
+                LogHelper.Log(String.Format("GetAccountIdOAuthToken failure - code=`{0}`", code));
             }
 
             return token;
@@ -168,11 +168,11 @@ namespace CronofyCSharpSampleApp
             try
             {
                 token = OAuthClient.GetTokenFromCode(code, _enterpriseConnectUserAuthCallbackUrl + enterpriseConnectId + "?email=" + email);
-                LogHelper.Log($"GetEnterpriseConnectUserOAuthToken success - enterpriseConnectId=`{enterpriseConnectId}` - code=`{code}`");
+                LogHelper.Log(String.Format("GetEnterpriseConnectUserOAuthToken success - enterpriseConnectId=`{0}` - code=`{1}`", enterpriseConnectId, code));
             }
             catch (CronofyException)
             {
-                LogHelper.Log($"GetEnterpriseConnectUserOAuthToken failure - enterpriseConnectId=`{enterpriseConnectId}` - code=`{code}`");
+                LogHelper.Log(String.Format("GetEnterpriseConnectUserOAuthToken failure - enterpriseConnectId=`{0}` - code=`{1}`", enterpriseConnectId, code));
             }
 
             return token;
@@ -185,11 +185,11 @@ namespace CronofyCSharpSampleApp
             try
             {
                 token = OAuthClient.GetTokenFromCode(code, _enterpriseConnectOAuthCallbackUrl);
-                LogHelper.Log($"GetEnterpriseConnectOAuthToken success - code=`{code}`");
+                LogHelper.Log(String.Format("GetEnterpriseConnectOAuthToken success - code=`{0}`", code));
             }
             catch (CronofyException)
             {
-                LogHelper.Log($"GetEnterpriseConnectOAuthToken failure - code=`{code}`");
+                LogHelper.Log(String.Format("GetEnterpriseConnectOAuthToken failure - code=`{0}`", code));
             }
 
             return token;
@@ -202,11 +202,11 @@ namespace CronofyCSharpSampleApp
             try
             {
                 account = CronofyAccountRequest<Account>(() => { return AccountClient.GetAccount(); });
-                LogHelper.Log($"GetAccount success");
+                LogHelper.Log("GetAccount success");
             }
             catch (CronofyException)
             {
-                LogHelper.Log($"GetAccount failure");
+                LogHelper.Log("GetAccount failure");
             }
 
             return account;
@@ -219,11 +219,11 @@ namespace CronofyCSharpSampleApp
             try
             {
                 profiles = CronofyAccountRequest<IEnumerable<Cronofy.Profile>>(() => { return AccountClient.GetProfiles(); });
-                LogHelper.Log($"GetProfiles success");
+                LogHelper.Log("GetProfiles success");
             }
             catch (CronofyException)
             {
-                LogHelper.Log($"GetProfiles failure");
+                LogHelper.Log("GetProfiles failure");
             }
 
             return profiles;
@@ -236,11 +236,11 @@ namespace CronofyCSharpSampleApp
             try
             {
                 calendars = CronofyAccountRequest<IEnumerable<Cronofy.Calendar>>(() => { return AccountClient.GetCalendars(); });
-                LogHelper.Log($"GetCalendars success");
+                LogHelper.Log("GetCalendars success");
             }
             catch (CronofyException)
             {
-                LogHelper.Log($"GetCalendars failure");
+                LogHelper.Log("GetCalendars failure");
             }
 
             return calendars;
@@ -253,11 +253,11 @@ namespace CronofyCSharpSampleApp
             try
             {
                 calendar = CronofyAccountRequest<Cronofy.Calendar>(() => { return AccountClient.CreateCalendar(profileId, name); });
-                LogHelper.Log($"CreateCalendar success - profileId=`{profileId}` - name=`{name}`");
+                LogHelper.Log(String.Format("CreateCalendar success - profileId=`{0}` - name=`{1}`", profileId, name));
             }
             catch (CronofyException)
             {
-                LogHelper.Log($"CreateCalendar failure - profileId=`{profileId}` - name=`{name}`");
+                LogHelper.Log(String.Format("CreateCalendar failure - profileId=`{0}` - name=`{1}`", profileId, name));
             }
 
             return calendar;
@@ -270,11 +270,11 @@ namespace CronofyCSharpSampleApp
             try
             {
                 freeBusy = CronofyAccountRequest<IEnumerable<Cronofy.FreeBusy>>(() => { return AccountClient.GetFreeBusy(); });
-                LogHelper.Log($"GetFreeBusy success");
+                LogHelper.Log("GetFreeBusy success");
             }
             catch (CronofyException)
             {
-                LogHelper.Log($"GetFreeBusy failure");
+                LogHelper.Log("GetFreeBusy failure");
             }
 
             return freeBusy;
@@ -292,11 +292,11 @@ namespace CronofyCSharpSampleApp
             try
             {
                 events = CronofyAccountRequest<IEnumerable<Cronofy.Event>>(() => { return AccountClient.GetEvents(readEvents); });
-                LogHelper.Log($"ReadEventsForCalendar success - calendarId=`{calendarId}`");
+                LogHelper.Log(String.Format("ReadEventsForCalendar success - calendarId=`{0}`", calendarId));
             }
             catch (CronofyException)
             {
-                LogHelper.Log($"ReadEventsForCalendar failure - calendarId=`{calendarId}`");
+                LogHelper.Log(String.Format("ReadEventsForCalendar failure - calendarId=`{0}`", calendarId));
             }
 
             return events;
@@ -313,11 +313,11 @@ namespace CronofyCSharpSampleApp
             try
             {
                 events = CronofyAccountRequest<IEnumerable<Cronofy.Event>>(() => { return AccountClient.GetEvents(readEvents); });
-                LogHelper.Log($"ReadEvents success");
+                LogHelper.Log("ReadEvents success");
             }
             catch (CronofyException)
             {
-                LogHelper.Log($"ReadEvents failure");
+                LogHelper.Log("ReadEvents failure");
             }
 
             return events;
@@ -342,19 +342,19 @@ namespace CronofyCSharpSampleApp
             {
                 CronofyAccountRequest(() => { AccountClient.UpsertEvent(calendarId, builtEvent); });
 
-                var successLog = $"UpsertEvent success - eventId=`{eventId}` - calendarId=`{calendarId}` - summary=`{summary}` - description=`{description}` - start=`{start}` - end=`{end}`";
+                var successLog = "UpsertEvent success - eventId=`{eventId}` - calendarId=`{calendarId}` - summary=`{summary}` - description=`{description}` - start=`{start}` - end=`{end}`";
 
                 if (!(String.IsNullOrEmpty(location.Latitude) || String.IsNullOrEmpty(location.Longitude)))
-                    successLog += $" - location.lat=`{location.Latitude}` - location.long=`{location.Longitude}`";
+                    successLog += String.Format(" - location.lat=`{0}` - location.long=`{1}`", location.Latitude, location.Longitude);
 
                 LogHelper.Log(successLog);
             }
             catch (CronofyException)
             {
-                var failureLog = $"UpsertEvent failure - eventId=`{eventId}` - calendarId=`{calendarId}` - summary=`{summary}` - description=`{description}` - start=`{start}` - end=`{end}`";
+                var failureLog = "UpsertEvent failure - eventId=`{eventId}` - calendarId=`{calendarId}` - summary=`{summary}` - description=`{description}` - start=`{start}` - end=`{end}`";
 
                 if (!(String.IsNullOrEmpty(location.Latitude) || String.IsNullOrEmpty(location.Longitude)))
-                    failureLog += $" - location.lat=`{location.Latitude}` - location.long=`{location.Longitude}`";
+                    failureLog += String.Format(" - location.lat=`{0}` - location.long=`{1}`", location.Latitude, location.Longitude);
                 
                 LogHelper.Log(failureLog);
             }
@@ -365,11 +365,11 @@ namespace CronofyCSharpSampleApp
             try
             {
                 CronofyAccountRequest(() => { AccountClient.DeleteEvent(calendarId, eventId); });
-                LogHelper.Log($"DeleteEvent success - calendarId=`{calendarId}` - eventId=`{eventId}`");
+                LogHelper.Log(String.Format("DeleteEvent success - calendarId=`{0}` - eventId=`{1}`", calendarId, eventId));
             }
             catch (CronofyException)
             {
-                LogHelper.Log($"DeleteEvent failure - calendarId=`{calendarId}` - eventId=`{eventId}`");
+                LogHelper.Log(String.Format("DeleteEvent failure - calendarId=`{0}` - eventId=`{1}`", calendarId, eventId));
             }
         }
 
@@ -403,11 +403,11 @@ namespace CronofyCSharpSampleApp
             try
             {
                 channel = CronofyAccountRequest<Cronofy.Channel>(() => { return AccountClient.CreateChannel(builtChannel); });
-                LogHelper.Log($"CreateChannel success - path=`{path}` - onlyManaged=`{onlyManaged}` - calendarIds=`{String.Join(",", calendarIds)}`");
+                LogHelper.Log(String.Format("CreateChannel success - path=`{0}` - onlyManaged=`{1}` - calendarIds=`{2}`", path, onlyManaged, String.Join(",", calendarIds)));
             }
             catch (CronofyException)
             {
-                LogHelper.Log($"CreateChannel failure - path=`{path}` - onlyManaged=`{onlyManaged}` - calendarIds=`{String.Join(",", calendarIds)}`");
+                LogHelper.Log(String.Format("CreateChannel failure - path=`{0}` - onlyManaged=`{1}` - calendarIds=`{2}`", path, onlyManaged, String.Join(",", calendarIds)));
             }
 
             return channel;
@@ -452,11 +452,11 @@ namespace CronofyCSharpSampleApp
             try
             {
                 CronofyEnterpriseConnectAccountRequest(() => { EnterpriseConnectAccountClient.AuthorizeUser(email, _enterpriseConnectUserAuthCallbackUrl + enterpriseConnectId + "?email=" + email, scopes); });
-                LogHelper.Log($"AuthorizeWithServiceAccount success - enterpriseConnectId=`{enterpriseConnectId}` - email=`{email}` - scopes=`{scopes}`");
+                LogHelper.Log(String.Format("AuthorizeWithServiceAccount success - enterpriseConnectId=`{0}` - email=`{1}` - scopes=`{2}`", enterpriseConnectId, email, scopes));
             }
             catch (CronofyException)
             {
-                LogHelper.Log($"AuthorizeWithServiceAccount failure - enterpriseConnectId=`{enterpriseConnectId}` - email=`{email}` - scopes=`{scopes}`");
+                LogHelper.Log(String.Format("AuthorizeWithServiceAccount failure - enterpriseConnectId=`{0}` - email=`{1}` - scopes=`{2}`", enterpriseConnectId, email, scopes));
             }
         }
 
@@ -484,11 +484,11 @@ namespace CronofyCSharpSampleApp
             try
             {
                 availablePeriods = CronofyAccountRequest<IEnumerable<Cronofy.AvailablePeriod>>(() => { return AccountClient.GetAvailability(builtAvailabilityRequest); });
-                LogHelper.Log($"Availability success - accountId1=`{availability.AccountId1}` - accountId2=`{availability.AccountId2}` - requiredParticipants=`{availability.RequiredParticipants}` - duration=`{availability.Duration}` - start=`{availability.Start}` - end=`{availability.End}` - periods=`{JsonConvert.SerializeObject(availablePeriods)}`");
+                LogHelper.Log("Availability success - accountId1=`{availability.AccountId1}` - accountId2=`{availability.AccountId2}` - requiredParticipants=`{availability.RequiredParticipants}` - duration=`{availability.Duration}` - start=`{availability.Start}` - end=`{availability.End}` - periods=`{JsonConvert.SerializeObject(availablePeriods)}`");
             }
             catch (CronofyException)
             {
-                LogHelper.Log($"Availability failure - accountId1=`{availability.AccountId1}` - accountId2=`{availability.AccountId2}` - requiredParticipants=`{availability.RequiredParticipants}` - duration=`{availability.Duration}` - start=`{availability.Start}` - end=`{availability.End}`");
+                LogHelper.Log("Availability failure - accountId1=`{availability.AccountId1}` - accountId2=`{availability.AccountId2}` - requiredParticipants=`{availability.RequiredParticipants}` - duration=`{availability.Duration}` - start=`{availability.Start}` - end=`{availability.End}`");
             }
 
             return availablePeriods;
@@ -515,16 +515,16 @@ namespace CronofyCSharpSampleApp
                     // First time this fails, attempt to get a new access token and store it for the user
                     var token = OAuthClient.GetTokenFromRefreshToken(_refreshToken);
 
-                    DatabaseHandler.ExecuteNonQuery($"UPDATE UserCredentials SET AccessToken='{token.AccessToken}', RefreshToken='{token.RefreshToken}' WHERE CronofyUID='{_cronofyUid}' AND ServiceAccount=0");
+                    DatabaseHandler.ExecuteNonQuery(String.Format("UPDATE UserCredentials SET AccessToken='{0}', RefreshToken='{1}' WHERE CronofyUID='{2}' AND ServiceAccount=0", token.AccessToken, token.RefreshToken, _cronofyUid));
                     SetToken(token, false);
 
-                    LogHelper.Log($"Access Token out of date, tokens have been refreshed - _cronofyUid=`{_cronofyUid}` - serviceAccount=0");
+                    LogHelper.Log(String.Format("Access Token out of date, tokens have been refreshed - _cronofyUid=`{0}` - serviceAccount=0", _cronofyUid));
                 }
                 catch (CronofyException)
                 {
                     // If getting a new oauth token fails then delete the user's credentials and throw an exception
-                    DatabaseHandler.ExecuteNonQuery($"DELETE FROM UserCredentials WHERE CronofyUID='{_cronofyUid}' AND ServiceAccount=0");
-                    LogHelper.Log($"Credentials invalid, deleting account - _cronofyUid=`{_cronofyUid}` - serviceAccount=1");
+                    DatabaseHandler.ExecuteNonQuery(String.Format("DELETE FROM UserCredentials WHERE CronofyUID='{0}' AND ServiceAccount=0", _cronofyUid));
+                    LogHelper.Log(String.Format("Credentials invalid, deleting account - _cronofyUid=`{0}` - serviceAccount=1", _cronofyUid));
 
                     throw new CredentialsInvalidError();
                 }
@@ -558,16 +558,16 @@ namespace CronofyCSharpSampleApp
                     // First time this fails, attempt to get a new access token and store it for the user
                     var token = OAuthClient.GetTokenFromRefreshToken(_enterpriseConnectRefreshToken);
 
-                    DatabaseHandler.ExecuteNonQuery($"UPDATE UserCredentials SET AccessToken='{token.AccessToken}', RefreshToken='{token.RefreshToken}' WHERE CronofyUID='{_enterpriseConnectCronofyUid}' AND ServiceAccount=1");
+                    DatabaseHandler.ExecuteNonQuery(String.Format("UPDATE UserCredentials SET AccessToken='{0}', RefreshToken='{1}' WHERE CronofyUID='{2}' AND ServiceAccount=1", token.AccessToken, token.RefreshToken, _enterpriseConnectCronofyUid));
                     SetToken(token, true);
 
-                    LogHelper.Log($"Access Token out of date, tokens have been refreshed - _enterpriseConnectCronofyUid=`{_enterpriseConnectCronofyUid}` - serviceAccount=1");
+                    LogHelper.Log(String.Format("Access Token out of date, tokens have been refreshed - _enterpriseConnectCronofyUid=`{0}` - serviceAccount=1", _enterpriseConnectCronofyUid));
                 }
                 catch (CronofyException)
                 {
                     // If getting a new oauth token fails then delete the user's credentials and throw an exception
-                    DatabaseHandler.ExecuteNonQuery($"DELETE FROM UserCredentials WHERE CronofyUID='{_enterpriseConnectCronofyUid}' AND ServiceAccount=1");
-                    LogHelper.Log($"Credentials invalid, deleting account - _enterpriseConnectCronofyUid=`{_enterpriseConnectCronofyUid}` - serviceAccount=1");
+                    DatabaseHandler.ExecuteNonQuery(String.Format("DELETE FROM UserCredentials WHERE CronofyUID='{0}' AND ServiceAccount=1", _enterpriseConnectCronofyUid));
+                    LogHelper.Log(String.Format("Credentials invalid, deleting account - _enterpriseConnectCronofyUid=`{0}` - serviceAccount=1", _enterpriseConnectCronofyUid));
 
                     throw new CredentialsInvalidError();
                 }

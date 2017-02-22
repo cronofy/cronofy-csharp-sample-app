@@ -42,4 +42,28 @@
 
   <dt>End Date</dt>
   <dd>@(Model.End.HasTime ? Model.End.DateTimeOffset.ToString() : Model.End.Date.ToString())</dd>
+
+@if(!String.IsNullOrEmpty(Model.Location.Description)){
+  <dt>Location</dt>
+  <dd>@Model.Location.Description</dd>
+}
+	
+@if(Model.Location?.Latitude != null && Model.Location?.Longitude != null){
+  if(!String.IsNullOrEmpty(ViewData["google_maps_embed_api_key"]?.ToString())){
+  <dt>Map location</dt>
+  <dd>
+    <iframe
+    width="600"
+    height="450"
+    frameborder="0" style="border:0"
+    src="https://www.google.com/maps/embed/v1/place?key=@ViewData["google_maps_embed_api_key"]
+      &q=@Model.Location.Latitude,@Model.Location.Longitude" allowfullscreen>
+  </iframe>
+  </dd>
+  } else {
+  <dt>Latitude, Longitude</dt>
+  <dd>@Model.Location.Latitude, @Model.Location.Longitude</dd>
+  }
+}
+
 </dl>

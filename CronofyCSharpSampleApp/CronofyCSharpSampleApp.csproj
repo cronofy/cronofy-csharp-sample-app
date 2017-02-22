@@ -121,6 +121,7 @@
     <Reference Include="Cronofy">
       <HintPath>packages\Cronofy.0.1.1\lib\net35\Cronofy.dll</HintPath>
     </Reference>
+    <Reference Include="Mono.Data.Sqlite" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Logs\" />

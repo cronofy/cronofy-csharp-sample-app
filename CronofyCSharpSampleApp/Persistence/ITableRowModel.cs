@@ -6,6 +6,6 @@ namespace CronofyCSharpSampleApp
     public interface ITableRowModel
     {
         ITableRowModel Initialize(SQLiteDataReader row);
-        ITableRowModel Initialize(object obj);
+        ITableRowModel Initialize(Mono.Data.Sqlite.SqliteDataReader row);
     }
 }

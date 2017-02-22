@@ -27,8 +27,12 @@ namespace CronofyCSharpSampleApp.Persistence.Models
             return this;
         }
 
-        public ITableRowModel Initialize(object obj)
+        public ITableRowModel Initialize(Mono.Data.Sqlite.SqliteDataReader row)
         {
+            CronofyUID = row.GetString(0);
+            AccessToken = row.GetString(1);
+            RefreshToken = row.GetString(2);
+
             return this;
         }
     }

@@ -27,8 +27,12 @@ namespace CronofyCSharpSampleApp.Persistence.Models
             return this;
         }
 
-        public ITableRowModel Initialize(object obj)
+        public ITableRowModel Initialize(Mono.Data.Sqlite.SqliteDataReader row)
         {
+            ChannelId = row.GetString(0);
+            Record = row.GetString(1);
+            OccurredOn = DateTime.Parse(row.GetString(2));
+
             return this;
         }
     }

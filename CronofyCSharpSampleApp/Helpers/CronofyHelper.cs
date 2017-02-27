@@ -62,7 +62,8 @@ namespace CronofyCSharpSampleApp
 
         public static bool LoadUser(string cronofyUid, bool serviceAccount)
         {
-            var user = DatabaseHandler.Get<Persistence.Models.User>(String.Format("SELECT CronofyUid, AccessToken, RefreshToken FROM UserCredentials WHERE CronofyUID='{0}' AND ServiceAccount='{1}'", cronofyUid, (serviceAccount ? 1 : 0)));
+            var user = DatabaseHandler.Get<Persistence.Models.User>("SELECT CronofyUid, AccessToken, RefreshToken FROM UserCredentials WHERE CronofyUID=@cronofyUid AND ServiceAccount=@serviceAccount",
+                                                                    new Dictionary<string, object> { { "cronofyUid", cronofyUid }, { "serviceAccount", (serviceAccount ? 1 : 0) } });
 
             if (user == null)
             {

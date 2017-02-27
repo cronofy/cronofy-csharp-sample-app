@@ -44,7 +44,8 @@ namespace CronofyCSharpSampleApp.Controllers
 
         public ActionResult Show([Bind(Prefix = "id")] string userId)
         {
-            var enterpriseConnectData = DatabaseHandler.Get<EnterpriseConnectUserData>(String.Format("SELECT CronofyUID, Email, Status FROM EnterpriseConnectUserData WHERE CronofyUID='{0}' AND OwnedBy='{1}'", userId, uidCookie.Value));
+            var enterpriseConnectData = DatabaseHandler.Get<EnterpriseConnectUserData>("SELECT CronofyUID, Email, Status FROM EnterpriseConnectUserData WHERE CronofyUID=@userId AND OwnedBy=@uidCookie",
+                                                                                       new Dictionary<string, object> { { "userId", userId }, { "uidCookie", uidCookie.Value } });
 
             ImpersonateUser(userId);
 
@@ -112,7 +113,8 @@ namespace CronofyCSharpSampleApp.Controllers
 
         private void ImpersonateUser(string userId)
         {
-            var user = DatabaseHandler.Get<User>(String.Format("SELECT CronofyUID, AccessToken, RefreshToken from UserCredentials WHERE CronofyUID='{0}' AND ServiceAccount=0", userId));
+			var user = DatabaseHandler.Get<User>("SELECT CronofyUID, AccessToken, RefreshToken from UserCredentials WHERE CronofyUID=@userId AND ServiceAccount=0",
+                                                 new Dictionary<string, object> { { "userId", userId } });
 
             CronofyHelper.SetToken(user.AccessToken, user.RefreshToken, false);
         }

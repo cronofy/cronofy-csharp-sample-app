@@ -42,7 +42,7 @@ namespace CronofyCSharpSampleApp
             }
         }
 
-        public static IEnumerable<T> Many<T>(string sql, IDictionary<string, object> parameters = null) where T : ITableRowModel, new()
+        public static IEnumerable<T> Many<T>(string sql, IDictionary<string, object> parameters) where T : ITableRowModel, new()
         {
             if (!_initialized)
                 Initialize();
@@ -98,7 +98,7 @@ namespace CronofyCSharpSampleApp
             }
         }
 
-        public static T Get<T>(string sql, IDictionary<string, object> parameters = null) where T : ITableRowModel, new()
+        public static T Get<T>(string sql, IDictionary<string, object> parameters) where T : ITableRowModel, new()
         {
             return Many<T>(sql, parameters).FirstOrDefault();
         }

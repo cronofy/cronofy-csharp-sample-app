@@ -17,7 +17,8 @@ namespace CronofyCSharpSampleApp.Controllers
 
             var account = CronofyHelper.GetAccount();
 
-            var recordCount = Convert.ToInt32(DatabaseHandler.Scalar(String.Format("SELECT COUNT(*) FROM UserCredentials WHERE CronofyUID='{0}' AND ServiceAccount=0", account.Id)));
+            var recordCount = Convert.ToInt32(DatabaseHandler.Scalar("SELECT COUNT(*) FROM UserCredentials WHERE CronofyUID=@accountId AND ServiceAccount=0",
+                                                                     new Dictionary<string, object> { { "accountId", account.Id } }));
 
             if (recordCount == 0)
             {
@@ -42,7 +43,8 @@ namespace CronofyCSharpSampleApp.Controllers
 
             var userInfo = CronofyHelper.GetEnterpriseConnectUserInfo();
 
-            var recordCount = Convert.ToInt32(DatabaseHandler.Scalar(String.Format("SELECT COUNT(*) FROM UserCredentials WHERE CronofyUID='{0}' AND ServiceAccount=1", userInfo.Sub)));
+            var recordCount = Convert.ToInt32(DatabaseHandler.Scalar("SELECT COUNT(*) FROM UserCredentials WHERE CronofyUID=@cronofyUid AND ServiceAccount=1",
+                                                                     new Dictionary<string, object> { { "cronofyUid", userInfo.Sub } }));
 
             if (recordCount == 0)
             {

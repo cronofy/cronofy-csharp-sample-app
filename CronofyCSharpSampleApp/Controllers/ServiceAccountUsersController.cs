@@ -26,7 +26,8 @@ namespace CronofyCSharpSampleApp.Controllers
             {
                 CronofyHelper.AuthorizeWithServiceAccount(uidCookie.Value, user.Email, user.Scopes);
 
-                var recordCount = Convert.ToInt32(DatabaseHandler.Scalar(String.Format("SELECT * FROM EnterpriseConnectUserData WHERE Email='{0}' AND OwnedBy='{1}'", user.Email, uidCookie.Value)));
+                var recordCount = Convert.ToInt32(DatabaseHandler.Scalar("SELECT * FROM EnterpriseConnectUserData WHERE Email=@email AND OwnedBy=@ownedBy",
+                                                                         new Dictionary<string, object> { { "email", user.Email }, { "ownedBy", uidCookie.Value } }));
 
                 if (recordCount == 0)
                 {

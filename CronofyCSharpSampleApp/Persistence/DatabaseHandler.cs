@@ -103,7 +103,7 @@ namespace CronofyCSharpSampleApp
             return Many<T>(sql, parameters).FirstOrDefault();
         }
 
-        public static object Scalar(string sql)
+        public static object Scalar(string sql, IDictionary<string, object> parameters)
         {
             if (!_initialized)
                 Initialize();
@@ -117,6 +117,12 @@ namespace CronofyCSharpSampleApp
                     {
                         cmd.CommandText = sql;
                         cmd.CommandType = System.Data.CommandType.Text;
+
+                        foreach (var parameter in parameters)
+                        {
+                            cmd.Parameters.Add(new Mono.Data.Sqlite.SqliteParameter("@" + parameter.Key, parameter.Value));
+                        }
+
                         return cmd.ExecuteScalar();
                     }
                 }

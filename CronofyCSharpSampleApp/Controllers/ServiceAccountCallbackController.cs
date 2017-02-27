@@ -25,7 +25,8 @@ namespace CronofyCSharpSampleApp.Controllers
 
                 if (data.Authorization.Error != null)
                 {
-                    DatabaseHandler.ExecuteNonQuery(String.Format("UPDATE EnterpriseConnectUserData SET Status='{0}' WHERE Email='{1}' AND OwnedBy='{2}'", (int)EnterpriseConnectUserData.ConnectedStatus.Failed, email, enterpriseConnectId));
+                    DatabaseHandler.ExecuteNonQuery("UPDATE EnterpriseConnectUserData SET Status=@status WHERE Email=@email AND OwnedBy=@ownedBy",
+                                                    new Dictionary<string, object> { { "status", (int)EnterpriseConnectUserData.ConnectedStatus.Failed }, { "email", email }, { "ownedBy", enterpriseConnectId } });
 
                     LogHelper.Log(String.Format("Service Account callback failure - error=`{0}` - error_key=`{1}` - error_description=`{2}`", data.Authorization.Error, data.Authorization.ErrorKey, data.Authorization.ErrorDescription));
                 }
@@ -33,8 +34,10 @@ namespace CronofyCSharpSampleApp.Controllers
                 {
                     var userToken = CronofyHelper.GetEnterpriseConnectUserOAuthToken(enterpriseConnectId, email, data.Authorization.Code);
 
-                    DatabaseHandler.ExecuteNonQuery(String.Format("INSERT INTO UserCredentials(CronofyUID, AccessToken, RefreshToken, ServiceAccount) VALUES('{0}', '{1}', '{2}', 0)", userToken.LinkingProfile.Id, userToken.AccessToken, userToken.RefreshToken));
-                    DatabaseHandler.ExecuteNonQuery(String.Format("UPDATE EnterpriseConnectUserData SET Status='{0}', CronofyUID='{1}' WHERE Email='{2}' AND OwnedBy='{3}'", (int)EnterpriseConnectUserData.ConnectedStatus.Linked, userToken.LinkingProfile.Id, userToken.LinkingProfile.Name, enterpriseConnectId));
+                    DatabaseHandler.ExecuteNonQuery("INSERT INTO UserCredentials(CronofyUID, AccessToken, RefreshToken, ServiceAccount) VALUES(@cronofyUid, @accessToken, @refreshToken, 0)",
+                                                    new Dictionary<string, object> { { "cronofyUid", userToken.LinkingProfile.Id }, { "accessToken", userToken.AccessToken }, { "refreshToken", userToken.RefreshToken } });
+                    DatabaseHandler.ExecuteNonQuery("UPDATE EnterpriseConnectUserData SET Status=@status, CronofyUID=@cronofyUid WHERE Email=@email AND OwnedBy=@ownedBy",
+                                                    new Dictionary<string, object> { { "status", (int)EnterpriseConnectUserData.ConnectedStatus.Linked }, { "cronofyUid", userToken.LinkingProfile.Id }, { "email", userToken.LinkingProfile.Name }, { "ownedBy", enterpriseConnectId } });
 
                     LogHelper.Log(String.Format("Service Account callback success - id=`{0}` - email=`{1}`", userToken.LinkingProfile.Id, userToken.LinkingProfile.Name));
                 }

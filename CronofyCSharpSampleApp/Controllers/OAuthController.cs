@@ -22,12 +22,14 @@ namespace CronofyCSharpSampleApp.Controllers
 
             if (recordCount == 0)
             {
-                DatabaseHandler.ExecuteNonQuery(String.Format("INSERT INTO UserCredentials(CronofyUID, AccessToken, RefreshToken, ServiceAccount) VALUES('{0}', '{1}', '{2}', 0)", account.Id, token.AccessToken, token.RefreshToken));
+                DatabaseHandler.ExecuteNonQuery("INSERT INTO UserCredentials(CronofyUID, AccessToken, RefreshToken, ServiceAccount) VALUES(@cronofyUid, @accessToken, @refreshToken, 0)",
+                                                new Dictionary<string, object> { { "cronofyUid", account.Id }, { "accessToken", token.AccessToken }, { "refreshToken", token.RefreshToken } });
                 LogHelper.Log(String.Format("Create user credentials record - accountId=`{0}`", account.Id));
             }
             else 
             {
-                DatabaseHandler.ExecuteNonQuery(String.Format("UPDATE UserCredentials SET AccessToken='{0}', RefreshToken='{1}' WHERE CronofyUID='{2}'", token.AccessToken, token.RefreshToken, account.Id));
+                DatabaseHandler.ExecuteNonQuery("UPDATE UserCredentials SET AccessToken=@accessToken, RefreshToken=@refreshToken WHERE CronofyUID=@cronofyUid",
+                                                new Dictionary<string, object> { { "accessToken", token.AccessToken }, { "refreshToken", token.RefreshToken }, { "cronofyUid", account.Id } });
                 LogHelper.Log(String.Format("Update user credentials record - accountId=`{0}`", account.Id));
             }
 
@@ -48,12 +50,14 @@ namespace CronofyCSharpSampleApp.Controllers
 
             if (recordCount == 0)
             {
-                DatabaseHandler.ExecuteNonQuery(String.Format("INSERT INTO UserCredentials(CronofyUID, AccessToken, RefreshToken, ServiceAccount) VALUES('{0}', '{1}', '{2}', 1)", userInfo.Sub, token.AccessToken, token.RefreshToken));
+                DatabaseHandler.ExecuteNonQuery("INSERT INTO UserCredentials(CronofyUID, AccessToken, RefreshToken, ServiceAccount) VALUES(@cronofyUid, @accessToken, @refreshToken, 1)",
+                                                new Dictionary<string, object> { { "cronofyUid", userInfo.Sub }, { "accessToken", token.AccessToken }, { "refreshToken", token.RefreshToken } });
                 LogHelper.Log(String.Format("Create enterprise connect user credentials record - sub=`{0}`", userInfo.Sub));
             }
             else
             {
-                DatabaseHandler.ExecuteNonQuery(String.Format("UPDATE UserCredentials SET AccessToken='{0}', RefreshToken='{1}' WHERE CronofyUID='{2}'", token.AccessToken, token.RefreshToken, userInfo.Sub));
+                DatabaseHandler.ExecuteNonQuery("UPDATE UserCredentials SET AccessToken=@accessToken, RefreshToken=@refreshToken WHERE CronofyUID=@cronofyUid",
+                                                new Dictionary<string, object> { { "accessToken", token.AccessToken }, { "refreshToken", token.RefreshToken }, { "cronofyUid", userInfo.Sub } });
                 LogHelper.Log(String.Format("Update enterprise connect user credentials record - sub=`{0}`", userInfo.Sub));
             }
 

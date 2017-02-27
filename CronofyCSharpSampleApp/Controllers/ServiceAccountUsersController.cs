@@ -31,10 +31,12 @@ namespace CronofyCSharpSampleApp.Controllers
 
                 if (recordCount == 0)
                 {
-                    DatabaseHandler.ExecuteNonQuery(String.Format("INSERT INTO EnterpriseConnectUserData(Email, OwnedBy, Status) VALUES('{0}', '{1}', '{2}')", user.Email, uidCookie.Value, (int)EnterpriseConnectUserData.ConnectedStatus.Pending));
+                    DatabaseHandler.ExecuteNonQuery("INSERT INTO EnterpriseConnectUserData(Email, OwnedBy, Status) VALUES(@email, @ownedBy, @status)",
+                                                    new Dictionary<string, object> { { "email", user.Email }, { "ownedBy", uidCookie.Value }, { "status", (int)EnterpriseConnectUserData.ConnectedStatus.Pending } });
                 }
                 else {
-                    DatabaseHandler.ExecuteNonQuery(String.Format("UPDATE EnterpriseConnectUserData SET Status='{0}' WHERE Email='{1}' AND OwnedBy='{2}'", (int)EnterpriseConnectUserData.ConnectedStatus.Pending, user.Email, uidCookie.Value));
+                    DatabaseHandler.ExecuteNonQuery("UPDATE EnterpriseConnectUserData SET Status=@status WHERE Email=@email AND OwnedBy=@ownedBy",
+                                                    new Dictionary<string, object> { { "status", (int)EnterpriseConnectUserData.ConnectedStatus.Pending }, { "email", user.Email }, { "ownedBy", uidCookie.Value } });
                 }
 
                 return new RedirectResult("/enterpriseconnect");

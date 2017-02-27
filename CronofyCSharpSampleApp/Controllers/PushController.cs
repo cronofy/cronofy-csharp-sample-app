@@ -31,7 +31,8 @@ namespace CronofyCSharpSampleApp.Controllers
                     record += String.Format(": {0}", data.Notification.ChangesSince);
                 }
 
-                DatabaseHandler.ExecuteNonQuery(String.Format("INSERT INTO ChannelData(ChannelId, Record, OccurredOn) VALUES('{0}', '{1}', '{2}')", data.Channel.ChannelId, record, DateTime.Now));
+                DatabaseHandler.ExecuteNonQuery("INSERT INTO ChannelData(ChannelId, Record, OccurredOn) VALUES(@channelId, @record, @occurredOn)",
+                                                new Dictionary<string, object> { { "channelId", data.Channel.ChannelId }, { "record", record }, { "occurredOn", DateTime.Now } });
 
                 LogHelper.Log(String.Format("Push notification success - channelId=`{0}`", data.Channel.ChannelId));
             }

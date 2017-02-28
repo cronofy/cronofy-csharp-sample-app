@@ -83,6 +83,12 @@ namespace CronofyCSharpSampleApp
                     {
                         cmd.CommandText = sql;
                         cmd.CommandType = System.Data.CommandType.Text;
+
+                        foreach (var parameter in parameters)
+                        {
+                            cmd.Parameters.Add(new SQLiteParameter("@" + parameter.Key, parameter.Value));
+                        }
+
                         SQLiteDataReader reader = cmd.ExecuteReader();
 
                         var rows = new List<T>();
@@ -135,6 +141,12 @@ namespace CronofyCSharpSampleApp
                     {
                         cmd.CommandText = sql;
                         cmd.CommandType = System.Data.CommandType.Text;
+
+                        foreach (var parameter in parameters)
+                        {
+                            cmd.Parameters.Add(new SQLiteParameter("@" + parameter.Key, parameter.Value));
+                        }
+
                         return cmd.ExecuteScalar();
                     }
                 }
@@ -176,6 +188,15 @@ namespace CronofyCSharpSampleApp
                     {
                         cmd.CommandText = sql;
                         cmd.CommandType = System.Data.CommandType.Text;
+
+                        if (parameters != null)
+                        {
+                            foreach (var parameter in parameters)
+                            {
+                                cmd.Parameters.Add(new SQLiteParameter("@" + parameter.Key, parameter.Value));
+                            }
+                        }
+
                         cmd.ExecuteNonQuery();
                     }
                 }

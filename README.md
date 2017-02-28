@@ -13,7 +13,7 @@ For help in cloning this repository please see [this](https://help.github.com/ar
 ### A .NET IDE
 
 We would recommend using [Xamarin Studio](https://www.xamarin.com) to build and
-run this project.
+run this project on mac and [Visual Studio](https://www.visualstudio.com/) for Windows.
 
 ## Set-up
 

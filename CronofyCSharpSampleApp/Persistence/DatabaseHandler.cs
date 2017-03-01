@@ -3,6 +3,7 @@ using System.Data.SQLite;
 using System.IO;
 using System.Collections.Generic;
 using System.Linq;
+using System.Data.Common;
 
 namespace CronofyCSharpSampleApp
 {
@@ -47,47 +48,24 @@ namespace CronofyCSharpSampleApp
             if (!_initialized)
                 Initialize();
 
-            if (_mac)
+            using (var conn = CreateConnection())
             {
-                using (var conn = new Mono.Data.Sqlite.SqliteConnection(_connectionString))
+                conn.Open();
+                using (var cmd = conn.CreateCommand())
                 {
-                    conn.Open();
-                    using (var cmd = conn.CreateCommand())
+                    cmd.CommandText = sql;
+                    cmd.CommandType = System.Data.CommandType.Text;
+
+                    var reader = cmd.ExecuteReader();
+
+                    var rows = new List<T>();
+
+                    while (reader.Read())
                     {
-                        cmd.CommandText = sql;
-                        cmd.CommandType = System.Data.CommandType.Text;
-                        Mono.Data.Sqlite.SqliteDataReader reader = cmd.ExecuteReader();
-
-                        var rows = new List<T>();
-
-                        while (reader.Read())
-                        {
-                            rows.Add((T)(new T().Initialize(reader)));
-                        }
-
-                        return rows;
+                        rows.Add((T)(new T().Initialize(reader)));
                     }
-                }
-            }
-            else {
-                using (var conn = new SQLiteConnection(_connectionString))
-                {
-                    conn.Open();
-                    using (var cmd = conn.CreateCommand())
-                    {
-                        cmd.CommandText = sql;
-                        cmd.CommandType = System.Data.CommandType.Text;
-                        SQLiteDataReader reader = cmd.ExecuteReader();
 
-                        var rows = new List<T>();
-
-                        while (reader.Read())
-                        {
-                            rows.Add((T)(new T().Initialize(reader)));
-                        }
-
-                        return rows;
-                    }
+                    return rows;
                 }
             }
         }
@@ -102,29 +80,15 @@ namespace CronofyCSharpSampleApp
             if (!_initialized)
                 Initialize();
 
-            if (_mac)
+            using (var conn = CreateConnection())
             {
-                using (var conn = new Mono.Data.Sqlite.SqliteConnection(_connectionString))
+                conn.Open();
+                using (var cmd = conn.CreateCommand())
                 {
-                    conn.Open();
-                    using (var cmd = conn.CreateCommand())
-                    {
-                        cmd.CommandText = sql;
-                        cmd.CommandType = System.Data.CommandType.Text;
-                        return cmd.ExecuteScalar();
-                    }
-                }
-            }
-            else {
-                using (var conn = new SQLiteConnection(_connectionString))
-                {
-                    conn.Open();
-                    using (var cmd = conn.CreateCommand())
-                    {
-                        cmd.CommandText = sql;
-                        cmd.CommandType = System.Data.CommandType.Text;
-                        return cmd.ExecuteScalar();
-                    }
+                    cmd.CommandText = sql;
+                    cmd.CommandType = System.Data.CommandType.Text;
+
+                    return cmd.ExecuteScalar();
                 }
             }
         }
@@ -134,30 +98,40 @@ namespace CronofyCSharpSampleApp
             if (!_initialized)
                 Initialize();
 
-            if (_mac)
+            using (var conn = CreateConnection())
             {
-                using (var conn = new Mono.Data.Sqlite.SqliteConnection(_connectionString))
+                conn.Open();
+                using (var cmd = conn.CreateCommand())
                 {
-                    conn.Open();
-                    using (var cmd = conn.CreateCommand())
-                    {
-                        cmd.CommandText = sql;
-                        cmd.CommandType = System.Data.CommandType.Text;
-                        cmd.ExecuteNonQuery();
-                    }
+                    cmd.CommandText = sql;
+                    cmd.CommandType = System.Data.CommandType.Text;
+
+                    cmd.ExecuteNonQuery();
                 }
             }
-            else {
-                using (var conn = new SQLiteConnection(_connectionString))
-                {
-                    conn.Open();
-                    using (var cmd = conn.CreateCommand())
-                    {
-                        cmd.CommandText = sql;
-                        cmd.CommandType = System.Data.CommandType.Text;
-                        cmd.ExecuteNonQuery();
-                    }
-                }
+        }
+
+        public static DbConnection CreateConnection()
+        {
+            if (_mac)
+            {
+                return new Mono.Data.Sqlite.SqliteConnection(_connectionString);
+            }
+            else
+            {
+                return new SQLiteConnection(_connectionString);
+            }
+        }
+
+        public static DbParameter CreateParameter(string key, object value)
+        {
+            if (_mac)
+            {
+                return new Mono.Data.Sqlite.SqliteParameter(key, value);
+            }
+            else
+            {
+                return new SQLiteParameter(key, value);
             }
         }
     }

@@ -58,7 +58,7 @@ namespace CronofyCSharpSampleApp
 
                     foreach(var parameter in parameters)
                     {
-                      cmd.Parameters.Add(new Mono.Data.Sqlite.SqliteParameter("@" + parameter.Key, parameter.Value));
+                        cmd.Parameters.Add(CreateParameter(cmd, "@" + parameter.Key, parameter.Value));
                     }
 
                     var reader = cmd.ExecuteReader();
@@ -95,7 +95,7 @@ namespace CronofyCSharpSampleApp
 
                     foreach (var parameter in parameters)
                     {
-                      cmd.Parameters.Add(new Mono.Data.Sqlite.SqliteParameter("@" + parameter.Key, parameter.Value));
+                        cmd.Parameters.Add(CreateParameter(cmd, "@" + parameter.Key, parameter.Value));
                     }
 
                     return cmd.ExecuteScalar();
@@ -123,7 +123,7 @@ namespace CronofyCSharpSampleApp
 
                     foreach (var parameter in parameters)
                     {
-                      cmd.Parameters.Add(new Mono.Data.Sqlite.SqliteParameter("@" + parameter.Key, parameter.Value));
+                        cmd.Parameters.Add(CreateParameter(cmd, "@" + parameter.Key, parameter.Value));
                     }
 
                     cmd.ExecuteNonQuery();
@@ -143,16 +143,14 @@ namespace CronofyCSharpSampleApp
             }
         }
 
-        public static DbParameter CreateParameter(string key, object value)
+        public static DbParameter CreateParameter(DbCommand cmd, string key, object value)
         {
-            if (_mac)
-            {
-                return new Mono.Data.Sqlite.SqliteParameter(key, value);
-            }
-            else
-            {
-                return new SQLiteParameter(key, value);
-            }
+            var parameter = cmd.CreateParameter();
+
+            parameter.ParameterName = key;
+            parameter.Value = value;
+
+            return parameter;
         }
     }
 }

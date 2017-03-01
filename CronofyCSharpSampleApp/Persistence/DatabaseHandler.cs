@@ -43,7 +43,7 @@ namespace CronofyCSharpSampleApp
             }
         }
 
-        public static IEnumerable<T> Many<T>(string sql) where T : ITableRowModel, new()
+        public static IEnumerable<T> Many<T>(string sql, IDictionary<string, object> parameters) where T : ITableRowModel, new()
         {
             if (!_initialized)
                 Initialize();
@@ -55,6 +55,11 @@ namespace CronofyCSharpSampleApp
                 {
                     cmd.CommandText = sql;
                     cmd.CommandType = System.Data.CommandType.Text;
+
+                    foreach(var parameter in parameters)
+                    {
+                      cmd.Parameters.Add(new Mono.Data.Sqlite.SqliteParameter("@" + parameter.Key, parameter.Value));
+                    }
 
                     var reader = cmd.ExecuteReader();
 
@@ -70,12 +75,12 @@ namespace CronofyCSharpSampleApp
             }
         }
 
-        public static T Get<T>(string sql) where T : ITableRowModel, new()
+        public static T Get<T>(string sql, IDictionary<string, object> parameters) where T : ITableRowModel, new()
         {
-            return Many<T>(sql).FirstOrDefault();
+            return Many<T>(sql, parameters).FirstOrDefault();
         }
 
-        public static object Scalar(string sql)
+        public static object Scalar(string sql, IDictionary<string, object> parameters)
         {
             if (!_initialized)
                 Initialize();
@@ -87,6 +92,11 @@ namespace CronofyCSharpSampleApp
                 {
                     cmd.CommandText = sql;
                     cmd.CommandType = System.Data.CommandType.Text;
+
+                    foreach (var parameter in parameters)
+                    {
+                      cmd.Parameters.Add(new Mono.Data.Sqlite.SqliteParameter("@" + parameter.Key, parameter.Value));
+                    }
 
                     return cmd.ExecuteScalar();
                 }
@@ -95,6 +105,11 @@ namespace CronofyCSharpSampleApp
 
         public static void ExecuteNonQuery(string sql)
         {
+            ExecuteNonQuery(sql, new Dictionary<string, object>());
+        }
+
+        public static void ExecuteNonQuery(string sql, IDictionary<string, object> parameters)
+        {
             if (!_initialized)
                 Initialize();
 
@@ -105,6 +120,11 @@ namespace CronofyCSharpSampleApp
                 {
                     cmd.CommandText = sql;
                     cmd.CommandType = System.Data.CommandType.Text;
+
+                    foreach (var parameter in parameters)
+                    {
+                      cmd.Parameters.Add(new Mono.Data.Sqlite.SqliteParameter("@" + parameter.Key, parameter.Value));
+                    }
 
                     cmd.ExecuteNonQuery();
                 }

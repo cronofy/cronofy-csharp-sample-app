@@ -62,7 +62,8 @@ namespace CronofyCSharpSampleApp
 
         public static bool LoadUser(string cronofyUid, bool serviceAccount)
         {
-            var user = DatabaseHandler.Get<Persistence.Models.User>(String.Format("SELECT CronofyUid, AccessToken, RefreshToken FROM UserCredentials WHERE CronofyUID='{0}' AND ServiceAccount='{1}'", cronofyUid, (serviceAccount ? 1 : 0)));
+            var user = DatabaseHandler.Get<Persistence.Models.User>("SELECT CronofyUid, AccessToken, RefreshToken FROM UserCredentials WHERE CronofyUID=@cronofyUid AND ServiceAccount=@serviceAccount",
+                                                                    new Dictionary<string, object> { { "cronofyUid", cronofyUid }, { "serviceAccount", (serviceAccount ? 1 : 0) } });
 
             if (user == null)
             {
@@ -515,7 +516,8 @@ namespace CronofyCSharpSampleApp
                     // First time this fails, attempt to get a new access token and store it for the user
                     var token = OAuthClient.GetTokenFromRefreshToken(_refreshToken);
 
-                    DatabaseHandler.ExecuteNonQuery(String.Format("UPDATE UserCredentials SET AccessToken='{0}', RefreshToken='{1}' WHERE CronofyUID='{2}' AND ServiceAccount=0", token.AccessToken, token.RefreshToken, _cronofyUid));
+                    DatabaseHandler.ExecuteNonQuery("UPDATE UserCredentials SET AccessToken=@accessToken, RefreshToken=@refreshToken WHERE CronofyUID=@cronofyUid AND ServiceAccount=0",
+                                                    new Dictionary<string, object> { { "accessToken", token.AccessToken }, { "refreshToken", token.RefreshToken }, { "cronofyUid", _cronofyUid } });
                     SetToken(token, false);
 
                     LogHelper.Log(String.Format("Access Token out of date, tokens have been refreshed - _cronofyUid=`{0}` - serviceAccount=0", _cronofyUid));
@@ -523,7 +525,8 @@ namespace CronofyCSharpSampleApp
                 catch (CronofyException)
                 {
                     // If getting a new oauth token fails then delete the user's credentials and throw an exception
-                    DatabaseHandler.ExecuteNonQuery(String.Format("DELETE FROM UserCredentials WHERE CronofyUID='{0}' AND ServiceAccount=0", _cronofyUid));
+                    DatabaseHandler.ExecuteNonQuery("DELETE FROM UserCredentials WHERE CronofyUID=@cronofyUid AND ServiceAccount=0",
+                                                    new Dictionary<string, object> { { "cronofyUid", _cronofyUid } });
                     LogHelper.Log(String.Format("Credentials invalid, deleting account - _cronofyUid=`{0}` - serviceAccount=1", _cronofyUid));
 
                     throw new CredentialsInvalidError();
@@ -558,7 +561,8 @@ namespace CronofyCSharpSampleApp
                     // First time this fails, attempt to get a new access token and store it for the user
                     var token = OAuthClient.GetTokenFromRefreshToken(_enterpriseConnectRefreshToken);
 
-                    DatabaseHandler.ExecuteNonQuery(String.Format("UPDATE UserCredentials SET AccessToken='{0}', RefreshToken='{1}' WHERE CronofyUID='{2}' AND ServiceAccount=1", token.AccessToken, token.RefreshToken, _enterpriseConnectCronofyUid));
+                    DatabaseHandler.ExecuteNonQuery("UPDATE UserCredentials SET AccessToken=@accessToken, RefreshToken=@refreshToken WHERE CronofyUID=@cronofyUid AND ServiceAccount=1",
+                                                    new Dictionary<string, object> { { "accessToken", token.AccessToken }, { "refreshToken", token.RefreshToken }, { "cronofyUid", _enterpriseConnectCronofyUid } });
                     SetToken(token, true);
 
                     LogHelper.Log(String.Format("Access Token out of date, tokens have been refreshed - _enterpriseConnectCronofyUid=`{0}` - serviceAccount=1", _enterpriseConnectCronofyUid));
@@ -566,7 +570,8 @@ namespace CronofyCSharpSampleApp
                 catch (CronofyException)
                 {
                     // If getting a new oauth token fails then delete the user's credentials and throw an exception
-                    DatabaseHandler.ExecuteNonQuery(String.Format("DELETE FROM UserCredentials WHERE CronofyUID='{0}' AND ServiceAccount=1", _enterpriseConnectCronofyUid));
+                    DatabaseHandler.ExecuteNonQuery("DELETE FROM UserCredentials WHERE CronofyUID=@cronofyUid AND ServiceAccount=1",
+                                                    new Dictionary<string, object> { { "cronofyUid", _enterpriseConnectCronofyUid } });
                     LogHelper.Log(String.Format("Credentials invalid, deleting account - _enterpriseConnectCronofyUid=`{0}` - serviceAccount=1", _enterpriseConnectCronofyUid));
 
                     throw new CredentialsInvalidError();

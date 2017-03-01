@@ -153,7 +153,12 @@ namespace CronofyCSharpSampleApp
             }
         }
 
-        public static void ExecuteNonQuery(string sql, IDictionary<string, object> parameters = null)
+        public static void ExecuteNonQuery(string sql)
+        {
+            ExecuteNonQuery(sql, new Dictionary<string, object>());
+        }
+
+        public static void ExecuteNonQuery(string sql, IDictionary<string, object> parameters)
         {
             if (!_initialized)
                 Initialize();
@@ -168,12 +173,9 @@ namespace CronofyCSharpSampleApp
                         cmd.CommandText = sql;
                         cmd.CommandType = System.Data.CommandType.Text;
 
-                        if (parameters != null)
+                        foreach (var parameter in parameters)
                         {
-                            foreach (var parameter in parameters)
-                            {
-                                cmd.Parameters.Add(new Mono.Data.Sqlite.SqliteParameter("@" + parameter.Key, parameter.Value));
-                            }
+                            cmd.Parameters.Add(new Mono.Data.Sqlite.SqliteParameter("@" + parameter.Key, parameter.Value));
                         }
 
                         cmd.ExecuteNonQuery();
@@ -189,12 +191,9 @@ namespace CronofyCSharpSampleApp
                         cmd.CommandText = sql;
                         cmd.CommandType = System.Data.CommandType.Text;
 
-                        if (parameters != null)
+                        foreach (var parameter in parameters)
                         {
-                            foreach (var parameter in parameters)
-                            {
-                                cmd.Parameters.Add(new SQLiteParameter("@" + parameter.Key, parameter.Value));
-                            }
+                            cmd.Parameters.Add(new SQLiteParameter("@" + parameter.Key, parameter.Value));
                         }
 
                         cmd.ExecuteNonQuery();

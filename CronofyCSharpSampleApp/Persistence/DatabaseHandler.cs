@@ -9,17 +9,15 @@ namespace CronofyCSharpSampleApp
     public static class DatabaseHandler
     {
         private static bool _mac = false;
-        private static bool _initialized = false;
         private static string _connectionString;
 
 
-        public static void Initialize()
+        static DatabaseHandler()
         {
             var currentDirectory = AppDomain.CurrentDomain.BaseDirectory;
             var pathToDatabase = Path.Combine(currentDirectory, "Persistence/cronofy_sample_app.db");
 
             _connectionString = String.Format("Data Source={0};Version=3;", pathToDatabase);
-            _initialized = true;
             _mac = Environment.OSVersion.Platform != PlatformID.WinCE 
                               && Environment.OSVersion.Platform != PlatformID.Win32S 
                               && Environment.OSVersion.Platform != PlatformID.Win32NT
@@ -44,9 +42,6 @@ namespace CronofyCSharpSampleApp
 
         public static IEnumerable<T> Many<T>(string sql, IDictionary<string, object> parameters) where T : ITableRowModel, new()
         {
-            if (!_initialized)
-                Initialize();
-
             if (_mac)
             {
                 using (var conn = new Mono.Data.Sqlite.SqliteConnection(_connectionString))
@@ -111,9 +106,6 @@ namespace CronofyCSharpSampleApp
 
         public static object Scalar(string sql, IDictionary<string, object> parameters)
         {
-            if (!_initialized)
-                Initialize();
-
             if (_mac)
             {
                 using (var conn = new Mono.Data.Sqlite.SqliteConnection(_connectionString))
@@ -160,9 +152,6 @@ namespace CronofyCSharpSampleApp
 
         public static void ExecuteNonQuery(string sql, IDictionary<string, object> parameters)
         {
-            if (!_initialized)
-                Initialize();
-
             if (_mac)
             {
                 using (var conn = new Mono.Data.Sqlite.SqliteConnection(_connectionString))

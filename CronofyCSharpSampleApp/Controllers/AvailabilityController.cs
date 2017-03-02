@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 using System.Web.Mvc;
+using Cronofy;
 using CronofyCSharpSampleApp.Models;
 
 namespace CronofyCSharpSampleApp.Controllers
@@ -29,7 +27,14 @@ namespace CronofyCSharpSampleApp.Controllers
 
             if (ModelState.IsValid)
             {
-                resource.AvailablePeriods = CronofyHelper.Availability(resource);
+                try
+                {
+                    resource.AvailablePeriods = CronofyHelper.Availability(resource);
+                }
+                catch (CronofyResponseException ex)
+                {
+                    resource.SetError(ex);
+                }
 
                 return View("Index", resource);
             }

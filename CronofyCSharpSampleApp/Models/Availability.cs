@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace CronofyCSharpSampleApp.Models
 {
-    public class Availability : IValidatableObject
+    public class Availability : ResourceWithError, IValidatableObject
     {
         public string AuthUrl { get; set; }
 

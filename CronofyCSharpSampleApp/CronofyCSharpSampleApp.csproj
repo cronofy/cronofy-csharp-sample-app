@@ -161,6 +161,8 @@
     <Compile Include="Helpers\LogHelper.cs" />
     <Compile Include="Controllers\AvailabilityController.cs" />
     <Compile Include="Models\Availability.cs" />
+    <Compile Include="Models\ResourceWithError.cs" />
+    <Compile Include="Helpers\ModelHelper.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Web.config" />

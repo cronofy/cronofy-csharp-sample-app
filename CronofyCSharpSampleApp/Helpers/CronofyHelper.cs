@@ -490,6 +490,7 @@ namespace CronofyCSharpSampleApp
             catch (CronofyException)
             {
                 LogHelper.Log("Availability failure - accountId1=`{availability.AccountId1}` - accountId2=`{availability.AccountId2}` - requiredParticipants=`{availability.RequiredParticipants}` - duration=`{availability.Duration}` - start=`{availability.Start}` - end=`{availability.End}`");
+                throw;
             }
 
             return availablePeriods;

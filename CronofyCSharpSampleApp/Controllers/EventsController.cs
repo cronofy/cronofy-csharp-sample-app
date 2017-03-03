@@ -4,6 +4,7 @@ using System.Configuration;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using Cronofy;
 
 namespace CronofyCSharpSampleApp.Controllers
 {
@@ -41,9 +42,19 @@ namespace CronofyCSharpSampleApp.Controllers
 
             if (ModelState.IsValid)
             {
-                CronofyHelper.UpsertEvent(newEvent.EventId, newEvent.CalendarId, newEvent.Summary, newEvent.Description, newEvent.Start, newEvent.End, new Cronofy.Location(newEvent.LocationDescription, newEvent.Latitude, newEvent.Longitude));
+                try
+                {
+                    CronofyHelper.UpsertEvent(newEvent.EventId, newEvent.CalendarId, newEvent.Summary, newEvent.Description, newEvent.Start, newEvent.End, new Cronofy.Location(newEvent.LocationDescription, newEvent.Latitude, newEvent.Longitude));
+                }
+                catch (CronofyResponseException ex)
+                {
+                    newEvent.SetError(ex);
+                }
 
-                return new RedirectResult(String.Format("/calendars/show/{0}", newEvent.CalendarId));
+                if (newEvent.NoErrors())
+                {
+                    return new RedirectResult(String.Format("/calendars/show/{0}", newEvent.CalendarId));
+                }
             }
             
             newEvent.Calendar = CronofyHelper.GetCalendars().First(x => x.CalendarId == newEvent.CalendarId);

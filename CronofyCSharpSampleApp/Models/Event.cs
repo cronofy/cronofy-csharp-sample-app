@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace CronofyCSharpSampleApp.Models
 {
-    public class Event : IValidatableObject
+    public class Event : ResourceWithError, IValidatableObject
     {
         public Cronofy.Calendar Calendar { get; set; }
 

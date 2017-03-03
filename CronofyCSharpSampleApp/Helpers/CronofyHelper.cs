@@ -359,6 +359,7 @@ namespace CronofyCSharpSampleApp
                     failureLog += String.Format(" - location.lat=`{0}` - location.long=`{1}`", location.Latitude, location.Longitude);
                 
                 LogHelper.Log(failureLog);
+                throw;
             }
         }
 

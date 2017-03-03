@@ -259,6 +259,7 @@ namespace CronofyCSharpSampleApp
             catch (CronofyException)
             {
                 LogHelper.Log(String.Format("CreateCalendar failure - profileId=`{0}` - name=`{1}`", profileId, name));
+                throw;
             }
 
             return calendar;

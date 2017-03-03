@@ -333,10 +333,13 @@ namespace CronofyCSharpSampleApp
                 .Description(description)
                 .Start(start)
                 .End(end);
-            
-            buildingEvent.Location(location.Description,
-                                   String.IsNullOrEmpty(location.Latitude) ? null : location.Latitude,
-                                   String.IsNullOrEmpty(location.Longitude) ? null : location.Longitude);
+
+            if (location != null)
+            {
+                buildingEvent.Location(location.Description,
+                                       String.IsNullOrEmpty(location.Latitude) ? null : location.Latitude,
+                                       String.IsNullOrEmpty(location.Longitude) ? null : location.Longitude);
+            }
 
             var builtEvent = buildingEvent.Build();
 
@@ -346,7 +349,7 @@ namespace CronofyCSharpSampleApp
 
                 var successLog = "UpsertEvent success - eventId=`{eventId}` - calendarId=`{calendarId}` - summary=`{summary}` - description=`{description}` - start=`{start}` - end=`{end}`";
 
-                if (!(String.IsNullOrEmpty(location.Latitude) || String.IsNullOrEmpty(location.Longitude)))
+                if (location != null && !(String.IsNullOrEmpty(location.Latitude) || String.IsNullOrEmpty(location.Longitude)))
                     successLog += String.Format(" - location.lat=`{0}` - location.long=`{1}`", location.Latitude, location.Longitude);
 
                 LogHelper.Log(successLog);
@@ -355,7 +358,7 @@ namespace CronofyCSharpSampleApp
             {
                 var failureLog = "UpsertEvent failure - eventId=`{eventId}` - calendarId=`{calendarId}` - summary=`{summary}` - description=`{description}` - start=`{start}` - end=`{end}`";
 
-                if (!(String.IsNullOrEmpty(location.Latitude) || String.IsNullOrEmpty(location.Longitude)))
+                if (location != null && !(String.IsNullOrEmpty(location.Latitude) || String.IsNullOrEmpty(location.Longitude)))
                     failureLog += String.Format(" - location.lat=`{0}` - location.long=`{1}`", location.Latitude, location.Longitude);
                 
                 LogHelper.Log(failureLog);

@@ -93,9 +93,19 @@ namespace CronofyCSharpSampleApp.Controllers
 
             if (ModelState.IsValid)
             {
-                CronofyHelper.UpsertEvent(editEvent.EventId, editEvent.CalendarId, editEvent.Summary, editEvent.Description, editEvent.Start, editEvent.End, new Cronofy.Location(editEvent.LocationDescription, editEvent.Latitude, editEvent.Longitude));
+                try
+                {
+                    CronofyHelper.UpsertEvent(editEvent.EventId, editEvent.CalendarId, editEvent.Summary, editEvent.Description, editEvent.Start, editEvent.End, new Cronofy.Location(editEvent.LocationDescription, editEvent.Latitude, editEvent.Longitude));
+                }
+                catch (CronofyResponseException ex)
+                {
+                    editEvent.SetError(ex);
+                }
 
-                return new RedirectResult(String.Format("/calendars/show/{0}", editEvent.CalendarId));
+                if (editEvent.NoErrors())
+                {
+                    return new RedirectResult(String.Format("/calendars/show/{0}", editEvent.CalendarId));
+                }
             }
 
             editEvent.Calendar = CronofyHelper.GetCalendars().First(x => x.CalendarId == editEvent.CalendarId);

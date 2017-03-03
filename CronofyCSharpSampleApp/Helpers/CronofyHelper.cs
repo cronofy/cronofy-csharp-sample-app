@@ -460,6 +460,7 @@ namespace CronofyCSharpSampleApp
             catch (CronofyException)
             {
                 LogHelper.Log(String.Format("AuthorizeWithServiceAccount failure - enterpriseConnectId=`{0}` - email=`{1}` - scopes=`{2}`", enterpriseConnectId, email, scopes));
+                throw;
             }
         }
 
@@ -468,11 +469,11 @@ namespace CronofyCSharpSampleApp
             IEnumerable<Cronofy.AvailablePeriod> availablePeriods = null;
 
             var participants = new ParticipantGroupBuilder()
-                .AddParticipant(availability.AccountId1);
+                .AddMember(availability.AccountId1);
 
             if (availability.AccountId2 != null)
             {
-                participants.AddParticipant(availability.AccountId2);
+                participants.AddMember(availability.AccountId2);
             }
 
             if (availability.RequiredParticipants == "All")

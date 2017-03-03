@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace CronofyCSharpSampleApp.Models
 {
-    public class Channel
+    public class Channel : ResourceWithError
     {
         public string Path { get; set; }
         public bool OnlyManaged { get; set; }

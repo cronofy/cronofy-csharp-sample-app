@@ -410,6 +410,7 @@ namespace CronofyCSharpSampleApp
             catch (CronofyException)
             {
                 LogHelper.Log(String.Format("CreateChannel failure - path=`{0}` - onlyManaged=`{1}` - calendarIds=`{2}`", path, onlyManaged, String.Join(",", calendarIds)));
+                throw;
             }
 
             return channel;

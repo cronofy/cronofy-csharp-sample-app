@@ -112,9 +112,19 @@ namespace CronofyCSharpSampleApp.Controllers
 
             if (ModelState.IsValid)
             {
-                CronofyHelper.UpsertEvent(newEvent.EventId, newEvent.CalendarId, newEvent.Summary, newEvent.Description, newEvent.Start, newEvent.End);
+                try
+                {
+                    CronofyHelper.UpsertEvent(newEvent.EventId, newEvent.CalendarId, newEvent.Summary, newEvent.Description, newEvent.Start, newEvent.End);
+                }
+                catch (CronofyResponseException ex)
+                {
+                    newEvent.SetError(ex);
+                }
 
-                return new RedirectResult(String.Format("/serviceaccountusers/show/{0}/calendar/{1}", newEvent.UserId, newEvent.CalendarId));
+                if (newEvent.NoErrors())
+                {
+                    return new RedirectResult(String.Format("/serviceaccountusers/show/{0}/calendar/{1}", newEvent.UserId, newEvent.CalendarId));
+                }
             }
 
             ViewData["calendarName"] = CronofyHelper.GetCalendars().First(x => x.CalendarId == newEvent.CalendarId).Name;

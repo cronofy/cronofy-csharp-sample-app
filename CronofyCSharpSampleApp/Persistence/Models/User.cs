@@ -1,5 +1,4 @@
-﻿using System;
-using System.Data.SQLite;
+﻿using System.Data.Common;
 
 namespace CronofyCSharpSampleApp.Persistence.Models
 {
@@ -18,16 +17,7 @@ namespace CronofyCSharpSampleApp.Persistence.Models
             RefreshToken = refreshToken;
         }
 
-        public ITableRowModel Initialize(SQLiteDataReader row)
-        {
-            CronofyUID = row.GetString(0);
-            AccessToken = row.GetString(1);
-            RefreshToken = row.GetString(2);
-
-            return this;
-        }
-
-        public ITableRowModel Initialize(Mono.Data.Sqlite.SqliteDataReader row)
+        public ITableRowModel Initialize(DbDataReader row)
         {
             CronofyUID = row.GetString(0);
             AccessToken = row.GetString(1);

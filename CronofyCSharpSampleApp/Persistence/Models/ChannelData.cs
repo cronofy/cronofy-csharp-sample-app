@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Data.SQLite;
+using System.Data.Common;
 
 namespace CronofyCSharpSampleApp.Persistence.Models
 {
@@ -18,16 +18,7 @@ namespace CronofyCSharpSampleApp.Persistence.Models
             OccurredOn = occurredOn;
         }
 
-        public ITableRowModel Initialize(SQLiteDataReader row)
-        {
-            ChannelId = row.GetString(0);
-            Record = row.GetString(1);
-            OccurredOn = row.GetDateTime(2);
-
-            return this;
-        }
-
-        public ITableRowModel Initialize(Mono.Data.Sqlite.SqliteDataReader row)
+        public ITableRowModel Initialize(DbDataReader row)
         {
             ChannelId = row.GetString(0);
             Record = row.GetString(1);

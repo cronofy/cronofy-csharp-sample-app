@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace CronofyCSharpSampleApp.Models
 {
-    public class EnterpriseConnectUser
+    public class EnterpriseConnectUser : ResourceWithError
     {
         [Required(ErrorMessage = "Email is required")]
         public string Email { get; set; }

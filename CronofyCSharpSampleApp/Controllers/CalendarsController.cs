@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using Cronofy;
 
 namespace CronofyCSharpSampleApp.Controllers
 {
@@ -33,9 +34,19 @@ namespace CronofyCSharpSampleApp.Controllers
         {
             if (ModelState.IsValid)
             {
-                CronofyHelper.CreateCalendar(calendar.ProfileId, calendar.Name);
+                try
+                {
+                    CronofyHelper.CreateCalendar(calendar.ProfileId, calendar.Name);
+                }
+                catch (CronofyResponseException ex)
+                {
+                    calendar.SetError(ex);
+                }
 
-                return new RedirectResult("/profiles");
+                if (calendar.NoErrors())
+                {
+                    return new RedirectResult("/profiles");
+                }
             }
 
             ViewData["profileName"] = CronofyHelper.GetProfiles().First(x => x.Id == calendar.ProfileId).Name;

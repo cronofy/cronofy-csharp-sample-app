@@ -118,10 +118,11 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Data" />
-    <Reference Include="Cronofy">
-      <HintPath>packages\Cronofy.0.1.1\lib\net35\Cronofy.dll</HintPath>
-    </Reference>
     <Reference Include="Mono.Data.Sqlite" />
+    <Reference Include="Cronofy">
+      <HintPath>packages\Cronofy.0.5.1\lib\net35\Cronofy.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Logs\" />
@@ -161,6 +162,8 @@
     <Compile Include="Helpers\LogHelper.cs" />
     <Compile Include="Controllers\AvailabilityController.cs" />
     <Compile Include="Models\Availability.cs" />
+    <Compile Include="Models\ResourceWithError.cs" />
+    <Compile Include="Helpers\ModelHelper.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Web.config" />

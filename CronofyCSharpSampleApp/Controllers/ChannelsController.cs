@@ -4,6 +4,7 @@ using System.Configuration;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using Cronofy;
 
 namespace CronofyCSharpSampleApp.Controllers
 {
@@ -45,9 +46,19 @@ namespace CronofyCSharpSampleApp.Controllers
             {
                 var url = ConfigurationManager.AppSettings["domain"] + "/push/channel/" + channel.Path;
 
-                CronofyHelper.CreateChannel(url, channel.OnlyManaged, channel.CalendarIds);
+                try
+                {
+                    CronofyHelper.CreateChannel(url, channel.OnlyManaged, channel.CalendarIds);
+                }
+                catch (CronofyResponseException ex)
+                {
+                    channel.SetError(ex);
+                }
 
-                return new RedirectResult("/channels");
+                if (channel.NoErrors())
+                {
+                    return new RedirectResult("/channels");
+                }
             }
 
             ViewData["domain"] = ConfigurationManager.AppSettings["domain"];

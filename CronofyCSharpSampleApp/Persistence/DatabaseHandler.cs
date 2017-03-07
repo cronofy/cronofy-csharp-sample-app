@@ -3,23 +3,22 @@ using System.Data.SQLite;
 using System.IO;
 using System.Collections.Generic;
 using System.Linq;
+using System.Data.Common;
 
 namespace CronofyCSharpSampleApp
 {
     public static class DatabaseHandler
     {
         private static bool _mac = false;
-        private static bool _initialized = false;
         private static string _connectionString;
 
 
-        public static void Initialize()
+        static DatabaseHandler()
         {
             var currentDirectory = AppDomain.CurrentDomain.BaseDirectory;
             var pathToDatabase = Path.Combine(currentDirectory, "Persistence/cronofy_sample_app.db");
 
             _connectionString = String.Format("Data Source={0};Version=3;", pathToDatabase);
-            _initialized = true;
             _mac = Environment.OSVersion.Platform != PlatformID.WinCE 
                               && Environment.OSVersion.Platform != PlatformID.Win32S 
                               && Environment.OSVersion.Platform != PlatformID.Win32NT
@@ -44,62 +43,29 @@ namespace CronofyCSharpSampleApp
 
         public static IEnumerable<T> Many<T>(string sql, IDictionary<string, object> parameters) where T : ITableRowModel, new()
         {
-            if (!_initialized)
-                Initialize();
-
-            if (_mac)
+            using (var conn = CreateConnection())
             {
-                using (var conn = new Mono.Data.Sqlite.SqliteConnection(_connectionString))
+                conn.Open();
+                using (var cmd = conn.CreateCommand())
                 {
-                    conn.Open();
-                    using (var cmd = conn.CreateCommand())
+                    cmd.CommandText = sql;
+                    cmd.CommandType = System.Data.CommandType.Text;
+
+                    foreach(var parameter in parameters)
                     {
-                        cmd.CommandText = sql;
-                        cmd.CommandType = System.Data.CommandType.Text;
-
-                        foreach(var parameter in parameters)
-                        {
-                            cmd.Parameters.Add(new Mono.Data.Sqlite.SqliteParameter("@" + parameter.Key, parameter.Value));
-                        }
-
-                        Mono.Data.Sqlite.SqliteDataReader reader = cmd.ExecuteReader();
-
-                        var rows = new List<T>();
-
-                        while (reader.Read())
-                        {
-                            rows.Add((T)(new T().Initialize(reader)));
-                        }
-
-                        return rows;
+                        cmd.Parameters.Add(CreateParameter(cmd, "@" + parameter.Key, parameter.Value));
                     }
-                }
-            }
-            else {
-                using (var conn = new SQLiteConnection(_connectionString))
-                {
-                    conn.Open();
-                    using (var cmd = conn.CreateCommand())
+
+                    var reader = cmd.ExecuteReader();
+
+                    var rows = new List<T>();
+
+                    while (reader.Read())
                     {
-                        cmd.CommandText = sql;
-                        cmd.CommandType = System.Data.CommandType.Text;
-
-                        foreach (var parameter in parameters)
-                        {
-                            cmd.Parameters.Add(new SQLiteParameter("@" + parameter.Key, parameter.Value));
-                        }
-
-                        SQLiteDataReader reader = cmd.ExecuteReader();
-
-                        var rows = new List<T>();
-
-                        while (reader.Read())
-                        {
-                            rows.Add((T)(new T().Initialize(reader)));
-                        }
-
-                        return rows;
+                        rows.Add((T)(new T().Initialize(reader)));
                     }
+
+                    return rows;
                 }
             }
         }
@@ -111,44 +77,20 @@ namespace CronofyCSharpSampleApp
 
         public static object Scalar(string sql, IDictionary<string, object> parameters)
         {
-            if (!_initialized)
-                Initialize();
-
-            if (_mac)
+            using (var conn = CreateConnection())
             {
-                using (var conn = new Mono.Data.Sqlite.SqliteConnection(_connectionString))
+                conn.Open();
+                using (var cmd = conn.CreateCommand())
                 {
-                    conn.Open();
-                    using (var cmd = conn.CreateCommand())
+                    cmd.CommandText = sql;
+                    cmd.CommandType = System.Data.CommandType.Text;
+
+                    foreach (var parameter in parameters)
                     {
-                        cmd.CommandText = sql;
-                        cmd.CommandType = System.Data.CommandType.Text;
-
-                        foreach (var parameter in parameters)
-                        {
-                            cmd.Parameters.Add(new Mono.Data.Sqlite.SqliteParameter("@" + parameter.Key, parameter.Value));
-                        }
-
-                        return cmd.ExecuteScalar();
+                        cmd.Parameters.Add(CreateParameter(cmd, "@" + parameter.Key, parameter.Value));
                     }
-                }
-            }
-            else {
-                using (var conn = new SQLiteConnection(_connectionString))
-                {
-                    conn.Open();
-                    using (var cmd = conn.CreateCommand())
-                    {
-                        cmd.CommandText = sql;
-                        cmd.CommandType = System.Data.CommandType.Text;
 
-                        foreach (var parameter in parameters)
-                        {
-                            cmd.Parameters.Add(new SQLiteParameter("@" + parameter.Key, parameter.Value));
-                        }
-
-                        return cmd.ExecuteScalar();
-                    }
+                    return cmd.ExecuteScalar();
                 }
             }
         }
@@ -160,46 +102,44 @@ namespace CronofyCSharpSampleApp
 
         public static void ExecuteNonQuery(string sql, IDictionary<string, object> parameters)
         {
-            if (!_initialized)
-                Initialize();
+            using (var conn = CreateConnection())
+            {
+                conn.Open();
+                using (var cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = sql;
+                    cmd.CommandType = System.Data.CommandType.Text;
 
+                    foreach (var parameter in parameters)
+                    {
+                        cmd.Parameters.Add(CreateParameter(cmd, "@" + parameter.Key, parameter.Value));
+                    }
+
+                    cmd.ExecuteNonQuery();
+                }
+            }
+        }
+
+        public static DbConnection CreateConnection()
+        {
             if (_mac)
             {
-                using (var conn = new Mono.Data.Sqlite.SqliteConnection(_connectionString))
-                {
-                    conn.Open();
-                    using (var cmd = conn.CreateCommand())
-                    {
-                        cmd.CommandText = sql;
-                        cmd.CommandType = System.Data.CommandType.Text;
-
-                        foreach (var parameter in parameters)
-                        {
-                            cmd.Parameters.Add(new Mono.Data.Sqlite.SqliteParameter("@" + parameter.Key, parameter.Value));
-                        }
-
-                        cmd.ExecuteNonQuery();
-                    }
-                }
+                return new Mono.Data.Sqlite.SqliteConnection(_connectionString);
             }
-            else {
-                using (var conn = new SQLiteConnection(_connectionString))
-                {
-                    conn.Open();
-                    using (var cmd = conn.CreateCommand())
-                    {
-                        cmd.CommandText = sql;
-                        cmd.CommandType = System.Data.CommandType.Text;
-
-                        foreach (var parameter in parameters)
-                        {
-                            cmd.Parameters.Add(new SQLiteParameter("@" + parameter.Key, parameter.Value));
-                        }
-
-                        cmd.ExecuteNonQuery();
-                    }
-                }
+            else
+            {
+                return new SQLiteConnection(_connectionString);
             }
+        }
+
+        public static DbParameter CreateParameter(DbCommand cmd, string key, object value)
+        {
+            var parameter = cmd.CreateParameter();
+
+            parameter.ParameterName = key;
+            parameter.Value = value;
+
+            return parameter;
         }
     }
 }

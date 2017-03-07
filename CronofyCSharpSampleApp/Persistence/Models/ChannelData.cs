@@ -22,7 +22,7 @@ namespace CronofyCSharpSampleApp.Persistence.Models
         {
             ChannelId = row.GetString(0);
             Record = row.GetString(1);
-            OccurredOn = DateTime.Parse(row.GetString(2));
+            OccurredOn = row.GetDateTime(2);
 
             return this;
         }

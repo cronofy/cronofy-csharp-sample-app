@@ -1,13 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Configuration;
-using System.IO;
 using System.Linq;
-using System.Web;
 using System.Web.Mvc;
+using Cronofy;
 using CronofyCSharpSampleApp.Models;
 using CronofyCSharpSampleApp.Persistence.Models;
-using Newtonsoft.Json;
 
 namespace CronofyCSharpSampleApp.Controllers
 {
@@ -15,7 +12,8 @@ namespace CronofyCSharpSampleApp.Controllers
     {
         public ActionResult New()
         {
-            return View ("New", new EnterpriseConnectUser {
+            return View("New", new EnterpriseConnectUser
+            {
                 Scopes = "read_account list_calendars read_events create_event delete_event read_free_busy"
             });
         }
@@ -24,22 +22,32 @@ namespace CronofyCSharpSampleApp.Controllers
         {
             if (ModelState.IsValid)
             {
-                CronofyHelper.AuthorizeWithServiceAccount(uidCookie.Value, user.Email, user.Scopes);
-
-                var recordCount = Convert.ToInt32(DatabaseHandler.Scalar("SELECT COUNT(1) FROM EnterpriseConnectUserData WHERE Email=@email AND OwnedBy=@ownedBy",
-                                                                         new Dictionary<string, object> { { "email", user.Email }, { "ownedBy", uidCookie.Value } }));
-
-                if (recordCount == 0)
+                try
                 {
-                    DatabaseHandler.ExecuteNonQuery("INSERT INTO EnterpriseConnectUserData(Email, OwnedBy, Status) VALUES(@email, @ownedBy, @status)",
-                                                    new Dictionary<string, object> { { "email", user.Email }, { "ownedBy", uidCookie.Value }, { "status", (int)EnterpriseConnectUserData.ConnectedStatus.Pending } });
+                    CronofyHelper.AuthorizeWithServiceAccount(uidCookie.Value, user.Email, user.Scopes);
                 }
-                else {
-                    DatabaseHandler.ExecuteNonQuery("UPDATE EnterpriseConnectUserData SET Status=@status WHERE Email=@email AND OwnedBy=@ownedBy",
-                                                    new Dictionary<string, object> { { "status", (int)EnterpriseConnectUserData.ConnectedStatus.Pending }, { "email", user.Email }, { "ownedBy", uidCookie.Value } });
+                catch (CronofyResponseException ex)
+                {
+                    user.SetError(ex);
                 }
 
-                return new RedirectResult("/enterpriseconnect");
+                if (user.NoErrors())
+                {
+                    var recordCount = Convert.ToInt32(DatabaseHandler.Scalar("SELECT COUNT(1) FROM EnterpriseConnectUserData WHERE Email=@email AND OwnedBy=@ownedBy",
+                                                                             new Dictionary<string, object> { { "email", user.Email }, { "ownedBy", uidCookie.Value } }));
+
+                    if (recordCount == 0)
+                    {
+                        DatabaseHandler.ExecuteNonQuery("INSERT INTO EnterpriseConnectUserData(Email, OwnedBy, Status) VALUES(@email, @ownedBy, @status)",
+                                                        new Dictionary<string, object> { { "email", user.Email }, { "ownedBy", uidCookie.Value }, { "status", (int)EnterpriseConnectUserData.ConnectedStatus.Pending } });
+                    }
+                    else {
+                        DatabaseHandler.ExecuteNonQuery("UPDATE EnterpriseConnectUserData SET Status=@status WHERE Email=@email AND OwnedBy=@ownedBy",
+                                                        new Dictionary<string, object> { { "status", (int)EnterpriseConnectUserData.ConnectedStatus.Pending }, { "email", user.Email }, { "ownedBy", uidCookie.Value } });
+                    }
+
+                    return new RedirectResult("/enterpriseconnect");
+                }
             }
 
             return View("New", user);
@@ -104,9 +112,19 @@ namespace CronofyCSharpSampleApp.Controllers
 
             if (ModelState.IsValid)
             {
-                CronofyHelper.UpsertEvent(newEvent.EventId, newEvent.CalendarId, newEvent.Summary, newEvent.Description, newEvent.Start, newEvent.End);
+                try
+                {
+                    CronofyHelper.UpsertEvent(newEvent.EventId, newEvent.CalendarId, newEvent.Summary, newEvent.Description, newEvent.Start, newEvent.End);
+                }
+                catch (CronofyResponseException ex)
+                {
+                    newEvent.SetError(ex);
+                }
 
-                return new RedirectResult(String.Format("/serviceaccountusers/show/{0}/calendar/{1}", newEvent.UserId, newEvent.CalendarId));
+                if (newEvent.NoErrors())
+                {
+                    return new RedirectResult(String.Format("/serviceaccountusers/show/{0}/calendar/{1}", newEvent.UserId, newEvent.CalendarId));
+                }
             }
 
             ViewData["calendarName"] = CronofyHelper.GetCalendars().First(x => x.CalendarId == newEvent.CalendarId).Name;
@@ -116,7 +134,7 @@ namespace CronofyCSharpSampleApp.Controllers
 
         private void ImpersonateUser(string userId)
         {
-			var user = DatabaseHandler.Get<User>("SELECT CronofyUID, AccessToken, RefreshToken from UserCredentials WHERE CronofyUID=@userId AND ServiceAccount=0",
+            var user = DatabaseHandler.Get<User>("SELECT CronofyUID, AccessToken, RefreshToken from UserCredentials WHERE CronofyUID=@userId AND ServiceAccount=0",
                                                  new Dictionary<string, object> { { "userId", userId } });
 
             CronofyHelper.SetToken(user.AccessToken, user.RefreshToken, false);

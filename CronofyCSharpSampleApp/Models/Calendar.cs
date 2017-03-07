@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace CronofyCSharpSampleApp.Models
 {
-    public class Calendar
+    public class Calendar : ResourceWithError
     {
         [Required(ErrorMessage = "Name is required")]
         public string Name { get; set; }

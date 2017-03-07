@@ -259,6 +259,7 @@ namespace CronofyCSharpSampleApp
             catch (CronofyException)
             {
                 LogHelper.Log(String.Format("CreateCalendar failure - profileId=`{0}` - name=`{1}`", profileId, name));
+                throw;
             }
 
             return calendar;
@@ -332,10 +333,13 @@ namespace CronofyCSharpSampleApp
                 .Description(description)
                 .Start(start)
                 .End(end);
-            
-            buildingEvent.Location(location.Description,
-                                   String.IsNullOrEmpty(location.Latitude) ? null : location.Latitude,
-                                   String.IsNullOrEmpty(location.Longitude) ? null : location.Longitude);
+
+            if (location != null)
+            {
+                buildingEvent.Location(location.Description,
+                                       String.IsNullOrEmpty(location.Latitude) ? null : location.Latitude,
+                                       String.IsNullOrEmpty(location.Longitude) ? null : location.Longitude);
+            }
 
             var builtEvent = buildingEvent.Build();
 
@@ -345,7 +349,7 @@ namespace CronofyCSharpSampleApp
 
                 var successLog = "UpsertEvent success - eventId=`{eventId}` - calendarId=`{calendarId}` - summary=`{summary}` - description=`{description}` - start=`{start}` - end=`{end}`";
 
-                if (!(String.IsNullOrEmpty(location.Latitude) || String.IsNullOrEmpty(location.Longitude)))
+                if (location != null && !(String.IsNullOrEmpty(location.Latitude) || String.IsNullOrEmpty(location.Longitude)))
                     successLog += String.Format(" - location.lat=`{0}` - location.long=`{1}`", location.Latitude, location.Longitude);
 
                 LogHelper.Log(successLog);
@@ -354,10 +358,11 @@ namespace CronofyCSharpSampleApp
             {
                 var failureLog = "UpsertEvent failure - eventId=`{eventId}` - calendarId=`{calendarId}` - summary=`{summary}` - description=`{description}` - start=`{start}` - end=`{end}`";
 
-                if (!(String.IsNullOrEmpty(location.Latitude) || String.IsNullOrEmpty(location.Longitude)))
+                if (location != null && !(String.IsNullOrEmpty(location.Latitude) || String.IsNullOrEmpty(location.Longitude)))
                     failureLog += String.Format(" - location.lat=`{0}` - location.long=`{1}`", location.Latitude, location.Longitude);
                 
                 LogHelper.Log(failureLog);
+                throw;
             }
         }
 
@@ -409,6 +414,7 @@ namespace CronofyCSharpSampleApp
             catch (CronofyException)
             {
                 LogHelper.Log(String.Format("CreateChannel failure - path=`{0}` - onlyManaged=`{1}` - calendarIds=`{2}`", path, onlyManaged, String.Join(",", calendarIds)));
+                throw;
             }
 
             return channel;
@@ -458,6 +464,7 @@ namespace CronofyCSharpSampleApp
             catch (CronofyException)
             {
                 LogHelper.Log(String.Format("AuthorizeWithServiceAccount failure - enterpriseConnectId=`{0}` - email=`{1}` - scopes=`{2}`", enterpriseConnectId, email, scopes));
+                throw;
             }
         }
 
@@ -466,11 +473,11 @@ namespace CronofyCSharpSampleApp
             IEnumerable<Cronofy.AvailablePeriod> availablePeriods = null;
 
             var participants = new ParticipantGroupBuilder()
-                .AddParticipant(availability.AccountId1);
+                .AddMember(availability.AccountId1);
 
             if (availability.AccountId2 != null)
             {
-                participants.AddParticipant(availability.AccountId2);
+                participants.AddMember(availability.AccountId2);
             }
 
             if (availability.RequiredParticipants == "All")
@@ -490,6 +497,7 @@ namespace CronofyCSharpSampleApp
             catch (CronofyException)
             {
                 LogHelper.Log("Availability failure - accountId1=`{availability.AccountId1}` - accountId2=`{availability.AccountId2}` - requiredParticipants=`{availability.RequiredParticipants}` - duration=`{availability.Duration}` - start=`{availability.Start}` - end=`{availability.End}`");
+                throw;
             }
 
             return availablePeriods;

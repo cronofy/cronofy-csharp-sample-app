@@ -125,6 +125,7 @@ namespace CronofyCSharpSampleApp
         {
             return OAuthClient.GetAuthorizationUrlBuilder(_enterpriseConnectOAuthCallbackUrl)
                               .EnterpriseConnect()
+                              .Scope("read_account", "list_calendars", "read_events", "create_event", "delete_event", "read_free_busy")
                               .ToString();
         }
 

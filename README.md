@@ -46,4 +46,14 @@ Once you have ngrok installed you can initialise it for your application by usin
 `ngrok http -host-header=localhost localhost:8080`
 (Replace `localhost:8080` with `localhost:[port number]` where appropriate)
 
-Your terminal will then display a URL in the format `http://[unique identifier].ngrok.io`. You will need to set the `domain` variable in the application's `Web.config` in order to test these remote features.
+Your terminal will then display a URL in the format `http://[unique identifier].ngrok.io`. You will need to set the `domain` variable in the application's `Web.config` in order to test these remote features for example.
+
+```
+<configuration>
+  ...
+  <appSettings>
+    ...
+    <add key="domain" value="http://examplecallback.ngrok.io" />
+  </appSettings>
+</configuration>
+```
